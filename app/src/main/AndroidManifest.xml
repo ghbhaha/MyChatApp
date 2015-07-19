@@ -29,7 +29,7 @@
             android:theme="@style/ThemeWithNoActionBar">
         </activity>
         <activity
-            android:name=".activity.RegistActivity"
+            android:name=".activity.RegisterActivity"
             android:label="@string/title_activity_regist"
             android:theme="@style/ThemeWithActionBar">
         </activity>

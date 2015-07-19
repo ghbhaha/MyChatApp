@@ -18,7 +18,7 @@ import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.util.TextUtil;
 
-public class RegistActivity extends AbstructActivity {
+public class RegisterActivity extends AbstructActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +69,11 @@ public class RegistActivity extends AbstructActivity {
                 @Override
                 public void done(AVException e) {
                     if (e == null) {
-                        Toast.makeText(RegistActivity.this, getString(R.string.regist_success), 1000).show();
-                        RegistActivity.this.finish();
+                        Toast.makeText(RegisterActivity.this, getString(R.string.regist_success), 1000).show();
+                        RegisterActivity.this.finish();
                     } else {
                         if (e.getCode() == AVException.USERNAME_TAKEN) {
-                            Toast.makeText(RegistActivity.this, getString(R.string.username_taken), 1000).show();
+                            Toast.makeText(RegisterActivity.this, getString(R.string.username_taken), 1000).show();
                         }
                     }
 

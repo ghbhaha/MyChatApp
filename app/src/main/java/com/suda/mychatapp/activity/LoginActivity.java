@@ -1,12 +1,10 @@
 package com.suda.mychatapp.activity;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,18 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.LogInCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.util.TextUtil;
-import com.suda.mychatapp.util.UiUtil;
-
-import java.util.List;
 
 public class LoginActivity extends AbstructActivity {
 
@@ -77,7 +69,7 @@ public class LoginActivity extends AbstructActivity {
     }
 
     public void registerNew(View v) {
-        Intent it = new Intent(this, RegistActivity.class);
+        Intent it = new Intent(this, RegisterActivity.class);
         startActivity(it);
     }
 
