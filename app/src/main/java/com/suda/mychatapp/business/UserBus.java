@@ -19,7 +19,7 @@ public class UserBus {
             callBack.done(this.me);
         } else {
             AVQuery<MyAVUser> query = AVObject.getQuery(MyAVUser.class);
-            query.whereContains("username", user.getUsername());
+            query.whereEqualTo("objectId", user.getObjectId());
             query.findInBackground(new FindCallback<MyAVUser>() {
                 @Override
                 public void done(List<MyAVUser> list, AVException e) {

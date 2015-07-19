@@ -57,6 +57,13 @@ public class MyAVUser extends AVUser {
         put(ICON, value);
     }
 
+    public int getSudaId() {
+        return getInt(SUDAID);
+    }
+
+    public void setSudaId(String value) {
+        put(SUDAID, value);
+    }
 
     private final static String EMAIL = "email";
     private final static String USERNAME = "username";
@@ -64,5 +71,6 @@ public class MyAVUser extends AVUser {
     private final static String OLD = "old";
     private final static String SEX = "sex";
     private final static String ICON = "head_icon";
+    private final static String SUDAID = "sudaid";
 
 }
