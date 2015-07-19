@@ -55,7 +55,7 @@ public class LoginActivity extends AbstructActivity {
                 @Override
                 public void done(MyAVUser avUser, AVException e) {
                     if (e == null) {
-                        Toast.makeText(LoginActivity.this, "find" + avUser.getUsername(), 1000).show();
+                        Toast.makeText(LoginActivity.this, "find" + avUser.getUsername(), Toast.LENGTH_SHORT).show();
                     } else {
                         if (e.getCode() == AVException.USERNAME_PASSWORD_MISMATCH)
                             Toast.makeText(LoginActivity.this, getString(R.string.username_password_mismatch), Toast.LENGTH_SHORT).show();

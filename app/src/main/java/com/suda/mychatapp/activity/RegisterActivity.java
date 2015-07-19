@@ -69,11 +69,11 @@ public class RegisterActivity extends AbstructActivity {
                 @Override
                 public void done(AVException e) {
                     if (e == null) {
-                        Toast.makeText(RegisterActivity.this, getString(R.string.regist_success), 1000).show();
+                        Toast.makeText(RegisterActivity.this, getString(R.string.regist_success), Toast.LENGTH_SHORT).show();
                         RegisterActivity.this.finish();
                     } else {
                         if (e.getCode() == AVException.USERNAME_TAKEN) {
-                            Toast.makeText(RegisterActivity.this, getString(R.string.username_taken), 1000).show();
+                            Toast.makeText(RegisterActivity.this, getString(R.string.username_taken), Toast.LENGTH_SHORT).show();
                         }
                     }
 
