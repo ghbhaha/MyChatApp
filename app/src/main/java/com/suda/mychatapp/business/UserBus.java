@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class UserBus {
 
-    public void getMe(final CallBack callBack) {
+    public void getMe(final CallBack callBack,MyAVUser user) {
         if (this.me != null) {
             callBack.done(this.me);
         } else {
             AVQuery<MyAVUser> query = AVObject.getQuery(MyAVUser.class);
-            query.whereContains("username", "ghbhaha");
+            query.whereContains("username", user.getUsername());
             query.findInBackground(new FindCallback<MyAVUser>() {
                 @Override
                 public void done(List<MyAVUser> list, AVException e) {

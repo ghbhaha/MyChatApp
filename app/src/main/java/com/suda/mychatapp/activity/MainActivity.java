@@ -55,34 +55,28 @@ public class MainActivity extends ActionBarActivity {
 
     private void initEntity() {
         MyAVUser user = (MyAVUser) MyAVUser.getCurrentUser();
-        new UserBus().getMe(new UserBus.CallBack() {
-            @Override
-            public void done(MyAVUser me) {
-/*                if (me.getIcon() != null) me.getIcon().getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] bytes, AVException e) {
+        if (user != null) {
+            new UserBus().getMe(new UserBus.CallBack() {
+                @Override
+                public void done(MyAVUser me) {
+                    mTvusername.setText(me.getUsername());
+                    if (me.getIcon() != null) {
+                        CacheUtil.showPicture(MainActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
+                            @Override
+                            public void done(final Bitmap bitmap) {
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mHeadIcon.setImageBitmap(bitmap);
+                                    }
+                                });
 
-                        mHeadIcon.setImageBitmap(bitmap);
+                            }
+                        });
                     }
-                });*/
-                if(me.getIcon()!=null){
-                    CacheUtil.showPicture(MainActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
-                        @Override
-                        public void done(final Bitmap bitmap) {
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mHeadIcon.setImageBitmap(bitmap);
-                                }
-                            });
-
-                        }
-                    });
                 }
-                mTvusername.setText(me.getUsername());
-            }
-        });
-
+            }, user);
+        }
     }
 
     private void initWidget() {

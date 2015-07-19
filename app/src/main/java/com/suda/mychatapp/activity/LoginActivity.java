@@ -42,20 +42,21 @@ public class LoginActivity extends AbstructActivity {
         if (TextUtil.isTextEmpty(username)) {
             mTvtipusername.setVisibility(View.VISIBLE);
             mTvtipusername.startAnimation(mShakeAnim);
-            mCanDo=false;
+            mCanDo = false;
         }
         if (TextUtil.isTextEmpty(password)) {
             mTvtippassword.setVisibility(View.VISIBLE);
             mTvtippassword.startAnimation(mShakeAnim);
-            mCanDo=false;
+            mCanDo = false;
         }
 
-        if(mCanDo) {
+        if (mCanDo) {
             AVUser.logInInBackground(username, password, new LogInCallback<MyAVUser>() {
                 @Override
                 public void done(MyAVUser avUser, AVException e) {
                     if (e == null) {
-                        Toast.makeText(LoginActivity.this, "find" + avUser.getUsername(), Toast.LENGTH_SHORT).show();
+                        Intent it = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(it);
                     } else {
                         if (e.getCode() == AVException.USERNAME_PASSWORD_MISMATCH)
                             Toast.makeText(LoginActivity.this, getString(R.string.username_password_mismatch), Toast.LENGTH_SHORT).show();
