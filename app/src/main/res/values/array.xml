@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="tab_title">
+        <item>消息</item>
+        <item>联系人</item>
+        <item>好友动态</item>
+    </string-array>
+
+</resources>
