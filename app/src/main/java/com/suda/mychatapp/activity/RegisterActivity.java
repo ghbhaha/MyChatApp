@@ -59,10 +59,9 @@ public class RegisterActivity extends AbstructActivity {
             Toast.makeText(this, getString(R.string.password_not_same), Toast.LENGTH_SHORT).show();
             mCanDo = false;
         }
-        Log.d("test3", mCanDo + "");
 
         if (mCanDo) {
-            MyAVUser user = new MyAVUser();
+            final MyAVUser user = new MyAVUser();
             user.setUsername(username);
             user.setPassword(password);
             user.saveInBackground(new SaveCallback() {
@@ -70,6 +69,7 @@ public class RegisterActivity extends AbstructActivity {
                 public void done(AVException e) {
                     if (e == null) {
                         Toast.makeText(RegisterActivity.this, getString(R.string.regist_success), Toast.LENGTH_SHORT).show();
+                        user.logOut();
                         RegisterActivity.this.finish();
                     } else {
                         if (e.getCode() == AVException.USERNAME_TAKEN) {
