@@ -39,12 +39,12 @@ public class CacheUtil {
 
         if (mDiskLruCache == null) {
             try {
-                // »ñÈ¡Í¼Æ¬»º´æÂ·¾¶
+                // è·å–å›¾ç‰‡ç¼“å­˜è·¯å¾„
                 File cacheDir = getDiskCacheDir(context, "thumb");
                 if (!cacheDir.exists()) {
                     cacheDir.mkdirs();
                 }
-                // ´´½¨DiskLruCacheÊµÀı£¬³õÊ¼»¯»º´æÊı¾İ
+                // åˆ›å»ºDiskLruCacheå®ä¾‹ï¼Œåˆå§‹åŒ–ç¼“å­˜æ•°æ®
                 mDiskLruCache = DiskLruCache
                         .open(cacheDir, getAppVersion(context), 1, 10 * 1024 * 1024);
             } catch (IOException e) {
@@ -66,15 +66,15 @@ public class CacheUtil {
                         FileInputStream fileInputStream = null;
                         DiskLruCache.Snapshot snapShot = null;
                         try {
-                            // Éú³ÉÍ¼Æ¬URL¶ÔÓ¦µÄkey
+                            // ç”Ÿæˆå›¾ç‰‡URLå¯¹åº”çš„key
                             final String key = hashKeyForDisk(imageUrl);
-                            // ²éÕÒkey¶ÔÓ¦µÄ»º´æ
+                            // æŸ¥æ‰¾keyå¯¹åº”çš„ç¼“å­˜
                             snapShot = mDiskLruCache.get(key);
 
                             boolean s = snapShot == null;
 
                             if (snapShot == null) {
-                                // Èç¹ûÃ»ÓĞÕÒµ½¶ÔÓ¦µÄ»º´æ£¬Ôò×¼±¸´ÓÍøÂçÉÏÇëÇóÊı¾İ£¬²¢Ğ´Èë»º´æ
+                                // å¦‚æœæ²¡æœ‰æ‰¾åˆ°å¯¹åº”çš„ç¼“å­˜ï¼Œåˆ™å‡†å¤‡ä»ç½‘ç»œä¸Šè¯·æ±‚æ•°æ®ï¼Œå¹¶å†™å…¥ç¼“å­˜
                                 DiskLruCache.Editor editor = mDiskLruCache.edit(key);
                                 if (editor != null) {
                                     OutputStream outputStream = editor.newOutputStream(0);
@@ -84,7 +84,7 @@ public class CacheUtil {
                                         editor.abort();
                                     }
                                 }
-                                // »º´æ±»Ğ´Èëºó£¬ÔÙ´Î²éÕÒkey¶ÔÓ¦µÄ»º´æ
+                                // ç¼“å­˜è¢«å†™å…¥åï¼Œå†æ¬¡æŸ¥æ‰¾keyå¯¹åº”çš„ç¼“å­˜
                                 snapShot = mDiskLruCache.get(key);
                                 flushCache();
                             }
@@ -92,13 +92,13 @@ public class CacheUtil {
                                 fileInputStream = (FileInputStream) snapShot.getInputStream(0);
                                 fileDescriptor = fileInputStream.getFD();
                             }
-                            // ½«»º´æÊı¾İ½âÎö³ÉBitmap¶ÔÏó
+                            // å°†ç¼“å­˜æ•°æ®è§£ææˆBitmapå¯¹è±¡
                             Bitmap bitmap = null;
                             if (fileDescriptor != null) {
                                 bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
                             }
                             if (bitmap != null) {
-                                // ½«Bitmap¶ÔÏóÌí¼Óµ½ÄÚ´æ»º´æµ±ÖĞ
+                                // å°†Bitmapå¯¹è±¡æ·»åŠ åˆ°å†…å­˜ç¼“å­˜å½“ä¸­
                                 callBack.done(bitmap);
                                 addBitmapToMemoryCache(imageUrl, bitmap);
                             }

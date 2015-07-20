@@ -65,6 +65,14 @@ public class MyAVUser extends AVUser {
         put(SUDAID, value);
     }
 
+    public String getSign() {
+        return getString(SIGN);
+    }
+
+    public void setSign(String value) {
+        put(SIGN, value);
+    }
+
     private final static String EMAIL = "email";
     private final static String USERNAME = "username";
     private final static String PASSWORD = "password";
@@ -72,5 +80,6 @@ public class MyAVUser extends AVUser {
     private final static String SEX = "sex";
     private final static String ICON = "head_icon";
     private final static String SUDAID = "sudaid";
+    private final static String SIGN="sign";
 
 }

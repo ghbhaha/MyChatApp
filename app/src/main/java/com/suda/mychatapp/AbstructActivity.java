@@ -9,7 +9,7 @@ import com.suda.mychatapp.util.UiUtil;
 /**
  * Created by Suda on 2015/7/19.
  */
-public class AbstructActivity extends ActionBarActivity{
+public abstract class AbstructActivity extends ActionBarActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,10 +1,9 @@
 package com.suda.mychatapp.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,22 +16,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.GetDataCallback;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.frg.NoAccountFrg;
 import com.suda.mychatapp.util.CacheUtil;
-import com.suda.mychatapp.util.DiskLruCache;
+import com.suda.mychatapp.util.TextUtil;
 import com.suda.mychatapp.widget.PagerSlidingTabStrip;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +56,8 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void done(MyAVUser me) {
                     mTvusername.setText(me.getUsername());
+                    mTvsign.setVisibility(TextUtil.isTextEmpty(me.getSign())?View.GONE:View.VISIBLE);
+                    mTvsign.setText("“"+me.getSign()+"”");
                     if (me.getIcon() != null) {
                         CacheUtil.showPicture(MainActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
                             @Override
@@ -91,6 +89,7 @@ public class MainActivity extends ActionBarActivity {
                 R.layout.siderbar_header, lvLeftMenu, false);
 
         mTvusername = (TextView) headerContainer.findViewById(R.id.tv_username);
+        mTvsign = (TextView) headerContainer.findViewById(R.id.tv_sign);
         mHeadIcon = (CircleImageView) headerContainer.findViewById(R.id.profile_image);
 
         lvLeftMenu.addHeaderView(headerContainer);
@@ -101,6 +100,20 @@ public class MainActivity extends ActionBarActivity {
                 "ItemImage"}, new int[]{R.id.ItemTitle, R.id.ItemImage});
 
         lvLeftMenu.setAdapter(mlistItemAdapter);
+
+        lvLeftMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        Intent it = new Intent(MainActivity.this,EditAccountActivity.class);
+                        startActivity(it);
+                        break;
+                    case 1:
+                        break;
+                }
+            }
+        });
 
 
         mToolbar.setTitle(getResources().getString(R.string.app_name));
@@ -202,6 +215,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private TextView mTvusername;
+    private TextView mTvsign;
     private CircleImageView mHeadIcon;
     private Handler mHandler;
 
