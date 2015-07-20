@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,38 +43,40 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        mHandler = new Handler();
         initWidget();
-        initEntity();
-
     }
 
 
     private void initEntity() {
-        MyAVUser user = (MyAVUser) MyAVUser.getCurrentUser();
-        if (user != null) {
-            new UserBus().getMe(new UserBus.CallBack() {
+
+        if (UserBus.isExistLocalUser()) {
+            UserBus.getMe(new UserBus.CallBack() {
                 @Override
                 public void done(MyAVUser me) {
                     mTvusername.setText(me.getUsername());
-                    mTvsign.setVisibility(TextUtil.isTextEmpty(me.getSign())?View.GONE:View.VISIBLE);
-                    mTvsign.setText("“"+me.getSign()+"”");
+                    mTvsign.setVisibility(TextUtil.isTextEmpty(me.getSign()) ? View.GONE : View.VISIBLE);
+                    mTvsign.setText("“" + me.getSign() + "”");
+
                     if (me.getIcon() != null) {
                         CacheUtil.showPicture(MainActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
                             @Override
                             public void done(final Bitmap bitmap) {
-                                mHandler.post(new Runnable() {
+                                final Bitmap bm = bitmap;
+                                mHeadIcon.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mHeadIcon.setImageBitmap(bitmap);
+                                        mHeadIcon.setImageBitmap(bm);
                                     }
                                 });
-
                             }
                         });
                     }
                 }
-            }, user);
+            });
+        }else{
+            Intent it = new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(it);
+            this.finish();
         }
     }
 
@@ -106,7 +109,7 @@ public class MainActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
-                        Intent it = new Intent(MainActivity.this,EditAccountActivity.class);
+                        Intent it = new Intent(MainActivity.this, AccountInfoActivity.class);
                         startActivity(it);
                         break;
                     case 1:
@@ -159,8 +162,6 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
         initTabsValue();
-
-
     }
 
     private void initTabsValue() {
@@ -200,11 +201,15 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
-
             return new NoAccountFrg();
-
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        initEntity();
+        super.onResume();
     }
 
     private void addLeftMenu(String title, int res) {
@@ -217,7 +222,6 @@ public class MainActivity extends ActionBarActivity {
     private TextView mTvusername;
     private TextView mTvsign;
     private CircleImageView mHeadIcon;
-    private Handler mHandler;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;

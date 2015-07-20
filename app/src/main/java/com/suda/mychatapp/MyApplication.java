@@ -15,6 +15,7 @@ public class MyApplication extends Application {
         super.onCreate();
         AVOSCloud.initialize(this, APP_ID, APP_KEY);
         LoadLib.LoadLib();
+        AVOSCloud.initialize(this,"bbi2udim376ydh5lvhq6jzp4o2afosu9nndydes45jvolhj4","flbtai7ocvvvrsutun5k77jkgagvayew944mnms8e94u3z6j");
 
     }
 

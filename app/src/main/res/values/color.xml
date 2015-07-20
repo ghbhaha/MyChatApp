@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- FloatingActionButton -->
+    <color name="pink">#e91e63</color>
+    <color name="pink_pressed">#ec407a</color>
 
     <!-- Other Color -->
     <color name="theme_blue">#6699FF</color>

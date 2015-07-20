@@ -1,5 +1,7 @@
 package com.suda.mychatapp.business;
 
+import android.util.Log;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
@@ -14,12 +16,13 @@ import java.util.List;
  */
 public class UserBus {
 
-    public void getMe(final CallBack callBack,MyAVUser user) {
-        if (this.me != null) {
-            callBack.done(this.me);
+    public static void getMe(final CallBack callBack) {
+        if (me != null) {
+            Log.d("cache","use");
+            callBack.done(me);
         } else {
             AVQuery<MyAVUser> query = AVObject.getQuery(MyAVUser.class);
-            query.whereEqualTo("objectId", user.getObjectId());
+            query.whereEqualTo("objectId", MyAVUser.getCurrentUser().getObjectId());
             query.findInBackground(new FindCallback<MyAVUser>() {
                 @Override
                 public void done(List<MyAVUser> list, AVException e) {
@@ -35,13 +38,34 @@ public class UserBus {
 
     }
 
-    public void saveInCache(MyAVUser me) {
-        this.me = me;
+    public static void refreshMe(final CallBack callBack) {
+
+        AVQuery<MyAVUser> query = AVObject.getQuery(MyAVUser.class);
+        query.whereEqualTo("objectId", MyAVUser.getCurrentUser().getObjectId());
+        query.findInBackground(new FindCallback<MyAVUser>() {
+            @Override
+            public void done(List<MyAVUser> list, AVException e) {
+                if (e == null) {
+                    saveInCache(list.get(0));
+                    callBack.done(list.get(0));
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public static boolean isExistLocalUser() {
+        return MyAVUser.getCurrentUser() != null;
+    }
+
+    public static void saveInCache(MyAVUser user) {
+        me = user;
     }
 
     public static MyAVUser me;
 
-    public interface CallBack{
-         void done(MyAVUser me);
+    public interface CallBack {
+        void done(MyAVUser me);
     }
 }

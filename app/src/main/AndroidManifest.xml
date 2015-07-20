@@ -16,28 +16,46 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".activity.LoginActivity"
-            android:theme="@style/ThemeWithActionBar"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@style/ThemeWithActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/ThemeWithNoActionBar">
+            android:theme="@style/ThemeWithNoActionBar" >
         </activity>
         <activity
             android:name=".activity.RegisterActivity"
             android:label="@string/title_activity_regist"
-            android:theme="@style/ThemeWithActionBar">
+            android:theme="@style/ThemeWithActionBar" >
         </activity>
         <activity
             android:name=".activity.EditAccountActivity"
             android:label="@string/title_activity_edit_account"
-            android:theme="@style/ThemeWithActionBar">
+            android:theme="@style/ThemeWithActionBar" >
         </activity>
+        <activity
+            android:name=".activity.AccountInfoActivity"
+            android:label="@string/title_activity_account_info"
+            android:theme="@style/ThemeWithActionBar" >
+        </activity>
+
+        <!--推送与聊天 -->
+        <service android:name="com.avos.avoscloud.PushService"
+            android:exported="true" />
+
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

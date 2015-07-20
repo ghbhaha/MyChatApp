@@ -57,6 +57,7 @@ public class LoginActivity extends AbstructActivity {
                     if (e == null) {
                         Intent it = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(it);
+                        LoginActivity.this.finish();
                     } else {
                         if (e.getCode() == AVException.USERNAME_PASSWORD_MISMATCH)
                             Toast.makeText(LoginActivity.this, getString(R.string.username_password_mismatch), Toast.LENGTH_SHORT).show();
