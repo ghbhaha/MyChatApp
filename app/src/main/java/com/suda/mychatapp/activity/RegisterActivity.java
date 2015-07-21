@@ -1,5 +1,7 @@
 package com.suda.mychatapp.activity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,10 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.SaveCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.util.ImageUtil;
 import com.suda.mychatapp.util.TextUtil;
 
 public class RegisterActivity extends AbstructActivity {
@@ -62,6 +66,9 @@ public class RegisterActivity extends AbstructActivity {
 
         if (mCanDo) {
             final MyAVUser user = new MyAVUser();
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+            AVFile avFile = new AVFile("icon", ImageUtil.Bitmap2Bytes(bitmap));
+            user.setIcon(avFile);
             user.setUsername(username);
             user.setPassword(password);
             user.saveInBackground(new SaveCallback() {

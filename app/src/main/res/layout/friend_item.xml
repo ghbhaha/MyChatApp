@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="5dp"
+        android:layout_height="wrap_content" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:id="@id/icon"
+        android:src="@mipmap/ic_launcher" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ghbhaha"
+            android:textColor="#000000"
+            android:id="@+id/tv_nikename"
+            android:textSize="18sp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:id="@id/tv_sign"
+            android:text="今天真开心"
+            android:textColor="@android:color/secondary_text_dark"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

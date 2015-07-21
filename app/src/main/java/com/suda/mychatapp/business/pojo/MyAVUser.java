@@ -53,7 +53,7 @@ public class MyAVUser extends AVUser {
         return getAVFile(ICON);
     }
 
-    public void setIcon(String value) {
+    public void setIcon(AVFile value) {
         put(ICON, value);
     }
 

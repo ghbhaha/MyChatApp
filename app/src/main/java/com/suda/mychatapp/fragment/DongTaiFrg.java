@@ -1,4 +1,4 @@
-package com.suda.mychatapp.frg;
+package com.suda.mychatapp.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import com.suda.mychatapp.R;
 
 
-public class NoAccountFrg extends Fragment {
+public class DongTaiFrg extends Fragment {
 
-	public NoAccountFrg() {
+	public DongTaiFrg() {
 		// TODO Auto-generated constructor stub
 	}
 

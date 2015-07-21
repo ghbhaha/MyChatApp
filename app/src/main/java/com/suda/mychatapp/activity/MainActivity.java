@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +19,19 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
-import com.suda.mychatapp.frg.NoAccountFrg;
+import com.suda.mychatapp.fragment.DongTaiFrg;
+import com.suda.mychatapp.fragment.FrienrdsFrg;
+import com.suda.mychatapp.fragment.MessageFrg;
 import com.suda.mychatapp.util.CacheUtil;
 import com.suda.mychatapp.util.TextUtil;
 import com.suda.mychatapp.widget.PagerSlidingTabStrip;
@@ -33,6 +39,7 @@ import com.suda.mychatapp.widget.PagerSlidingTabStrip;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,13 +51,13 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         initWidget();
-        initEntity();
     }
 
 
     private void initEntity() {
 
         if (UserBus.isExistLocalUser()) {
+
             UserBus.getMe(new UserBus.CallBack() {
                 @Override
                 public void done(MyAVUser me) {
@@ -80,6 +87,7 @@ public class MainActivity extends ActionBarActivity {
             this.finish();
         }
     }
+
 
     private void initWidget() {
 
@@ -202,8 +210,23 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new NoAccountFrg();
+            switch (position) {
+                case 0:
+                    return new MessageFrg();
+                case 1:
+                    return new FrienrdsFrg();
+                case 2:
+                    return new DongTaiFrg();
+                default:
+                    return null;
+            }
         }
+
+    }
+
+    public void searchNewFriend(View view) {
+        Intent it = new Intent(this, SearchNewFriendActivity.class);
+        startActivity(it);
 
     }
 
@@ -218,6 +241,12 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
+    @Override
+    protected void onResume() {
+        initEntity();
+        super.onResume();
+    }
 
     private void addLeftMenu(String title, int res) {
         HashMap<String, Object> map = new HashMap<String, Object>();

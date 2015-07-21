@@ -15,6 +15,7 @@
     <string name="user_dosenot_exist">用户不存在</string>
     <string name="password_not_same">两次密码不一致</string>
     <string name="title_activity_account_info">AccountInfoActivity</string>
+    <string name="title_activity_search_new_friend">SearchNewFriendActivity</string>
 
 
 </resources>
