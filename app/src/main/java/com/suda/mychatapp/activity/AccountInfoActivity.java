@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,12 +17,14 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil;
 import com.avos.avoscloud.SaveCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.util.CacheUtil;
+import com.suda.mychatapp.util.ImageUtil;
 import com.suda.mychatapp.util.TextUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -43,10 +47,11 @@ public class AccountInfoActivity extends AbstructActivity {
             new UserBus().getMe(new UserBus.CallBack() {
                 @Override
                 public void done(MyAVUser me) {
-                    mTvsign.setText(TextUtil.isTextEmpty(me.getSign())?"请填写签名哦":"“" + me.getSign() + "”");
+                    mTvsign.setText(TextUtil.isTextEmpty(me.getSign()) ? "请填写签名哦" : "“" + me.getSign() + "”");
                     mTvusername.setText(me.getUsername());
                     mTvsex.setText(TextUtil.isTextEmpty(me.getSex()) ? "--" : me.getSex());
                     mTvtel.setText(TextUtil.isTextEmpty(me.getMobilePhoneNumber()) ? "--" : me.getMobilePhoneNumber());
+
                     if (me.getIcon() != null) {
                         CacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
                             @Override
@@ -78,8 +83,9 @@ public class AccountInfoActivity extends AbstructActivity {
                 if (data != null) {
                     Bundle extras = data.getExtras();
                     mHeadBitMap = extras.getParcelable("data");
+                    mHeadIcon.setVisibility(View.INVISIBLE);
                     if (mHeadBitMap != null) {
-                        final AVFile f = new AVFile("icon", Bitmap2Bytes(mHeadBitMap));
+                        final AVFile f = new AVFile("icon", ImageUtil.Bitmap2Bytes(mHeadBitMap));
                         UserBus.getMe(new UserBus.CallBack() {
                             @Override
                             public void done(MyAVUser me) {
@@ -88,24 +94,20 @@ public class AccountInfoActivity extends AbstructActivity {
                                     @Override
                                     public void done(AVException e) {
                                         if (e == null)
-                                            UserBus.refreshMe(new UserBus.CallBack() {
-                                                @Override
-                                                public void done(MyAVUser me) {
-                                                    CacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
-                                                        @Override
-                                                        public void done(Bitmap bitmap) {
-                                                            //do nothing
-                                                            final Bitmap bm = bitmap;
-                                                            mHeadIcon.post(new Runnable() {
-                                                                @Override
-                                                                public void run() {
-                                                                    mHeadIcon.setImageBitmap(bm);
-                                                                }
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                            });
+                                            mUpdateImage = true;
+                                        mHeadIcon.setImageBitmap(mHeadBitMap);
+                                        mHeadIcon.setVisibility(View.VISIBLE);
+                                        UserBus.refreshMe(new UserBus.CallBack() {
+                                            @Override
+                                            public void done(MyAVUser me) {
+                                                CacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
+                                                    @Override
+                                                    public void done(Bitmap bitmap) {
+                                                        //do nothing
+                                                    }
+                                                });
+                                            }
+                                        });
                                     }
                                 });
                             }
@@ -132,18 +134,18 @@ public class AccountInfoActivity extends AbstructActivity {
         intent.putExtra("outputX", 150);
         intent.putExtra("outputY", 150);
         intent.putExtra("return-data", true);
-        startActivityForResult(intent, 2);
+        startActivityForResult(intent, REQUEST_CROP_IMAGE);
     }
 
     public void setHeadIcon(View view) {
         Intent it = new Intent(Intent.ACTION_PICK, null);
         it.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(it, 1);
+        startActivityForResult(it, REQUEST_SELECT_IMAGE);
     }
 
     public void editAccountInfo(View view) {
         Intent it = new Intent(this, EditAccountActivity.class);
-        startActivityForResult(it, 3);
+        startActivityForResult(it, REQUEST_EDIT_ACCOUNT);
     }
 
     public void logout(View v) {
@@ -181,6 +183,33 @@ public class AccountInfoActivity extends AbstructActivity {
         }).setNegativeButton("算了", null).show();
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            back();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            back();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    protected void back() {
+        Intent it = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("data", mHeadBitMap);
+        it.putExtras(bundle);
+        setResult(mUpdateImage ? RESULT_OK : RESULT_CANCELED, it);
+
+    }
+
     void initWidget() {
         mHeadIcon = (CircleImageView) findViewById(R.id.profile_image);
         mTvsign = (TextView) findViewById(R.id.tv_sign);
@@ -189,17 +218,17 @@ public class AccountInfoActivity extends AbstructActivity {
         mTvtel = (TextView) findViewById(R.id.tv_tel);
     }
 
-    public byte[] Bitmap2Bytes(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        return baos.toByteArray();
-    }
 
     private CircleImageView mHeadIcon;
     private TextView mTvsign;
     private TextView mTvusername;
     private TextView mTvsex;
     private TextView mTvtel;
-    private static String path = "/sdcard/myHead/";
     private Bitmap mHeadBitMap;
+    private static final int REQUEST_SELECT_IMAGE = 1;
+    private static final int REQUEST_CROP_IMAGE = 2;
+    private static final int REQUEST_EDIT_ACCOUNT = 3;
+
+    private boolean mUpdateImage = false;
+
 }

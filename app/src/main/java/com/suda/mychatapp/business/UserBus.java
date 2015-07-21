@@ -7,7 +7,6 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.suda.mychatapp.business.pojo.MyAVUser;
-import com.tencent.qc.stat.common.User;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class UserBus {
 
     public static void getMe(final CallBack callBack) {
         if (me != null) {
-            Log.d("cache","use");
+            Log.d("cache", "use");
             callBack.done(me);
         } else {
             AVQuery<MyAVUser> query = AVObject.getQuery(MyAVUser.class);
@@ -27,7 +26,7 @@ public class UserBus {
                 @Override
                 public void done(List<MyAVUser> list, AVException e) {
                     if (e == null) {
-                        saveInCache(list.get(0));
+                        saveMeInCache(list.get(0));
                         callBack.done(list.get(0));
                     } else {
                         e.printStackTrace();
@@ -35,11 +34,9 @@ public class UserBus {
                 }
             });
         }
-
     }
 
-
-    public static void clearMe(){
+    public static void clearMe() {
         me = null;
     }
 
@@ -51,7 +48,7 @@ public class UserBus {
             @Override
             public void done(List<MyAVUser> list, AVException e) {
                 if (e == null) {
-                    saveInCache(list.get(0));
+                    saveMeInCache(list.get(0));
                     callBack.done(list.get(0));
                 } else {
                     e.printStackTrace();
@@ -64,7 +61,7 @@ public class UserBus {
         return MyAVUser.getCurrentUser() != null;
     }
 
-    public static void saveInCache(MyAVUser user) {
+    public static void saveMeInCache(MyAVUser user) {
         me = user;
     }
 

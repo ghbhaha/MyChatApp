@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         initWidget();
+        initEntity();
     }
 
 
@@ -73,8 +74,8 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }
             });
-        }else{
-            Intent it = new Intent(MainActivity.this,LoginActivity.class);
+        } else {
+            Intent it = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(it);
             this.finish();
         }
@@ -107,10 +108,10 @@ public class MainActivity extends ActionBarActivity {
         lvLeftMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+                switch (position) {
                     case 0:
                         Intent it = new Intent(MainActivity.this, AccountInfoActivity.class);
-                        startActivity(it);
+                        startActivityForResult(it, REQUEST_UPDATE_IAMEG);
                         break;
                     case 1:
                         break;
@@ -207,10 +208,16 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onResume() {
-        initEntity();
-        super.onResume();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_UPDATE_IAMEG) {
+                Bundle extras = data.getExtras();
+                Bitmap bm = extras.getParcelable("data");
+                mHeadIcon.setImageBitmap(bm);
+            }
+        }
     }
+
 
     private void addLeftMenu(String title, int res) {
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -231,6 +238,7 @@ public class MainActivity extends ActionBarActivity {
     private ListView lvLeftMenu;
     private List<HashMap<String, Object>> mlistItems;
     private SimpleAdapter mlistItemAdapter;
+    private static final int REQUEST_UPDATE_IAMEG = 1;
 
 }
 
