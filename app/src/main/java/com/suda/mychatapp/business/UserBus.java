@@ -38,6 +38,11 @@ public class UserBus {
 
     }
 
+
+    public static void clearMe(){
+        me = null;
+    }
+
     public static void refreshMe(final CallBack callBack) {
 
         AVQuery<MyAVUser> query = AVObject.getQuery(MyAVUser.class);

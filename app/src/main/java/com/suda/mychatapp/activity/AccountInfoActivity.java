@@ -148,6 +148,7 @@ public class AccountInfoActivity extends AbstructActivity {
 
     public void logout(View v) {
         AVUser.getCurrentUser().logOut();
+        UserBus.clearMe();
         this.finish();
     }
 
