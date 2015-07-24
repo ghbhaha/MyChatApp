@@ -17,7 +17,7 @@ public class ExceptionInfoUtil {
                 info = "用户名已被占用";
                 break;
             case AVException.USER_DOESNOT_EXIST:
-                info = "用户名存在";
+                info = "用户名未注册";
                 break;
             case AVException.USERNAME_PASSWORD_MISMATCH:
                 info = "密码错误";

@@ -118,8 +118,6 @@ public class FriendInfoActivity extends AbstructActivity {
 
     void initStarIcon(final MyAVUser user) {
 
-        Log.d("sss", user.getObjectId());
-
         mStar.setIcon(0);
 
         MyAVUser.followeeQuery(MyAVUser.getCurrentUser().getObjectId(), MyAVUser.class).whereEqualTo("followee", user)
