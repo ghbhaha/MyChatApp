@@ -47,12 +47,18 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                 // 没有打开聊天界面或者不是当前联系人，这里简单地 Toast 一下。实际中可以刷新最近消息页面，增加小红点
                 if (message instanceof AVIMTextMessage) {
                     final AVIMTextMessage textMessage = (AVIMTextMessage) message;
+
                     UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
                         @Override
                         public void done(final MyAVUser user) {
                             ImageCacheUtil.showPicture(context, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
                                 @Override
                                 public void done(Bitmap bitmap) {
+                                    /**
+                                     *  PendingIntent.FLAG_UPDATE_CURRENT
+                                     *  Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                     *  保证每次传入的intent不一样
+                                     */
                                     //获得通知管理器
                                     NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                                     Notification notification = new Notification.Builder(context)
@@ -63,13 +69,12 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                                             .build();
                                     notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失
                                     notification.defaults = Notification.DEFAULT_SOUND;//声音默认
-
                                     Intent intent = new Intent(context, ChatActivity.class);
                                     intent.putExtra(EXTRA_CONVERSATION_ID, conversation.getConversationId());
                                     intent.putExtra(EXTRA_USERNAME, message.getFrom());
-                                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                                     notification.contentIntent = pendingIntent;
-
                                     manager.notify(user.getSudaId(), notification);//每个人sudaid均不同用于标识
                                 }
                             });
