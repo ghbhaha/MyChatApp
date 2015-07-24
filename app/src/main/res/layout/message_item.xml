@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="4dp"
+    android:background="#f1f1f1">
 
     <TextView
         android:id="@+id/msg_date"
@@ -10,11 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="4dp"
-        android:background="#bebebe"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:text="07-23 15:09"
-        android:textColor="#f5f5f5"
+        android:textColor="#bebebe"
         android:textSize="12sp" />
 
 
@@ -62,13 +63,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/message_bubble_margin"
                 android:layout_marginTop="@dimen/message_bubble_margin"
-                android:paddingTop="@dimen/message_bubble_padding_vertical"
-                android:paddingBottom="@dimen/message_bubble_padding_vertical"
-                android:paddingStart="@dimen/message_bubble_padding_horizontal_extra"
-                android:paddingEnd="@dimen/message_bubble_padding_horizontal"
                 android:layout_toRightOf="@+id/from_info_ll"
-                android:background="@drawable/message_bubble_incoming"
+                android:background="@drawable/friend_msg_bg"
                 android:gravity="center"
+                android:paddingBottom="@dimen/message_bubble_padding_vertical"
+                android:paddingEnd="@dimen/message_bubble_padding_horizontal"
+                android:paddingStart="@dimen/message_bubble_padding_horizontal_extra"
+                android:paddingTop="@dimen/message_bubble_padding_vertical"
                 android:text="你好"
                 android:textSize="16sp" />
         </RelativeLayout>
@@ -87,7 +88,7 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:gravity="right">
 
             <TextView
@@ -97,14 +98,14 @@
                 android:layout_marginRight="@dimen/message_bubble_margin"
                 android:layout_marginTop="@dimen/message_bubble_margin"
                 android:layout_toLeftOf="@+id/to_info_ll"
-                android:background="@drawable/message_bubble_outgoing"
-                android:paddingTop="@dimen/message_bubble_padding_vertical"
+                android:background="@drawable/self_msg_bg"
                 android:paddingBottom="@dimen/message_bubble_padding_vertical"
-                android:paddingStart="@dimen/message_bubble_padding_horizontal"
                 android:paddingEnd="@dimen/message_bubble_padding_horizontal_extra"
-                android:gravity="center"
+                android:paddingStart="@dimen/message_bubble_padding_horizontal"
+                android:paddingTop="@dimen/message_bubble_padding_vertical"
                 android:text="你好"
                 android:textSize="16sp" />
+
 
             <LinearLayout
                 android:id="@+id/to_info_ll"

@@ -127,10 +127,13 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
             @Override
             public void done(final AVFriendship avFriendship, AVException e) {
                 if (e == null) {
+                    mFriendslist.clear();
                     if (avFriendship.getFollowees().size() == 0) {
                         mSwipeRefreshLayput.setRefreshing(false);
+                        if (friendsAdpter != null) {
+                            friendsAdpter.notifyDataSetChanged();
+                        }
                     } else {
-                        mFriendslist.clear();
                         for (int i = 0; i < avFriendship.getFollowees().size(); i++) {
                             AVUser user = (AVUser) avFriendship.getFollowees().get(i);
                             UserBus.findUser(user.getUsername(), new UserBus.CallBack() {

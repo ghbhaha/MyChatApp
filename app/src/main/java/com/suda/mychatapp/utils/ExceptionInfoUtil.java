@@ -29,10 +29,10 @@ public class ExceptionInfoUtil {
                 info = "请填写正确手机号";
                 break;
             case AVException.EMAIL_TAKEN:
-                info = "该邮箱已被占用";
+                info = "该邮箱已被注册";
                 break;
             case AVException.USER_MOBILE_PHONENUMBER_TAKEN:
-                info = "该手机号已被占用";
+                info = "该手机号已被注册";
                 break;
             default:
                 break;

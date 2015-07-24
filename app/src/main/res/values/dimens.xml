@@ -8,6 +8,5 @@
     <dimen name="message_bubble_margin">5dp</dimen>
     <dimen name="message_bubble_padding_horizontal">10dp</dimen>
     <dimen name="message_bubble_padding_horizontal_extra">20dp</dimen>
-    <dimen name="message_item_text_padding_left_right">12dip</dimen>
-    <dimen name="message_item_text_padding_top">5dip</dimen>
+
 </resources>

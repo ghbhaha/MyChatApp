@@ -5,11 +5,11 @@
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:layout_width="wrap_content"
-        android:background="#FFFFF0"
         android:id="@+id/id_swipe_ly"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="#f1f1f1">
 
         <ListView
             android:id="@+id/chat_lv"
@@ -17,33 +17,65 @@
             android:layout_height="match_parent"
             android:divider="@null"
             android:transcriptMode="alwaysScroll" />
-    </android.support.v4.widget.SwipeRefreshLayout  >
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".8dp"
+        android:background="#BEBEBE" />
 
     <LinearLayout
         android:id="@+id/id_ly_bottom"
         android:layout_width="fill_parent"
-        android:layout_height="64dp"
-
+        android:layout_height="48dp"
         android:background="@android:color/white"
         android:orientation="horizontal">
 
-
-        <EditText
-            android:id="@+id/id_input_msg"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/id_send_msg"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_send_holo_light"
-            android:onClick="sendText" />
+            <TextView
+                android:layout_width="10dp"
+                android:layout_height="wrap_content" />
 
+            <EditText
+                android:id="@+id/id_input_msg"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="74dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/chat_select_expression_bg" />
+
+            <TextView
+                android:layout_width="10dp"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/id_send_msg"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/chat_send_bg"
+                android:onClick="sendText" />
+        </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".8dp"
+        android:background="#BEBEBE" />
 </LinearLayout>

@@ -4,8 +4,6 @@ package com.suda.mychatapp.utils;
  * Created by Suda on 2015/7/24.
  */
 
-import android.util.Log;
-
 import com.suda.mychatapp.db.pojo.Friends;
 
 import java.text.Collator;
@@ -15,27 +13,23 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 public class FriendSortUtil implements Comparator<Object> {
 
-    public static void sortFriend(ArrayList<Friends> arrayList){
+    public static void sortFriend(ArrayList<Friends> arrayList) {
         String[] names = new String[arrayList.size()];
-        Map<String,Friends> map = new HashMap<>();
-        int i=0;
-        String s ="";
+        Map<String, Friends> map = new HashMap<>();
+        int i = 0;
 
-        for (Friends friend:arrayList){
-            names[i]=friend.getNikeName();
-            map.put(friend.getNikeName(),friend);
-            s += names[i];
+        for (Friends friend : arrayList) {
+            names[i] = friend.getNikeName();
+            map.put(friend.getNikeName(), friend);
             i++;
         }
-        s="";
+
         Arrays.sort(names, 0, arrayList.size(), new FriendSortUtil());
         arrayList.clear();
-        for (String name :names){
-            s +=name;
+        for (String name : names) {
             arrayList.add(map.get(name));
         }
     }
