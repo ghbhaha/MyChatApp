@@ -26,6 +26,7 @@ import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.ImageUtil;
 import com.suda.mychatapp.utils.TextUtil;
+import com.suda.mychatapp.utils.UserPropUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -45,10 +46,13 @@ public class AccountInfoActivity extends AbstructActivity {
             new UserBus().getMe(new UserBus.CallBack() {
                 @Override
                 public void done(MyAVUser me) {
-                    mTvsign.setText(TextUtil.isTextEmpty(me.getSign()) ? "请填写签名哦" : "“" + me.getSign() + "”");
-                    mTvusername.setText(me.getUsername());
-                    mTvsex.setText(TextUtil.isTextEmpty(me.getSex()) ? "--" : me.getSex());
-                    mTvtel.setText(TextUtil.isTextEmpty(me.getMobilePhoneNumber()) ? "--" : me.getMobilePhoneNumber());
+                    mTvSign.setText(TextUtil.isTextEmpty(me.getSign()) ? "请填写签名哦" : "“" + me.getSign() + "”");
+                    mTvUsername.setText(me.getUsername());
+                    mTvSex.setText(UserPropUtil.getSexTip(me));
+                    mTvTel.setText(UserPropUtil.getTelTip(me));
+                    mTvNikeName.setText(UserPropUtil.getNikeNameTip(me));
+                    mTvBirthDay.setText(UserPropUtil.getBirthDayTip(me));
+                    mTvEmail.setText(UserPropUtil.getEmailTip(me));
 
                     if (me.getIcon() != null) {
                         ImageCacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
@@ -167,7 +171,7 @@ public class AccountInfoActivity extends AbstructActivity {
 
     public void setSign(View view) {
         final EditText et = new EditText(this);
-        et.setText(mTvsign.getText().toString().replace("“", "").replace("”", ""));
+        et.setText(mTvSign.getText().toString().replace("“", "").replace("”", ""));
         new AlertDialog.Builder(this).setTitle("请填写签名").setView(et).setPositiveButton("提交", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -180,7 +184,7 @@ public class AccountInfoActivity extends AbstructActivity {
                                 @Override
                                 public void done(AVException e) {
                                     if (e == null)
-                                        mTvsign.setText("“" + et.getText().toString() + "”");
+                                        mTvSign.setText("“" + et.getText().toString() + "”");
                                     else
                                         e.printStackTrace();
                                 }
@@ -223,18 +227,28 @@ public class AccountInfoActivity extends AbstructActivity {
 
     void initWidget() {
         mHeadIcon = (CircleImageView) findViewById(R.id.profile_image);
-        mTvsign = (TextView) findViewById(R.id.tv_sign);
-        mTvusername = (TextView) findViewById(R.id.tv_username);
-        mTvsex = (TextView) findViewById(R.id.tv_sex);
-        mTvtel = (TextView) findViewById(R.id.tv_tel);
+        mTvSign = (TextView) findViewById(R.id.tv_sign);
+        mTvUsername = (TextView) findViewById(R.id.tv_username);
+        mTvNikeName = (TextView)findViewById(R.id.tv_nikename);
+        mTvSex = (TextView) findViewById(R.id.tv_sex);
+        mTvTel = (TextView) findViewById(R.id.tv_tel);
+        mTvBirthDay = (TextView)findViewById(R.id.tv_birth);
+        mTvEmail = (TextView)findViewById(R.id.tv_email);
     }
 
 
     private CircleImageView mHeadIcon;
-    private TextView mTvsign;
-    private TextView mTvusername;
-    private TextView mTvsex;
-    private TextView mTvtel;
+    private TextView mTvSign;
+    private TextView mTvUsername;
+    private TextView mTvBirthDay;
+    private TextView mTvNikeName;
+    private TextView mTvSex;
+    private TextView mTvTel;
+    private TextView mTvEmail;
+
+
+
+
     private Bitmap mHeadBitMap;
     private static final int REQUEST_SELECT_IMAGE = 1;
     private static final int REQUEST_CROP_IMAGE = 2;

@@ -44,6 +44,10 @@ public class UserPropUtil {
         return TextUtil.isTextEmpty(user.getMobilePhoneNumber()) ? "就不告诉你" : user.getMobilePhoneNumber();
     }
 
+    public static String getBirthDay(MyAVUser user) {
+        return user.getBirthDay()==null ? "就不告诉你" : DateFmUtil.fmDate1(user.getBirthDay());
+    }
+
     public static String getSex(MyAVUser user) {
         return TextUtil.isTextEmpty(user.getSex()) ? "你猜" : user.getSex();
     }

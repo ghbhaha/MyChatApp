@@ -8,10 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFriendship;
-import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.callback.AVFriendshipCallback;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
@@ -38,10 +35,13 @@ public class FriendInfoActivity extends AbstructActivity {
     void initWidget() {
         mStar = (FloatingActionButton) findViewById(R.id.star_friend);
         mHeadIcon = (CircleImageView) findViewById(R.id.profile_image);
-        mTvsign = (TextView) findViewById(R.id.tv_sign);
-        mTvusername = (TextView) findViewById(R.id.tv_username);
-        mTvsex = (TextView) findViewById(R.id.tv_sex);
-        mTvtel = (TextView) findViewById(R.id.tv_tel);
+        mTvSign = (TextView) findViewById(R.id.tv_sign);
+        mTvUsername = (TextView) findViewById(R.id.tv_username);
+        mTvSex = (TextView) findViewById(R.id.tv_sex);
+        mTvTel = (TextView) findViewById(R.id.tv_tel);
+        mTvNikeName = (TextView)findViewById(R.id.tv_nikename);
+        mTvBirthDay = (TextView)findViewById(R.id.tv_birth);
+        mTvEmail = (TextView)findViewById(R.id.tv_email);
     }
 
     void initEntity() {
@@ -69,10 +69,14 @@ public class FriendInfoActivity extends AbstructActivity {
     }
 
     void showInfo(MyAVUser user) {
-        mTvusername.setText(username);
-        mTvsex.setText(UserPropUtil.getSex(user));
-        mTvtel.setText(UserPropUtil.getTel(user));
-        mTvsign.setText(UserPropUtil.getSign(user));
+        mTvUsername.setText(username);
+        mTvSex.setText(UserPropUtil.getSex(user));
+        mTvTel.setText(UserPropUtil.getTel(user));
+        mTvSign.setText(UserPropUtil.getSign(user));
+        mTvNikeName.setText(UserPropUtil.getNikeName(user));
+        mTvBirthDay.setText(UserPropUtil.getBirthDay(user));
+        mTvEmail.setText(UserPropUtil.getEmail(user));
+
         ImageCacheUtil.showPicture(FriendInfoActivity.this, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
             @Override
             public void done(final Bitmap bitmap) {
@@ -125,10 +129,13 @@ public class FriendInfoActivity extends AbstructActivity {
     }
 
     private CircleImageView mHeadIcon;
-    private TextView mTvsign;
-    private TextView mTvusername;
-    private TextView mTvsex;
-    private TextView mTvtel;
+    private TextView mTvSign;
+    private TextView mTvUsername;
+    private TextView mTvBirthDay;
+    private TextView mTvNikeName;
+    private TextView mTvSex;
+    private TextView mTvTel;
+    private TextView mTvEmail;
     private FloatingActionButton mStar;
 
 
