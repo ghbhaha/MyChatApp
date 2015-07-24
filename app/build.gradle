@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "com.suda.mychatapp"
-        minSdkVersion 19
+        minSdkVersion 17
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"

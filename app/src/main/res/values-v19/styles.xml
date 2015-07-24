@@ -1,14 +1,13 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
-    </style>
+    <style name="AppTheme" parent="@style/AppBaseTheme" />
 
-    <style name="ThemeWithNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
         <item name="colorPrimary">@color/theme_blue</item>
         <item name="colorPrimaryDark">@color/theme_blue_dark</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="ThemeWithActionBar" parent="Theme.AppCompat.Light">
@@ -16,6 +15,7 @@
         <item name="colorPrimaryDark">@color/theme_blue_dark</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -23,5 +23,6 @@
     </style>
 
     <style name="MyTitleStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse"></style>
+
 
 </resources>

@@ -108,7 +108,9 @@ public class MainActivity extends ActionBarActivity {
 
         lvLeftMenu.addHeaderView(headerContainer);
         mlistItems = new ArrayList<HashMap<String, Object>>();
-        addLeftMenu("a", R.mipmap.ic_launcher);
+        addLeftMenu("设置", R.drawable.ic_drawer_settings);
+        addLeftMenu("帮助", R.drawable.ic_drawer_about);
+        addLeftMenu("退出", R.drawable.ic_drawer_exit);
         mlistItemAdapter = new SimpleAdapter(this, mlistItems,
                 R.layout.siderbar_lisetview_item, new String[]{"ItemTitle",
                 "ItemImage"}, new int[]{R.id.ItemTitle, R.id.ItemImage});
@@ -124,6 +126,11 @@ public class MainActivity extends ActionBarActivity {
                         startActivityForResult(it, REQUEST_UPDATE_IAMEG);
                         break;
                     case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        MainActivity.this.finish();
                         break;
                 }
             }
