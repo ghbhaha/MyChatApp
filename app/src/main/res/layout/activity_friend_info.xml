@@ -39,6 +39,7 @@
         android:id="@+id/star_friend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="setOrNotFriend"
         android:layout_alignParentRight="true"
         android:layout_marginTop="165dp"
         fab:fab_colorNormal="@color/pink"

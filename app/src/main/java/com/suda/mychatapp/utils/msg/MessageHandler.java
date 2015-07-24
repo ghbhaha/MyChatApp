@@ -5,7 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -14,10 +16,15 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.suda.mychatapp.R;
+import com.suda.mychatapp.activity.ChatActivity;
 import com.suda.mychatapp.activity.MainActivity;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
+
+import java.util.Date;
+import java.util.Random;
 
 public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
@@ -31,9 +38,9 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
     }
 
     @Override
-    public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+    public void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation, final AVIMClient client) {
         if (client.getClientId().equals(MyAVUser.getCurrentUser().getUsername())) {
-            if (activityMessageHandler != null&&message.getFrom().equals(currentFriend)) {
+            if (activityMessageHandler != null && message.getFrom().equals(currentFriend)) {
                 // 正在聊天时，分发消息，刷新界面
                 activityMessageHandler.onMessage(message, conversation, client);
             } else {
@@ -42,24 +49,33 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                     final AVIMTextMessage textMessage = (AVIMTextMessage) message;
                     UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
                         @Override
-                        public void done(MyAVUser user) {
+                        public void done(final MyAVUser user) {
+                            ImageCacheUtil.showPicture(context, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+                                @Override
+                                public void done(Bitmap bitmap) {
+                                    //获得通知管理器
+                                    NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                                    Notification notification = new Notification.Builder(context)
+                                            .setLargeIcon(bitmap)
+                                            .setSmallIcon(R.mipmap.ic_launcher)
+                                            .setContentTitle(UserPropUtil.getNikeName(user))
+                                            .setContentText(textMessage.getText())
+                                            .build();
+                                    notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失
+                                    notification.defaults = Notification.DEFAULT_SOUND;//声音默认
 
-                            //获得通知管理器
-                            NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-                            //构建一个通知对象(需要传递的参数有三个,分别是图标,标题和 时间)
-                            Notification notification = new Notification(R.drawable.ic_launcher,"通知",System.currentTimeMillis());
-                            //Intent intent = new Intent(context,MainActivity.class);
-                            //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-                            notification.setLatestEventInfo(context,  UserPropUtil.getNikeName(user) +"发来一条消息", textMessage.getText(), null);
-                            notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失
-                            notification.defaults = Notification.DEFAULT_SOUND;//声音默认
-                            manager.notify(12, notification);//发动通知,id由自己指定，每一个Notification对应的唯一标志
-                            //其实这里的id没有必要设置,只是为了下面要用到它才进行了设置
+                                    Intent intent = new Intent(context, ChatActivity.class);
+                                    intent.putExtra(EXTRA_CONVERSATION_ID, conversation.getConversationId());
+                                    intent.putExtra(EXTRA_USERNAME, message.getFrom());
+                                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                                    notification.contentIntent = pendingIntent;
 
-                           // Toast.makeText(context, UserPropUtil.getNikeName(user) + " : " + textMessage.getText(), Toast.LENGTH_SHORT).show();
+                                    manager.notify(user.getSudaId(), notification);//每个人sudaid均不同用于标识
+                                }
+                            });
                         }
                     });
-                       }
+                }
             }
         } else {
             client.close(null);
@@ -82,5 +98,7 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
     private Context context;
     private String TAG = MessageHandler.this.getClass().getSimpleName();
     private static String currentFriend;
+    private static final String EXTRA_CONVERSATION_ID = "conversation_id";
+    private static final String EXTRA_USERNAME = "username";
 
 }

@@ -28,7 +28,7 @@ public class DongTaiFrg extends Fragment {
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 
-		View view = inflater.inflate(R.layout.activity_edit_account, container, false);
+		View view = inflater.inflate(R.layout.dongtai, container, false);
 
 		return view;
 

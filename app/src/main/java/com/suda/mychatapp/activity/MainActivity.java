@@ -29,7 +29,7 @@ import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.fragment.DongTaiFrg;
 import com.suda.mychatapp.fragment.FrienrdsFrg;
-import com.suda.mychatapp.fragment.MessageFrg;
+import com.suda.mychatapp.fragment.ConversationFrg;
 import com.suda.mychatapp.utils.DoubleClickExitHelper;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.TextUtil;
@@ -214,7 +214,7 @@ public class MainActivity extends ActionBarActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new MessageFrg();
+                    return new ConversationFrg();
                 case 1:
                     return new FrienrdsFrg();
                 case 2:

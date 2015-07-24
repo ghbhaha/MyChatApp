@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public FrienrdsFrg() {
         // TODO Auto-generated constructor stub
@@ -69,9 +69,7 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
                         }
                     }
                 });
-
     }
-
 
     @Override
     @Nullable
@@ -97,7 +95,7 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
         });
     }
 
-    public void initEntity(){
+    public void initEntity() {
         MyAVUser.getCurrentUser().friendshipQuery().getInBackground(new AVFriendshipCallback() {
             @Override
             public void done(final AVFriendship avFriendship, AVException e) {
@@ -129,7 +127,7 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
             public void done(final AVFriendship avFriendship, AVException e) {
                 if (e == null) {
                     Log.d("sss", avFriendship.getFollowees().size() + "");
-                    if(avFriendship.getFollowees().size()==0){
+                    if (avFriendship.getFollowees().size() == 0) {
                         mSwipeRefreshLayput.setRefreshing(false);
                     }
                     mFriendslist.clear();
@@ -138,11 +136,11 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
                         UserBus.findUser(user.getUsername(), new UserBus.CallBack() {
                             @Override
                             public void done(MyAVUser user) {
-                                mFriendslist.add(new Friends(UserPropUtil.getNikeName(user), UserPropUtil.getSign(user),user.getUsername(),user.getIcon().getUrl()));
-                                if(mFriendslist.size()==avFriendship.getFollowees().size()){
-                                    if(friendsAdpter!=null){
+                                mFriendslist.add(new Friends(UserPropUtil.getNikeName(user), UserPropUtil.getSign(user), user.getUsername(), user.getIcon().getUrl()));
+                                if (mFriendslist.size() == avFriendship.getFollowees().size()) {
+                                    if (friendsAdpter != null) {
                                         friendsAdpter.notifyDataSetChanged();
-                                    }else{
+                                    } else {
                                         friendsAdpter = new FriendsAdpter(getActivity(), mFriendslist);
                                         mLvfriends.setAdapter(friendsAdpter);
                                     }
@@ -157,8 +155,7 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
         });
     }
 
-    private void fetchConversationWithClientIds(List<String> clientIds, final ConversationType type, final
-    AVIMConversationCreatedCallback
+    private void fetchConversationWithClientIds(List<String> clientIds, final ConversationType type, final AVIMConversationCreatedCallback
             callback) {
         final AVIMClient imClient = MyApplication.getIMClient();
         final List<String> queryClientIds = new ArrayList<String>();

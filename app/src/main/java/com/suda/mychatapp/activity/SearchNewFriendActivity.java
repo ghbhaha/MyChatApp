@@ -17,6 +17,7 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.FollowCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
+import com.suda.mychatapp.business.FriendsBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.TextUtil;
@@ -78,31 +79,15 @@ public class SearchNewFriendActivity extends AbstructActivity {
                     }
                 }
             });
-
-
         }
-
     }
 
     public void addUserToMine(View view) {
-        Log.d("obj",mFriendUser.getObjectId());
-        MyAVUser.getCurrentUser().followInBackground(mFriendUser.getObjectId(), new FollowCallback() {
+        Log.d("obj", mFriendUser.getObjectId());
+        FriendsBus.starFriend(this, mFriendUser, new FriendsBus.ResultCallback() {
             @Override
-            public void done(AVObject avObject, AVException e) {
-                if (e==null){
-                    Toast.makeText(SearchNewFriendActivity.this,"添加成功，返回刷新一下吧",Toast.LENGTH_SHORT).show();
-                }else{
-                    e.printStackTrace();
-                }
-            }
+            public void result(boolean rs) {
 
-            @Override
-            protected void internalDone0(Object o, AVException e) {
-                if (e==null){
-                    Toast.makeText(SearchNewFriendActivity.this,"添加成功，返回刷新一下吧",Toast.LENGTH_SHORT).show();
-                }else{
-                    e.printStackTrace();
-                }
             }
         });
     }

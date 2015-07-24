@@ -8,10 +8,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
+import com.suda.mychatapp.business.FriendsBus;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.utils.ImageCacheUtil;
@@ -39,9 +41,9 @@ public class FriendInfoActivity extends AbstructActivity {
         mTvUsername = (TextView) findViewById(R.id.tv_username);
         mTvSex = (TextView) findViewById(R.id.tv_sex);
         mTvTel = (TextView) findViewById(R.id.tv_tel);
-        mTvNikeName = (TextView)findViewById(R.id.tv_nikename);
-        mTvBirthDay = (TextView)findViewById(R.id.tv_birth);
-        mTvEmail = (TextView)findViewById(R.id.tv_email);
+        mTvNikeName = (TextView) findViewById(R.id.tv_nikename);
+        mTvBirthDay = (TextView) findViewById(R.id.tv_birth);
+        mTvEmail = (TextView) findViewById(R.id.tv_email);
     }
 
     void initEntity() {
@@ -61,8 +63,32 @@ public class FriendInfoActivity extends AbstructActivity {
             UserBus.findUser(username, new UserBus.CallBack() {
                 @Override
                 public void done(MyAVUser user) {
+                    mFriend = user;
                     showInfo(user);
                     initStarIcon(user);
+                }
+            });
+        }
+    }
+
+
+    public void setOrNotFriend(View View) {
+        if (isFriend) {
+            FriendsBus.unStarFriend(this, mFriend, new FriendsBus.ResultCallback() {
+                @Override
+                public void result(boolean rs) {
+                    isFriend = !rs;
+                    mStar.setIcon(isFriend ?
+                            R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+                }
+            });
+        } else {
+            FriendsBus.starFriend(this, mFriend, new FriendsBus.ResultCallback() {
+                @Override
+                public void result(boolean rs) {
+                    isFriend = rs;
+                    mStar.setIcon(isFriend ?
+                            R.drawable.ic_action_important : R.drawable.ic_action_not_important);
                 }
             });
         }
@@ -142,5 +168,6 @@ public class FriendInfoActivity extends AbstructActivity {
     private boolean isFriend = false;
     private static final String EXTRA_USERNAME = "username";
     private String username;
+    private MyAVUser mFriend;
 
 }

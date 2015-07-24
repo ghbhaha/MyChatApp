@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import com.suda.mychatapp.R;
 
 
-public class MessageFrg extends Fragment {
+public class ConversationFrg extends Fragment {
 
-	public MessageFrg() {
+	public ConversationFrg() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -28,7 +28,7 @@ public class MessageFrg extends Fragment {
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 
-		View view = inflater.inflate(R.layout.activity_edit_account, container, false);
+		View view = inflater.inflate(R.layout.conversation, container, false);
 
 		return view;
 
