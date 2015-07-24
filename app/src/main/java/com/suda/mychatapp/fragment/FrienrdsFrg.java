@@ -1,59 +1,191 @@
 package com.suda.mychatapp.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFriendship;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.callback.AVFriendshipCallback;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMConversationQuery;
+import com.avos.avoscloud.im.v2.Conversation;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
+import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.R;
-import com.suda.mychatapp.activity.SearchNewFriendActivity;
+import com.suda.mychatapp.activity.ChatActivity;
 import com.suda.mychatapp.adapter.FriendsAdpter;
+import com.suda.mychatapp.business.UserBus;
+import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.Friends;
+import com.suda.mychatapp.utils.UserPropUtil;
+import com.suda.mychatapp.utils.msg.ConversationType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
-public class FrienrdsFrg extends Fragment {
+public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
-	public FrienrdsFrg() {
-		// TODO Auto-generated constructor stub
-	}
+    public FrienrdsFrg() {
+        // TODO Auto-generated constructor stub
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mFriendslist = new ArrayList<Friends>();
-		Bitmap bm = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
-		mFriendslist.add(new Friends("ghbhaha","你好","ghbhaha",bm));
-		mFriendslist.add(new Friends("ghbhaha2","你好","ghbhaha2",bm));
-		mFriendslist.add(new Friends("ghbhaha3","你好","ghbhaha3",bm));
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFriendslist = new ArrayList<Friends>();
 
-	}
-
-	@Override
-	@Nullable
-	public View onCreateView(LayoutInflater inflater,
-			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-
-		View view = inflater.inflate(R.layout.friend, container, false);
-		mLvfriends = (ListView)view.findViewById(R.id.lv_friends);
-		FriendsAdpter friendsAdpter = new FriendsAdpter(getActivity(),mFriendslist);
-		mLvfriends.setAdapter(friendsAdpter);
-		return view;
-
-	}
+    }
 
 
+    public void startChat(final String username) {
+        fetchConversationWithClientIds(Arrays.asList(username), ConversationType.OneToOne, new
+                AVIMConversationCreatedCallback
+                        () {
+                    @Override
+                    public void done(AVIMConversation conversation, AVException e) {
+                        if (e == null) {
+                            Intent it = new Intent(getActivity(), ChatActivity.class);
+                            it.putExtra(EXTRA_USERNAME, username);
+                            it.putExtra(EXTRA_CONVERSATION_ID, conversation.getConversationId());
+                            startActivity(it);
+                        } else {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
-	private ListView mLvfriends;
+    }
 
-	private ArrayList<Friends> mFriendslist;
 
+    @Override
+    @Nullable
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.friend, container, false);
+        initWidget(view);
+        initEntity();
+        return view;
+    }
+
+    public void initWidget(View view) {
+        mSwipeRefreshLayput = (SwipeRefreshLayout) view.findViewById(R.id.id_swipe_ly);
+        mSwipeRefreshLayput.setOnRefreshListener(this);
+
+        mLvfriends = (ListView) view.findViewById(R.id.lv_friends);
+        mLvfriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startChat(mFriendslist.get(position).getUserName());
+            }
+        });
+    }
+
+    public void initEntity(){
+        MyAVUser.getCurrentUser().friendshipQuery().getInBackground(new AVFriendshipCallback() {
+            @Override
+            public void done(final AVFriendship avFriendship, AVException e) {
+                if (e == null) {
+                    Log.d("sss", avFriendship.getFollowees().size() + "");
+                    for (int i = 0; i < avFriendship.getFollowees().size(); i++) {
+                       AVUser user = (AVUser) avFriendship.getFollowees().get(i);
+                        UserBus.findUser(user.getUsername(), new UserBus.CallBack() {
+                            @Override
+                            public void done(MyAVUser user) {
+                                mFriendslist.add(new Friends(UserPropUtil.getNikeName(user), UserPropUtil.getSign(user),user.getUsername(),user.getIcon().getUrl()));
+                                if(mFriendslist.size()==avFriendship.getFollowees().size()){
+                                    friendsAdpter = new FriendsAdpter(getActivity(), mFriendslist);
+                                    mLvfriends.setAdapter(friendsAdpter);
+                                }
+                            }
+                        });
+                    }
+                } else
+                    e.printStackTrace();
+            }
+        });
+    }
+
+
+    private void fetchConversationWithClientIds(List<String> clientIds, final ConversationType type, final
+    AVIMConversationCreatedCallback
+            callback) {
+        final AVIMClient imClient = MyApplication.getIMClient();
+        final List<String> queryClientIds = new ArrayList<String>();
+        queryClientIds.addAll(clientIds);
+        if (!clientIds.contains(imClient.getClientId())) {
+            queryClientIds.add(imClient.getClientId());
+        }
+        AVIMConversationQuery query = imClient.getQuery();
+        query.whereEqualTo(Conversation.ATTRIBUTE_MORE + ".type", type.getValue());
+        query.whereContainsAll(Conversation.COLUMN_MEMBERS, queryClientIds);
+        query.findInBackground(new AVIMConversationQueryCallback() {
+            @Override
+            public void done(List<AVIMConversation> list, AVException e) {
+                if (e != null) {
+                    callback.done(null, e);
+                } else {
+                    if (list == null || list.size() == 0) {
+                        Map<String, Object> attributes = new HashMap<String, Object>();
+                        attributes.put(ConversationType.KEY_ATTRIBUTE_TYPE, type.getValue());
+                        imClient.createConversation(queryClientIds, attributes, callback);
+                    } else {
+                        callback.done(list.get(0), null);
+                    }
+                }
+            }
+        });
+    }
+
+
+    private ListView mLvfriends;
+    private ArrayList<Friends> mFriendslist;
+    private FriendsAdpter friendsAdpter;
+    private SwipeRefreshLayout mSwipeRefreshLayput;
+
+
+    private static final String EXTRA_CONVERSATION_ID = "conversation_id";
+    private static final String EXTRA_USERNAME = "username";
+
+    @Override
+    public void onRefresh() {
+        MyAVUser.getCurrentUser().friendshipQuery().getInBackground(new AVFriendshipCallback() {
+            @Override
+            public void done(final AVFriendship avFriendship, AVException e) {
+                if (e == null) {
+                    Log.d("sss", avFriendship.getFollowees().size() + "");
+                    mFriendslist.clear();
+                    for (int i = 0; i < avFriendship.getFollowees().size(); i++) {
+                        AVUser user = (AVUser) avFriendship.getFollowees().get(i);
+                        UserBus.findUser(user.getUsername(), new UserBus.CallBack() {
+                            @Override
+                            public void done(MyAVUser user) {
+                                mFriendslist.add(new Friends(UserPropUtil.getNikeName(user), UserPropUtil.getSign(user),user.getUsername(),user.getIcon().getUrl()));
+                                if(mFriendslist.size()==avFriendship.getFollowees().size()){
+                                    friendsAdpter.notifyDataSetChanged();
+                                    mSwipeRefreshLayput.setRefreshing(false);
+                                }
+                            }
+                        });
+                    }
+                } else
+                    e.printStackTrace();
+            }
+        });
+    }
 }

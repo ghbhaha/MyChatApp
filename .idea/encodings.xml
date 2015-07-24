@@ -4,16 +4,22 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/AbstructActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/MyApplication.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/activity/AccountInfoActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/activity/ChatActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/activity/DetailEditActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/activity/EditAccountActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/activity/LoginActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/activity/MainActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/activity/SearchNewFriendActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/business/LoadLib.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/business/UserBus.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/business/pojo/MyAVUser.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/frg/NoAccountFrg.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/util/CacheUtil.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/util/DiskLruCache.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/util/TextUtil.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/util/UiUtil.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/fragment/DongTaiFrg.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/fragment/FrienrdsFrg.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/fragment/MessageFrg.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/utils/DiskLruCache.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/utils/ImageCacheUtil.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/utils/TextUtil.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/utils/UIUtil.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/utils/UserPropUtil.java" charset="UTF-8" />
   </component>
 </project>

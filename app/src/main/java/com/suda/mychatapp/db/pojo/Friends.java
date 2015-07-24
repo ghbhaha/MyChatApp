@@ -9,22 +9,24 @@ public class Friends {
 
     private String nikeName;
     private String sign;
-    private String userName;
-    private Bitmap icon;
+    private String iconurl;
+    private String username;
 
-    public Friends(String nikeName, String sign, String userName, Bitmap icon) {
+
+    public Friends(String nikeName, String sign,String username, String iconurl) {
         this.nikeName = nikeName;
         this.sign = sign;
-        this.userName = userName;
-        this.icon = icon;
+        this.iconurl = iconurl;
+        this.username = username;
+
     }
 
-    public Bitmap getIcon() {
-        return icon;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setIcon(Bitmap icon) {
-        this.icon = icon;
+    public String getUserName() {
+        return username;
     }
 
     public void setNikeName(String nikeName) {
@@ -35,19 +37,20 @@ public class Friends {
         this.sign = sign;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getNikeName() {
         return nikeName;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
     public String getSign() {
         return sign;
+    }
+
+    public String getIconurl() {
+        return iconurl;
+    }
+
+    public void setIconurl(String iconurl) {
+        this.iconurl = iconurl;
     }
 }

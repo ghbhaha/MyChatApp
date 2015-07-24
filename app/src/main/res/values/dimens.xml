@@ -2,4 +2,12 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="message_item_avatar_on_right_text_indent">50dip</dimen>
+    <dimen name="message_bubble_padding_vertical">6dp</dimen>
+    <dimen name="message_bubble_margin">5dp</dimen>
+    <dimen name="message_bubble_padding_horizontal">10dp</dimen>
+    <dimen name="message_bubble_padding_horizontal_extra">20dp</dimen>
+    <dimen name="message_item_text_padding_left_right">12dip</dimen>
+    <dimen name="message_item_text_padding_top">5dip</dimen>
 </resources>

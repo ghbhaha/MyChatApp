@@ -16,6 +16,9 @@
     <string name="password_not_same">两次密码不一致</string>
     <string name="title_activity_account_info">AccountInfoActivity</string>
     <string name="title_activity_search_new_friend">SearchNewFriendActivity</string>
-
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_friend_info">FriendInfoActivity</string>
+    <string name="chatting_with">正在和%1$s聊天</string>
+    <string name="title_activity_detail_edit">DetailEditActivity</string>
 
 </resources>

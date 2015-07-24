@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,17 +16,16 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.LogUtil;
 import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
-import com.suda.mychatapp.util.CacheUtil;
-import com.suda.mychatapp.util.ImageUtil;
-import com.suda.mychatapp.util.TextUtil;
-
-import java.io.ByteArrayOutputStream;
+import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.ImageUtil;
+import com.suda.mychatapp.utils.TextUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -39,7 +37,7 @@ public class AccountInfoActivity extends AbstructActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_info);
         initWidget();
-        initEntity();
+       // initEntity();
     }
 
     private void initEntity() {
@@ -53,7 +51,7 @@ public class AccountInfoActivity extends AbstructActivity {
                     mTvtel.setText(TextUtil.isTextEmpty(me.getMobilePhoneNumber()) ? "--" : me.getMobilePhoneNumber());
 
                     if (me.getIcon() != null) {
-                        CacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
+                        ImageCacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
                             @Override
                             public void done(Bitmap bitmap) {
                                 final Bitmap bm = bitmap;
@@ -69,6 +67,12 @@ public class AccountInfoActivity extends AbstructActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        initEntity();
+        super.onResume();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -100,7 +104,7 @@ public class AccountInfoActivity extends AbstructActivity {
                                         UserBus.refreshMe(new UserBus.CallBack() {
                                             @Override
                                             public void done(MyAVUser me) {
-                                                CacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
+                                                ImageCacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
                                                     @Override
                                                     public void done(Bitmap bitmap) {
                                                         //do nothing
@@ -149,6 +153,13 @@ public class AccountInfoActivity extends AbstructActivity {
     }
 
     public void logout(View v) {
+        AVIMClient.getInstance(MyAVUser.getCurrentUser().getUsername()).close(new AVIMClientCallback() {
+            @Override
+            public void done(AVIMClient avimClient, AVException e) {
+                if (e != null)
+                    e.printStackTrace();
+            }
+        });
         AVUser.getCurrentUser().logOut();
         UserBus.clearMe();
         this.finish();

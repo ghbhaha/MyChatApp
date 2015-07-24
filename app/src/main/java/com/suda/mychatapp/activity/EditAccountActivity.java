@@ -1,13 +1,31 @@
 package com.suda.mychatapp.activity;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.SaveCallback;
+import com.gc.materialdesign.widgets.Dialog;
+import com.novachevskyi.datepicker.CalendarDatePickerDialog;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
-import com.suda.mychatapp.util.UiUtil;
+import com.suda.mychatapp.business.UserBus;
+import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.utils.DateFmUtil;
+import com.suda.mychatapp.utils.TextUtil;
+import com.suda.mychatapp.utils.UserPropUtil;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class EditAccountActivity extends AbstructActivity {
@@ -16,28 +34,185 @@ public class EditAccountActivity extends AbstructActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_account);
-
+        initWidget();
+        //initEntity();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit_account, menu);
-        return true;
+    public void editSex(View view) {
+        final CharSequence[] items = {"男", "女"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请选择性别");
+        builder.setSingleChoiceItems(items, mSex, new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int item) {
+                UserBus.getMe(new UserBus.CallBack() {
+                    @Override
+                    public void done(MyAVUser user) {
+                        user.setSex(items[item].toString());
+                        user.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    mSex = item;
+                                    mTvSex.setText(items[item].toString());
+                                    dialog.cancel();
+                                } else {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        builder.create().show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void editBirth(View view) {
+        int year;
+        int month;
+        int day;
+        if (birthday == null) {
+            final Calendar d = Calendar.getInstance(Locale.CHINA);
+            Date myDate = new Date();
+            d.setTime(myDate);
+            year = d.get(Calendar.YEAR);
+            month = d.get(Calendar.MONTH);
+            day = d.get(Calendar.DAY_OF_MONTH);
+        } else {
+            final Calendar d = Calendar.getInstance(Locale.CHINA);
+            d.setTime(birthday);
+            year = d.get(Calendar.YEAR);
+            month = d.get(Calendar.MONTH);
+            day = d.get(Calendar.DAY_OF_MONTH);
         }
 
-        return super.onOptionsItemSelected(item);
+        DatePickerDialog dlg = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                final Date newdate = new Date(year - 1900, monthOfYear, dayOfMonth);
+                UserBus.getMe(new UserBus.CallBack() {
+                    @Override
+                    public void done(MyAVUser user) {
+                        user.setBirthDay(newdate);
+                        user.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    birthday = newdate;
+                                    mTvBirth.setText(DateFmUtil.fmDate1(newdate));
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }, year, month, day);
+        dlg.show();
+
+/*
+        CalendarDatePickerDialog dialog = CalendarDatePickerDialog.newInstance(new CalendarDatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(final CalendarDatePickerDialog calendarDatePickerDialog, int year, int month, int day) {
+                final Date newdate = new Date(year - 1900, month, day);
+                UserBus.getMe(new UserBus.CallBack() {
+                    @Override
+                    public void done(MyAVUser user) {
+                        user.setBirthDay(newdate);
+                        user.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    birthday = newdate;
+                                    mTvBirth.setText(DateFmUtil.fmDate1(newdate));
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }, year, month, day);
+        dialog.show(getSupportFragmentManager(), DATE_PICKER_TAG);
+*/
+
     }
+
+
+    public void editNikeName(View view) {
+        Intent it = new Intent(EditAccountActivity.this, DetailEditActivity.class);
+        it.putExtra("request_code", REQUEST_CODE_NIKENAME);
+        startActivityForResult(it, REQUEST_CODE_NIKENAME);
+    }
+
+    public void editSign(View view) {
+        Intent it = new Intent(EditAccountActivity.this, DetailEditActivity.class);
+        it.putExtra("request_code", REQUEST_CODE_SIGN);
+        startActivityForResult(it, REQUEST_CODE_SIGN);
+    }
+
+    public void editTel(View view) {
+        Intent it = new Intent(EditAccountActivity.this, DetailEditActivity.class);
+        it.putExtra("request_code", REQUEST_CODE_SIGN);
+        startActivityForResult(it, REQUEST_CODE_SIGN);
+    }
+
+    public void editEmail(View view) {
+        Intent it = new Intent(EditAccountActivity.this, DetailEditActivity.class);
+        it.putExtra("request_code", REQUEST_CODE_SIGN);
+        startActivityForResult(it, REQUEST_CODE_SIGN);
+    }
+
+    void initWidget() {
+        mTvNikeName = (TextView) findViewById(R.id.tv_nikename);
+        mTvSign = (TextView) findViewById(R.id.tv_sign);
+        mTvSex = (TextView) findViewById(R.id.tv_sex);
+        mTvBirth = (TextView) findViewById(R.id.tv_birth);
+        mTvTel = (TextView) findViewById(R.id.tv_tel);
+        mTvEmail = (TextView) findViewById(R.id.tv_email);
+    }
+
+    void initEntity() {
+        UserBus.getMe(new UserBus.CallBack() {
+            @Override
+            public void done(MyAVUser user) {
+                mTvNikeName.setText(UserPropUtil.getNikeNameTip(user));
+                mTvSex.setText(UserPropUtil.getSexTip(user));
+                mTvSign.setText(UserPropUtil.getSignTip(user));
+                mTvTel.setText(UserPropUtil.getTelTip(user));
+                mTvEmail.setText(UserPropUtil.getEmailTip(user));
+                mTvBirth.setText(UserPropUtil.getBirthDayTip(user));
+                if (TextUtil.isTextEmpty(user.getSex())) {
+                    mSex = -1;
+                } else {
+                    mSex = user.getSex().equals("男") ? 0 : 1;
+                }
+
+                birthday = user.getBirthDay();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        initEntity();
+        super.onResume();
+    }
+
+    private final static int REQUEST_CODE_NIKENAME = 1;
+    private final static int REQUEST_CODE_SIGN = 2;
+    private final static int REQUEST_CODE_TEL = 3;
+    private final static int REQUEST_CODE_EMAIL = 4;
+
+    private static final String DATE_PICKER_TAG = "DATE_PICKER_TAG";
+
+    private TextView mTvNikeName;
+    private TextView mTvSign;
+    private TextView mTvSex;
+    private TextView mTvBirth;
+    private TextView mTvTel;
+    private TextView mTvEmail;
+    private int mSex = -1;
+    private Date birthday = null;
+
+
 }

@@ -19,8 +19,8 @@ import com.avos.avoscloud.SaveCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.pojo.MyAVUser;
-import com.suda.mychatapp.util.ImageUtil;
-import com.suda.mychatapp.util.TextUtil;
+import com.suda.mychatapp.utils.ImageUtil;
+import com.suda.mychatapp.utils.TextUtil;
 
 public class RegisterActivity extends AbstructActivity {
 

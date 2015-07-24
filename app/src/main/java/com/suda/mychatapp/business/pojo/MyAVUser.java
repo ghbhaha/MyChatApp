@@ -3,6 +3,8 @@ package com.suda.mychatapp.business.pojo;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 
+import java.util.Date;
+
 /**
  * Created by Suda on 2015/7/18.
  */
@@ -25,8 +27,16 @@ public class MyAVUser extends AVUser {
         put(USERNAME, value);
     }
 
+    public String getNikename() {
+        return getString(NIKENAME);
+    }
+
+    public void setNikename(String value) {
+        put(NIKENAME, value);
+    }
+
     public String getPassword() {
-        return getString(PASSWORD);
+        return getString(NIKENAME);
     }
 
     public void setPassword(String value) {
@@ -73,6 +83,14 @@ public class MyAVUser extends AVUser {
         put(SIGN, value);
     }
 
+    public Date getBirthDay() {
+        return getDate(BIRTHDAY);
+    }
+
+    public void setBirthDay(Date value) {
+        put(BIRTHDAY, value);
+    }
+
     private final static String EMAIL = "email";
     private final static String USERNAME = "username";
     private final static String PASSWORD = "password";
@@ -81,5 +99,7 @@ public class MyAVUser extends AVUser {
     private final static String ICON = "head_icon";
     private final static String SUDAID = "sudaid";
     private final static String SIGN="sign";
+    private final static String NIKENAME="nikename";
+    private final static String BIRTHDAY="birthday";
 
 }

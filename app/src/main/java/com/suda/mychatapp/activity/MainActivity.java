@@ -19,27 +19,24 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.fragment.DongTaiFrg;
 import com.suda.mychatapp.fragment.FrienrdsFrg;
 import com.suda.mychatapp.fragment.MessageFrg;
-import com.suda.mychatapp.util.CacheUtil;
-import com.suda.mychatapp.util.TextUtil;
+import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.TextUtil;
+import com.suda.mychatapp.utils.UserPropUtil;
 import com.suda.mychatapp.widget.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -61,12 +58,13 @@ public class MainActivity extends ActionBarActivity {
             UserBus.getMe(new UserBus.CallBack() {
                 @Override
                 public void done(MyAVUser me) {
-                    mTvusername.setText(me.getUsername());
+                    openClient(me.getUsername());
+                    mTvNikeName.setText(UserPropUtil.getNikeName(me));
                     mTvsign.setVisibility(TextUtil.isTextEmpty(me.getSign()) ? View.GONE : View.VISIBLE);
                     mTvsign.setText("“" + me.getSign() + "”");
 
                     if (me.getIcon() != null) {
-                        CacheUtil.showPicture(MainActivity.this, me.getIcon().getUrl(), new CacheUtil.CallBack() {
+                        ImageCacheUtil.showPicture(MainActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
                             @Override
                             public void done(final Bitmap bitmap) {
                                 final Bitmap bm = bitmap;
@@ -100,7 +98,7 @@ public class MainActivity extends ActionBarActivity {
         View headerContainer = LayoutInflater.from(this).inflate(
                 R.layout.siderbar_header, lvLeftMenu, false);
 
-        mTvusername = (TextView) headerContainer.findViewById(R.id.tv_username);
+        mTvNikeName = (TextView) headerContainer.findViewById(R.id.tv_username);
         mTvsign = (TextView) headerContainer.findViewById(R.id.tv_sign);
         mHeadIcon = (CircleImageView) headerContainer.findViewById(R.id.profile_image);
 
@@ -241,11 +239,35 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        if (MyAVUser.getCurrentUser() != null) {
+            AVIMClient.getInstance(MyAVUser.getCurrentUser().getUsername()).close(new AVIMClientCallback() {
+                @Override
+                public void done(AVIMClient avimClient, AVException e) {
+                    if (e != null)
+                        e.printStackTrace();
+                }
+            });
+        }
+        super.onDestroy();
+    }
 
     @Override
     protected void onResume() {
         initEntity();
         super.onResume();
+    }
+
+    public void openClient(String selfId) {
+        AVIMClient imClient = AVIMClient.getInstance(selfId);
+        imClient.open(new AVIMClientCallback() {
+            @Override
+            public void done(AVIMClient avimClient, AVException e) {
+                if (e != null)
+                    e.printStackTrace();
+            }
+        });
     }
 
     private void addLeftMenu(String title, int res) {
@@ -255,7 +277,7 @@ public class MainActivity extends ActionBarActivity {
         mlistItems.add(map);
     }
 
-    private TextView mTvusername;
+    private TextView mTvNikeName;
     private TextView mTvsign;
     private CircleImageView mHeadIcon;
 

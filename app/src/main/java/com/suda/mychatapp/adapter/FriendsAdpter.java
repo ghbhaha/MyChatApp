@@ -1,6 +1,7 @@
 package com.suda.mychatapp.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,8 @@ import android.widget.TextView;
 
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.db.pojo.Friends;
-import com.suda.mychatapp.util.TextUtil;
-
-import org.w3c.dom.Text;
+import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.TextUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,13 +67,26 @@ public class FriendsAdpter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        bindDataToView(holder, position);
         return convertView;
     }
 
-    public void bindDataToView(ViewHolder holder, int position) {
+    public void bindDataToView(final ViewHolder holder, int position) {
         holder.mTvsign.setVisibility(TextUtil.isTextEmpty(arrayList.get(position).getSign()) ? View.INVISIBLE : View.VISIBLE);
         holder.mTvsign.setText(arrayList.get(position).getSign());
-        holder.mHeadIcon.setImageBitmap(arrayList.get(position).getIcon());
+
+        ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
+            @Override
+            public void done(final Bitmap bitmap) {
+                holder.mHeadIcon.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.mHeadIcon.setImageBitmap(bitmap);
+                    }
+                });
+            }
+        });
+
         holder.mTvnikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikeName()) ?
                 arrayList.get(position).getUserName() : arrayList.get(position).getNikeName());
     }

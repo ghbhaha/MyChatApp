@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_friend_username"
         android:layout_marginTop="70dp"
+        android:onClick="getFriendInfo"
         android:id="@+id/new_friends_ll"
         android:visibility="invisible"
         android:orientation="horizontal">
@@ -74,6 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_action_new"
+            android:onClick="addUserToMine"
             android:layout_alignParentRight="true"
             />
     </RelativeLayout>

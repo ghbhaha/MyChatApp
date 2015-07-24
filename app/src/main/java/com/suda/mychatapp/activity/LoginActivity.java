@@ -18,7 +18,7 @@ import com.avos.avoscloud.LogInCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.pojo.MyAVUser;
-import com.suda.mychatapp.util.TextUtil;
+import com.suda.mychatapp.utils.TextUtil;
 
 public class LoginActivity extends AbstructActivity {
 
@@ -142,4 +142,6 @@ public class LoginActivity extends AbstructActivity {
 
     private boolean mCanDo = true;
     private Animation mShakeAnim;
+
+    
 }
