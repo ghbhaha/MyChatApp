@@ -152,14 +152,14 @@ public class EditAccountActivity extends AbstructActivity {
 
     public void editTel(View view) {
         Intent it = new Intent(EditAccountActivity.this, DetailEditActivity.class);
-        it.putExtra("request_code", REQUEST_CODE_SIGN);
-        startActivityForResult(it, REQUEST_CODE_SIGN);
+        it.putExtra("request_code", REQUEST_CODE_TEL);
+        startActivityForResult(it, REQUEST_CODE_TEL);
     }
 
     public void editEmail(View view) {
         Intent it = new Intent(EditAccountActivity.this, DetailEditActivity.class);
-        it.putExtra("request_code", REQUEST_CODE_SIGN);
-        startActivityForResult(it, REQUEST_CODE_SIGN);
+        it.putExtra("request_code", REQUEST_CODE_EMAIL);
+        startActivityForResult(it, REQUEST_CODE_EMAIL);
     }
 
     void initWidget() {
@@ -203,7 +203,7 @@ public class EditAccountActivity extends AbstructActivity {
     private final static int REQUEST_CODE_TEL = 3;
     private final static int REQUEST_CODE_EMAIL = 4;
 
-    private static final String DATE_PICKER_TAG = "DATE_PICKER_TAG";
+    //private static final String DATE_PICKER_TAG = "DATE_PICKER_TAG";
 
     private TextView mTvNikeName;
     private TextView mTvSign;

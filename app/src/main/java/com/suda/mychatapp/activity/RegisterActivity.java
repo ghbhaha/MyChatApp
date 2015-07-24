@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.avos.avoscloud.SaveCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.utils.ExceptionInfoUtil;
 import com.suda.mychatapp.utils.ImageUtil;
 import com.suda.mychatapp.utils.TextUtil;
 
@@ -79,9 +81,7 @@ public class RegisterActivity extends AbstructActivity {
                         user.logOut();
                         RegisterActivity.this.finish();
                     } else {
-                        if (e.getCode() == AVException.USERNAME_TAKEN) {
-                            Toast.makeText(RegisterActivity.this, getString(R.string.username_taken), Toast.LENGTH_SHORT).show();
-                        }
+                        ExceptionInfoUtil.toastError(RegisterActivity.this, e.getCode());
                     }
 
                 }

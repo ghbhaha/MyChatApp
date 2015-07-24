@@ -18,6 +18,7 @@ import com.avos.avoscloud.LogInCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.utils.ExceptionInfoUtil;
 import com.suda.mychatapp.utils.TextUtil;
 
 public class LoginActivity extends AbstructActivity {
@@ -59,10 +60,7 @@ public class LoginActivity extends AbstructActivity {
                         startActivity(it);
                         LoginActivity.this.finish();
                     } else {
-                        if (e.getCode() == AVException.USERNAME_PASSWORD_MISMATCH)
-                            Toast.makeText(LoginActivity.this, getString(R.string.username_password_mismatch), Toast.LENGTH_SHORT).show();
-                        else if (e.getCode() == AVException.USER_DOESNOT_EXIST)
-                            Toast.makeText(LoginActivity.this, getString(R.string.user_dosenot_exist), Toast.LENGTH_SHORT).show();
+                        ExceptionInfoUtil.toastError(LoginActivity.this,e.getCode());
                     }
 
                 }

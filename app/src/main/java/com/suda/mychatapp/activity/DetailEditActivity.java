@@ -12,6 +12,7 @@ import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.utils.ExceptionInfoUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 
@@ -63,6 +64,52 @@ public class DetailEditActivity extends AbstructActivity {
                 }
             });
         }
+
+        if (mRequestcode == REQUEST_CODE_TEL) {
+            UserBus.getMe(new UserBus.CallBack() {
+                @Override
+                public void done(final MyAVUser user) {
+                    final String tmp;
+                    tmp = user.getMobilePhoneNumber();
+                    user.setMobilePhoneNumber(content);
+                    user.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null){
+                                Toast.makeText(DetailEditActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                                DetailEditActivity.this.finish();
+                            } else {
+                                ExceptionInfoUtil.toastError(DetailEditActivity.this, e.getCode());
+                                user.setMobilePhoneNumber(tmp);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        if (mRequestcode == REQUEST_CODE_EMAIL) {
+            UserBus.getMe(new UserBus.CallBack() {
+                @Override
+                public void done(final MyAVUser user) {
+                    final String tmp;
+                    tmp = user.getEmail();
+                    user.setEmail(content);
+                    user.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null){
+                                Toast.makeText(DetailEditActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                                DetailEditActivity.this.finish();
+                            } else {
+                                user.setEmail(tmp);
+                                ExceptionInfoUtil.toastError(DetailEditActivity.this,e.getCode());
+                            }
+                        }
+                    });
+                }
+            });
+        }
     }
 
 
@@ -74,9 +121,9 @@ public class DetailEditActivity extends AbstructActivity {
             UserBus.getMe(new UserBus.CallBack() {
                 @Override
                 public void done(MyAVUser user) {
-                    if (TextUtil.isTextEmpty(user.getNikename())){
+                    if (TextUtil.isTextEmpty(user.getNikename())) {
                         mEtContent.setHint("请填写昵称");
-                    }else{
+                    } else {
                         mEtContent.setText(user.getNikename());
                     }
 
@@ -88,10 +135,36 @@ public class DetailEditActivity extends AbstructActivity {
             UserBus.getMe(new UserBus.CallBack() {
                 @Override
                 public void done(MyAVUser user) {
-                    if (TextUtil.isTextEmpty(user.getSign())){
+                    if (TextUtil.isTextEmpty(user.getSign())) {
                         mEtContent.setHint("请填写签名");
-                    }else{
+                    } else {
                         mEtContent.setText(user.getSign());
+                    }
+                }
+            });
+        }
+        if (REQUEST_CODE_TEL == mRequestcode) {
+            getSupportActionBar().setTitle("修改电话");
+            UserBus.getMe(new UserBus.CallBack() {
+                @Override
+                public void done(MyAVUser user) {
+                    if (TextUtil.isTextEmpty(user.getMobilePhoneNumber())) {
+                        mEtContent.setHint("请填写电话号码");
+                    } else {
+                        mEtContent.setText(user.getMobilePhoneNumber());
+                    }
+                }
+            });
+        }
+        if (REQUEST_CODE_EMAIL == mRequestcode) {
+            getSupportActionBar().setTitle("修改邮箱");
+            UserBus.getMe(new UserBus.CallBack() {
+                @Override
+                public void done(MyAVUser user) {
+                    if (TextUtil.isTextEmpty(user.getEmail())) {
+                        mEtContent.setHint("请填写邮箱");
+                    } else {
+                        mEtContent.setText(user.getEmail());
                     }
                 }
             });

@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +30,7 @@ import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.fragment.DongTaiFrg;
 import com.suda.mychatapp.fragment.FrienrdsFrg;
 import com.suda.mychatapp.fragment.MessageFrg;
+import com.suda.mychatapp.utils.DoubleClickExitHelper;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
@@ -89,6 +91,8 @@ public class MainActivity extends ActionBarActivity {
 
     private void initWidget() {
 
+        mClickExitHelper = new DoubleClickExitHelper(MainActivity.this);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         mPagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -136,13 +140,13 @@ public class MainActivity extends ActionBarActivity {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu();
-                // openOrClose = false;
+                 openOrClose = false;
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
-                // openOrClose = true;
+                openOrClose = true;
             }
         };
         mDrawerToggle.syncState();
@@ -270,6 +274,23 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN) {
+
+            if (openOrClose == false) {
+                return mClickExitHelper.onKeyDown(keyCode, event);
+            } else {
+                mDrawerLayout.closeDrawers();
+            }
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
     private void addLeftMenu(String title, int res) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("ItemTitle", title);
@@ -280,6 +301,9 @@ public class MainActivity extends ActionBarActivity {
     private TextView mTvNikeName;
     private TextView mTvsign;
     private CircleImageView mHeadIcon;
+
+    private boolean openOrClose = false;
+    DoubleClickExitHelper mClickExitHelper;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
