@@ -308,16 +308,14 @@ public class ChatActivity extends AbstructActivity {
         MessageHandler.setActivityMessageHandler(mChatHandler);
         if (!mConversationId.equals(Conf.GROUP_CONVERSATION_ID)) {
             MessageHandler.setCurrentFriend(mFriend.getUsername());
-            UserBus.getMe(new UserBus.CallBack() {
-                @Override
-                public void done(MyAVUser user) {
-                    mMe = user;
-                    loadMessagesWhenInit();
-                }
-            });
-        } else {
-            loadMessagesWhenInit();
         }
+        UserBus.getMe(new UserBus.CallBack() {
+            @Override
+            public void done(MyAVUser user) {
+                mMe = user;
+                loadMessagesWhenInit();
+            }
+        });
     }
 
     @Override
