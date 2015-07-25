@@ -23,6 +23,9 @@ public class UserBus {
             Log.d("cache", "use");
             callBack.done(me);
         } else {
+            if(MyAVUser.getCurrentUser()==null){
+                return;
+            }
             AVQuery<MyAVUser> query = AVObject.getQuery(MyAVUser.class);
             query.whereEqualTo("objectId", MyAVUser.getCurrentUser().getObjectId());
             query.findInBackground(new FindCallback<MyAVUser>() {

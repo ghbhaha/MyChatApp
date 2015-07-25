@@ -75,7 +75,7 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                                     notification.contentIntent = pendingIntent;
-                                    manager.notify(user.getSudaId(), notification);//每个人sudaid均不同用于标识
+                                    manager.notify(R.mipmap.chat_launcher, notification);
                                 }
                             });
                         }

@@ -2,9 +2,11 @@ package com.suda.mychatapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,13 +22,17 @@ import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.utils.ExceptionInfoUtil;
 import com.suda.mychatapp.utils.TextUtil;
+import com.suda.mychatapp.utils.UIUtil;
 
-public class LoginActivity extends AbstructActivity {
+public class LoginActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        UIUtil.setNullElevation(this);
+        UIUtil.setActionBarBack(this);
 
         mShakeAnim = AnimationUtils.loadAnimation(this, R.anim.shake_x);
         checkIfLogin();
@@ -60,7 +66,7 @@ public class LoginActivity extends AbstructActivity {
                         startActivity(it);
                         LoginActivity.this.finish();
                     } else {
-                        ExceptionInfoUtil.toastError(LoginActivity.this,e.getCode());
+                        ExceptionInfoUtil.toastError(LoginActivity.this, e.getCode());
                     }
 
                 }
@@ -127,9 +133,16 @@ public class LoginActivity extends AbstructActivity {
             startActivity(it);
             this.finish();
         }
-
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private EditText mEtusername;
     private EditText mEtpassword;
@@ -141,5 +154,5 @@ public class LoginActivity extends AbstructActivity {
     private boolean mCanDo = true;
     private Animation mShakeAnim;
 
-    
+
 }

@@ -105,7 +105,6 @@ public class ChatActivity extends AbstructActivity {
                     }
                     finishSend();
                 }
-
             });
         }
     }

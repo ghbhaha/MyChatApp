@@ -32,6 +32,7 @@ import com.suda.mychatapp.fragment.FrienrdsFrg;
 import com.suda.mychatapp.fragment.ConversationFrg;
 import com.suda.mychatapp.utils.DoubleClickExitHelper;
 import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.NotificationUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 import com.suda.mychatapp.widget.PagerSlidingTabStrip;
@@ -147,7 +148,7 @@ public class MainActivity extends ActionBarActivity {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu();
-                 openOrClose = false;
+                openOrClose = false;
             }
 
             public void onDrawerOpened(View drawerView) {
@@ -261,12 +262,20 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
         }
+        NotificationUtil.clearNotification(this);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        NotificationUtil.createNotification(this);
+        super.onPause();
     }
 
     @Override
     protected void onResume() {
         initEntity();
+        NotificationUtil.clearNotification(this);
         super.onResume();
     }
 
@@ -287,7 +296,8 @@ public class MainActivity extends ActionBarActivity {
                 && event.getAction() == KeyEvent.ACTION_DOWN) {
 
             if (openOrClose == false) {
-                return mClickExitHelper.onKeyDown(keyCode, event);
+                moveTaskToBack(false);
+                // return mClickExitHelper.onKeyDown(keyCode, event);
             } else {
                 mDrawerLayout.closeDrawers();
             }

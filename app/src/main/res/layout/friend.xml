@@ -5,16 +5,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/id_swipe_ly"
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="130dp"
+        android:background="#6699FF" />
+
+    <com.gc.materialdesign.views.Card
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <ListView
-            android:id="@+id/lv_friends"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/id_swipe_ly"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="fill_parent">
+
+
+            <ListView
+                android:id="@+id/lv_friends"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </com.gc.materialdesign.views.Card>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_new_friends"

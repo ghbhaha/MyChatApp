@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.suda.mychatapp.utils.NotificationUtil;
 import com.suda.mychatapp.utils.UIUtil;
 
 /**
@@ -16,6 +17,24 @@ public abstract class AbstructActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         UIUtil.setNullElevation(this);
         UIUtil.setActionBarBack(this);
+    }
+
+    @Override
+    protected void onPause() {
+        NotificationUtil.createNotification(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        NotificationUtil.clearNotification(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        NotificationUtil.clearNotification(this);
+        super.onDestroy();
     }
 
     @Override
