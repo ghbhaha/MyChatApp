@@ -27,7 +27,7 @@ public class Message {
         this.avimTypedMessage = avimTypedMessage;
     }
 
-    //ÅĞ¶ÏÊÇ·ñÈºÁÄ
+    //åˆ¤æ–­æ˜¯å¦ç¾¤èŠ
     public boolean isGChat() {
         return avimTypedMessage.getConversationId().equals(Conf.GROUP_CONVERSATION_ID);
     }
@@ -42,7 +42,6 @@ public class Message {
 
     public String getMsg() {
         if (AVIMReservedMessageType.getAVIMReservedMessageType(avimTypedMessage.getMessageType()) == AVIMReservedMessageType.TextMessageType) {
-            AVIMTextMessage textMessage = (AVIMTextMessage) avimTypedMessage;
             return ((AVIMTextMessage) avimTypedMessage).getText();
         } else {
             return avimTypedMessage.getContent();
