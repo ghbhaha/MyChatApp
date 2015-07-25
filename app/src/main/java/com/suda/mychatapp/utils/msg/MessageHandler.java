@@ -1,11 +1,6 @@
 package com.suda.mychatapp.utils.msg;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -13,13 +8,9 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.suda.mychatapp.R;
-import com.suda.mychatapp.activity.ChatActivity;
-import com.suda.mychatapp.activity.MainActivity;
-import com.suda.mychatapp.business.UserBus;
+import com.suda.mychatapp.Conf;
 import com.suda.mychatapp.business.pojo.MyAVUser;
-import com.suda.mychatapp.utils.ImageCacheUtil;
-import com.suda.mychatapp.utils.UserPropUtil;
+import com.suda.mychatapp.utils.NotificationUtil;
 
 public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
@@ -40,72 +31,33 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                 // 如果当前用户转到后台则通知消息，更新聊天记录
                 if (isBackTask) {
                     if (message instanceof AVIMTextMessage) {
-                        final AVIMTextMessage textMessage = (AVIMTextMessage) message;
-                        UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
-                            @Override
-                            public void done(final MyAVUser user) {
-                                ImageCacheUtil.showPicture(context, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
-                                    @Override
-                                    public void done(Bitmap bitmap) {
-                                        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                                        Notification notification = new Notification.Builder(context)
-                                                .setLargeIcon(bitmap)
-                                                .setSmallIcon(R.drawable.select_expression_normal)
-                                                .setContentTitle(UserPropUtil.getNikeName(user))
-                                                .setContentText(textMessage.getText())
-                                                .build();
-                                        Intent intent = new Intent(Intent.ACTION_MAIN);
-                                        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                                        intent.setClass(context, MainActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                                        notification.flags = Notification.FLAG_AUTO_CANCEL;
-                                        PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intent, 0);
-                                        notification.contentIntent = contextIntent;
-                                        notificationManager.notify(R.mipmap.chat_launcher, notification);
-                                    }
-                                });
-                            }
-                        });
+                        AVIMTextMessage textMessage = (AVIMTextMessage) message;
+                        NotificationUtil.showCurrentOneChatNotification(context, textMessage);
+                    }
+                }
+                activityMessageHandler.onMessage(message, conversation, client);
+            } else if (message.getConversationId().equals(Conf.GROUP_CONVERSATION_ID) && activityMessageHandler != null) {
+                // 正在聊天并且前台时，分发消息，刷新界面
+                // 如果当前用户转到后台则通知消息，更新聊天记录
+                if (isBackTask) {
+                    if (message instanceof AVIMTextMessage) {
+                        AVIMTextMessage textMessage = (AVIMTextMessage) message;
+                        NotificationUtil.showCurrentGroupChatNotification(context, textMessage);
                     }
                 }
                 activityMessageHandler.onMessage(message, conversation, client);
             } else {
-                // 没有打开聊天界面或者不是当前联系人，通知栏通知
+                if (message.getConversationId().equals(Conf.GROUP_CONVERSATION_ID)) {
+                    // 没有打开聊天界面或者不是当前联系人并且是群组，通知栏群组通知
+                    if (message instanceof AVIMTextMessage) {
+                        AVIMTextMessage textMessage = (AVIMTextMessage) message;
+                        NotificationUtil.showNewGroupChatNotification(context, textMessage);
+                    }
+                }
+                // 没有打开聊天界面或者不是当前联系人，通知栏通个人通知
                 if (message instanceof AVIMTextMessage) {
                     final AVIMTextMessage textMessage = (AVIMTextMessage) message;
-
-                    UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
-                        @Override
-                        public void done(final MyAVUser user) {
-                            ImageCacheUtil.showPicture(context, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
-                                @Override
-                                public void done(Bitmap bitmap) {
-                                    /**
-                                     *  PendingIntent.FLAG_UPDATE_CURRENT
-                                     *  Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                     *  保证每次传入的intent不一样
-                                     */
-                                    //获得通知管理器
-                                    NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                                    Notification notification = new Notification.Builder(context)
-                                            .setLargeIcon(bitmap)
-                                            .setSmallIcon(R.mipmap.ic_launcher)
-                                            .setContentTitle(UserPropUtil.getNikeName(user))
-                                            .setContentText(textMessage.getText())
-                                            .build();
-                                    notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失
-                                    notification.defaults = Notification.DEFAULT_SOUND;//声音默认
-                                    Intent intent = new Intent(context, ChatActivity.class);
-                                    intent.putExtra(EXTRA_CONVERSATION_ID, conversation.getConversationId());
-                                    intent.putExtra(EXTRA_USERNAME, message.getFrom());
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                    notification.contentIntent = pendingIntent;
-                                    manager.notify(R.mipmap.chat_launcher, notification);
-                                }
-                            });
-                        }
-                    });
+                    NotificationUtil.showNewOneChatNotification(context, textMessage);
                 }
             }
         } else {

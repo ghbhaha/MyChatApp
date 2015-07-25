@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="4dp"
-    android:background="#f1f1f1">
+    android:background="#f1f1f1"
+    android:paddingBottom="4dp">
 
     <TextView
         android:id="@+id/msg_date"
@@ -25,7 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/msg_date"
         android:layout_marginTop="2dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -47,31 +48,41 @@
                     app:border_color="@android:color/white"
                     app:border_width="2dp" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_toRightOf="@+id/from_info_ll"
+                android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/from_nikename"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:paddingLeft="10dp"
                     android:text="ghbhaha"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/id_from_msg_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/message_bubble_margin"
+                    android:layout_marginTop="@dimen/message_bubble_margin"
+                    android:background="@drawable/friend_msg_bg"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/message_bubble_padding_vertical"
+                    android:paddingEnd="@dimen/message_bubble_padding_horizontal"
+                    android:paddingStart="@dimen/message_bubble_padding_horizontal_extra"
+                    android:paddingTop="@dimen/message_bubble_padding_vertical"
+                    android:text="你好"
+                    android:textSize="16sp" />
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/id_from_msg_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/message_bubble_margin"
-                android:layout_marginTop="@dimen/message_bubble_margin"
-                android:layout_toRightOf="@+id/from_info_ll"
-                android:background="@drawable/friend_msg_bg"
-                android:gravity="center"
-                android:paddingBottom="@dimen/message_bubble_padding_vertical"
-                android:paddingEnd="@dimen/message_bubble_padding_horizontal"
-                android:paddingStart="@dimen/message_bubble_padding_horizontal_extra"
-                android:paddingTop="@dimen/message_bubble_padding_vertical"
-                android:text="你好"
-                android:textSize="16sp" />
+
         </RelativeLayout>
 
     </LinearLayout>
@@ -83,7 +94,8 @@
         android:layout_below="@+id/msg_date"
         android:layout_marginTop="2dp"
         android:gravity="right"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingRight="10dp">
 
 
         <RelativeLayout
@@ -91,20 +103,36 @@
             android:layout_height="fill_parent"
             android:gravity="right">
 
-            <TextView
-                android:id="@+id/id_to_msg_info"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/message_bubble_margin"
-                android:layout_marginTop="@dimen/message_bubble_margin"
+                android:gravity="right"
                 android:layout_toLeftOf="@+id/to_info_ll"
-                android:background="@drawable/self_msg_bg"
-                android:paddingBottom="@dimen/message_bubble_padding_vertical"
-                android:paddingEnd="@dimen/message_bubble_padding_horizontal_extra"
-                android:paddingStart="@dimen/message_bubble_padding_horizontal"
-                android:paddingTop="@dimen/message_bubble_padding_vertical"
-                android:text="你好"
-                android:textSize="16sp" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/to_nikename"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ghbhaha"
+                    android:paddingRight="10dp"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/id_to_msg_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/message_bubble_margin"
+                    android:layout_marginTop="@dimen/message_bubble_margin"
+                    android:background="@drawable/self_msg_bg"
+                    android:paddingBottom="@dimen/message_bubble_padding_vertical"
+                    android:paddingEnd="@dimen/message_bubble_padding_horizontal_extra"
+                    android:paddingStart="@dimen/message_bubble_padding_horizontal"
+                    android:paddingTop="@dimen/message_bubble_padding_vertical"
+                    android:text="你好"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
 
             <LinearLayout
@@ -124,15 +152,6 @@
                     app:border_color="@android:color/white"
                     app:border_width="2dp" />
 
-
-                <TextView
-                    android:id="@+id/to_nikename"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="ghbhaha"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
             </LinearLayout>
 
         </RelativeLayout>

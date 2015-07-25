@@ -85,10 +85,12 @@ public class MessageAdapter extends BaseAdapter {
         Date time = new Date(arrayList.get(position).getAvimTypedMessage().getTimestamp());
 
         boolean show = false;
-        if (position > 0) {
+        /*if (position > 0) {
             long beforetime = arrayList.get(position - 1).getAvimTypedMessage().getMessageType();
             show = arrayList.get(position).getAvimTypedMessage().getTimestamp() - arrayList.get(position - 1).getAvimTypedMessage().getTimestamp() > 1000 * 60 * 3;
-        }
+        }*/
+        //当前消息第一个显示时间
+        show = position == 0;
 
         if (show) {
             holder.mTvDate.setVisibility(View.VISIBLE);
@@ -100,7 +102,9 @@ public class MessageAdapter extends BaseAdapter {
         if (isMe(arrayList.get(position).getUsername())) {
             holder.mFromll.setVisibility(View.INVISIBLE);
             holder.mToll.setVisibility(View.VISIBLE);
+
             holder.mTvToMsg.setText(arrayList.get(position).getMsg());
+            holder.mTvToUserNikeName.setVisibility(arrayList.get(position).isGChat() ? View.VISIBLE : View.GONE);
             holder.mTvToUserNikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikename()) ?
                     arrayList.get(position).getUsername() : arrayList.get(position).getNikename());
             ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
@@ -118,7 +122,10 @@ public class MessageAdapter extends BaseAdapter {
         } else {
             holder.mFromll.setVisibility(View.VISIBLE);
             holder.mToll.setVisibility(View.INVISIBLE);
+
+            arrayList.get(position).isGChat();
             holder.mTvFromMsg.setText(arrayList.get(position).getMsg());
+            holder.mTvFromUserNikeName.setVisibility(arrayList.get(position).isGChat() ? View.VISIBLE : View.GONE);
             holder.mTvFromUserNikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikename()) ?
                     arrayList.get(position).getUsername() : arrayList.get(position).getNikename());
             ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {

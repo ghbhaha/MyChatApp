@@ -21,5 +21,5 @@ public class DateFmUtil {
 
     private final static String SIMPLE_TIME_1 = "yyyy-MM-dd";
 
-    private final static String SIMPLE_TIME = "MM-dd HH:mm";
+    private final static String SIMPLE_TIME = "MM-dd aa h:mm";
 }

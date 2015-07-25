@@ -3,6 +3,7 @@ package com.suda.mychatapp.db.pojo;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.suda.mychatapp.Conf;
 
 import java.util.Date;
 
@@ -24,6 +25,11 @@ public class Message {
 
     public void setAvimTypedMessage(AVIMTypedMessage avimTypedMessage) {
         this.avimTypedMessage = avimTypedMessage;
+    }
+
+    //≈–∂œ «∑Ò»∫¡ƒ
+    public boolean isGChat() {
+        return avimTypedMessage.getConversationId().equals(Conf.GROUP_CONVERSATION_ID);
     }
 
     public AVIMTypedMessage getAvimTypedMessage() {

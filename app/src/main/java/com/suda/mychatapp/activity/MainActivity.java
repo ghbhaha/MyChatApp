@@ -23,7 +23,11 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.suda.mychatapp.Conf;
+import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
@@ -109,6 +113,7 @@ public class MainActivity extends ActionBarActivity {
 
         lvLeftMenu.addHeaderView(headerContainer);
         mlistItems = new ArrayList<HashMap<String, Object>>();
+        addLeftMenu("Suda聊天室（实验）", R.drawable.ic_drawer_settings);
         addLeftMenu("设置", R.drawable.ic_drawer_settings);
         addLeftMenu("帮助", R.drawable.ic_drawer_about);
         addLeftMenu("退出", R.drawable.ic_drawer_exit);
@@ -122,15 +127,39 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
+                    case 1:
+
+                        AVIMConversation conversation = MyApplication.getIMClient().getConversation(Conf.GROUP_CONVERSATION_ID);
+                        if (conversation.getMembers().contains(MyAVUser.getCurrentUser().getUsername())) {
+                            Intent it = new Intent(MainActivity.this, ChatActivity.class);
+                            it.putExtra(EXTRA_CONVERSATION_ID, Conf.GROUP_CONVERSATION_ID);
+                            it.putExtra(EXTRA_USERNAME, "Suda聊天室");
+                            startActivity(it);
+                        } else {
+                            conversation.join(new AVIMConversationCallback() {
+                                @Override
+                                public void done(AVException e) {
+                                    if (e == null) {
+                                        Intent it = new Intent(MainActivity.this, ChatActivity.class);
+                                        it.putExtra(EXTRA_CONVERSATION_ID, Conf.GROUP_CONVERSATION_ID);
+                                        it.putExtra(EXTRA_USERNAME, "Suda聊天室");
+                                        startActivity(it);
+                                    } else {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                        break;
                     case 0:
                         Intent it = new Intent(MainActivity.this, AccountInfoActivity.class);
                         startActivityForResult(it, REQUEST_UPDATE_IAMEG);
                         break;
-                    case 1:
-                        break;
                     case 2:
                         break;
                     case 3:
+                        break;
+                    case 4:
                         MainActivity.this.finish();
                         break;
                 }
@@ -163,13 +192,15 @@ public class MainActivity extends ActionBarActivity {
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         mViewPager.setOffscreenPageLimit(3);
 
+        mViewPager.setCurrentItem(1);
+
         mPagerSlidingTabStrip.setViewPager(mViewPager);
         mPagerSlidingTabStrip
                 .setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
                     @Override
                     public void onPageSelected(int arg0) {
-                        // colorChange(arg0);
+
                     }
 
                     @Override
@@ -331,6 +362,9 @@ public class MainActivity extends ActionBarActivity {
     private List<HashMap<String, Object>> mlistItems;
     private SimpleAdapter mlistItemAdapter;
     private static final int REQUEST_UPDATE_IAMEG = 1;
+
+    private static final String EXTRA_USERNAME = "username";
+    private static final String EXTRA_CONVERSATION_ID = "conversation_id";
 
 }
 
