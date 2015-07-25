@@ -15,6 +15,7 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.ChatActivity;
+import com.suda.mychatapp.activity.MainActivity;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.utils.ImageCacheUtil;
@@ -35,10 +36,41 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
     public void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation, final AVIMClient client) {
         if (client.getClientId().equals(MyAVUser.getCurrentUser().getUsername())) {
             if (activityMessageHandler != null && message.getFrom().equals(currentFriend)) {
-                // 正在聊天时，分发消息，刷新界面
+                // 正在聊天并且前台时，分发消息，刷新界面
+                // 如果当前用户转到后台则通知消息，更新聊天记录
+                if (isBackTask) {
+                    if (message instanceof AVIMTextMessage) {
+                        final AVIMTextMessage textMessage = (AVIMTextMessage) message;
+                        UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+                            @Override
+                            public void done(final MyAVUser user) {
+                                ImageCacheUtil.showPicture(context, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+                                    @Override
+                                    public void done(Bitmap bitmap) {
+                                        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                                        Notification notification = new Notification.Builder(context)
+                                                .setLargeIcon(bitmap)
+                                                .setSmallIcon(R.drawable.select_expression_normal)
+                                                .setContentTitle(UserPropUtil.getNikeName(user))
+                                                .setContentText(textMessage.getText())
+                                                .build();
+                                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                                        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                                        intent.setClass(context, MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                                        notification.flags = Notification.FLAG_AUTO_CANCEL;
+                                        PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                                        notification.contentIntent = contextIntent;
+                                        notificationManager.notify(R.mipmap.chat_launcher, notification);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
                 activityMessageHandler.onMessage(message, conversation, client);
             } else {
-                // 没有打开聊天界面或者不是当前联系人，这里简单地 Toast 一下。实际中可以刷新最近消息页面，增加小红点
+                // 没有打开聊天界面或者不是当前联系人，通知栏通知
                 if (message instanceof AVIMTextMessage) {
                     final AVIMTextMessage textMessage = (AVIMTextMessage) message;
 
@@ -93,10 +125,15 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
         MessageHandler.currentFriend = currentFriend;
     }
 
+    public static void setIsBackTask(Boolean isBackTask) {
+        MessageHandler.isBackTask = isBackTask;
+    }
+
     private static AVIMTypedMessageHandler<AVIMTypedMessage> activityMessageHandler;
     private Context context;
     private String TAG = MessageHandler.this.getClass().getSimpleName();
     private static String currentFriend;
+    private static Boolean isBackTask = false;
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";
     private static final String EXTRA_USERNAME = "username";
 

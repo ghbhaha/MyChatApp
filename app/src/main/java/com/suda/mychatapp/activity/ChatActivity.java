@@ -235,6 +235,19 @@ public class ChatActivity extends AbstructActivity {
 
     }
 
+
+    @Override
+    protected void onPause() {
+        MessageHandler.setIsBackTask(true);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        MessageHandler.setIsBackTask(false);
+        super.onResume();
+    }
+
     private String mFriendUserName;
     private String mConversationId;
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";
