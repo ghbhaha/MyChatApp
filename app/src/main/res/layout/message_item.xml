@@ -29,7 +29,7 @@
         android:paddingLeft="10dp">
 
         <RelativeLayout
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="54dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
@@ -107,6 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
+                android:layout_marginLeft="54dp"
                 android:layout_toLeftOf="@+id/to_info_ll"
                 android:orientation="vertical">
 
@@ -115,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ghbhaha"
-                    android:paddingRight="30dp"
+                    android:paddingRight="10dp"
                     android:textSize="12sp" />
 
                 <TextView
