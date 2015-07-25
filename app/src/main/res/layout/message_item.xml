@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#f1f1f1"
-    android:paddingBottom="4dp">
+    android:paddingBottom="8dp">
 
     <TextView
         android:id="@+id/msg_date"

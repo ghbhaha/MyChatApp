@@ -83,14 +83,15 @@ public class MessageAdapter extends BaseAdapter {
     public void bindDataToView(final ViewHolder holder, final int position) {
 
         Date time = new Date(arrayList.get(position).getAvimTypedMessage().getTimestamp());
+        boolean show;
 
-        boolean show = false;
-        /*if (position > 0) {
-            long beforetime = arrayList.get(position - 1).getAvimTypedMessage().getMessageType();
-            show = arrayList.get(position).getAvimTypedMessage().getTimestamp() - arrayList.get(position - 1).getAvimTypedMessage().getTimestamp() > 1000 * 60 * 3;
-        }*/
-        //当前消息第一个显示时间
-        show = position == 0;
+        if (position > 0) {
+            show = arrayList.get(position).getAvimTypedMessage().getTimestamp()
+                    - arrayList.get(position - 1).getAvimTypedMessage().getTimestamp() > 1000 * 60 * 4;
+        } else {
+            //当前消息第一个显示时间
+            show = true;
+        }
 
         if (show) {
             holder.mTvDate.setVisibility(View.VISIBLE);
