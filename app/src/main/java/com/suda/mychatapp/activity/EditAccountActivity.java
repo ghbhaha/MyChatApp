@@ -5,16 +5,12 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.SaveCallback;
-import com.gc.materialdesign.widgets.Dialog;
-import com.novachevskyi.datepicker.CalendarDatePickerDialog;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;

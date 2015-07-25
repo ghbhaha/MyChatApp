@@ -6,6 +6,6 @@ package com.suda.mychatapp.utils;
 public class TextUtil {
 
     public static boolean isTextEmpty(String s) {
-        return "".equals(s)||s==null;
+        return "".equals(s) || s == null;
     }
 }

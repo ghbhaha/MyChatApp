@@ -17,7 +17,6 @@ import com.suda.mychatapp.db.pojo.Message;
 import com.suda.mychatapp.utils.DateFmUtil;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.TextUtil;
-import com.suda.mychatapp.utils.msg.MessageUtil;
 
 import java.util.Date;
 import java.util.List;

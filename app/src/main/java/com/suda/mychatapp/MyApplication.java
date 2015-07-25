@@ -1,22 +1,13 @@
 package com.suda.mychatapp;
 
 import android.app.Application;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
-import com.suda.mychatapp.activity.MainActivity;
 import com.suda.mychatapp.business.LoadLib;
-
 import com.suda.mychatapp.business.pojo.MyAVUser;
-import com.suda.mychatapp.utils.UserPropUtil;
 import com.suda.mychatapp.utils.msg.MessageHandler;
 
 /**

@@ -37,9 +37,9 @@ public class Message {
     public String getMsg() {
         if (AVIMReservedMessageType.getAVIMReservedMessageType(avimTypedMessage.getMessageType()) == AVIMReservedMessageType.TextMessageType) {
             AVIMTextMessage textMessage = (AVIMTextMessage) avimTypedMessage;
-           return ((AVIMTextMessage) avimTypedMessage).getText();
+            return ((AVIMTextMessage) avimTypedMessage).getText();
         } else {
-           return avimTypedMessage.getContent();
+            return avimTypedMessage.getContent();
         }
     }
 

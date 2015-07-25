@@ -98,8 +98,8 @@ public class MyAVUser extends AVUser {
     private final static String SEX = "sex";
     private final static String ICON = "head_icon";
     private final static String SUDAID = "sudaid";
-    private final static String SIGN="sign";
-    private final static String NIKENAME="nikename";
-    private final static String BIRTHDAY="birthday";
+    private final static String SIGN = "sign";
+    private final static String NIKENAME = "nikename";
+    private final static String BIRTHDAY = "birthday";
 
 }

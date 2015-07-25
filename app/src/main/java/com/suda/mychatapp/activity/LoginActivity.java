@@ -12,12 +12,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
-import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.utils.ExceptionInfoUtil;

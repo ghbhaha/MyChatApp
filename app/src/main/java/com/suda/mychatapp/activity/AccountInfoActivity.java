@@ -38,7 +38,7 @@ public class AccountInfoActivity extends AbstructActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_info);
         initWidget();
-       // initEntity();
+        // initEntity();
     }
 
     private void initEntity() {
@@ -229,11 +229,11 @@ public class AccountInfoActivity extends AbstructActivity {
         mHeadIcon = (CircleImageView) findViewById(R.id.profile_image);
         mTvSign = (TextView) findViewById(R.id.tv_sign);
         mTvUsername = (TextView) findViewById(R.id.tv_username);
-        mTvNikeName = (TextView)findViewById(R.id.tv_nikename);
+        mTvNikeName = (TextView) findViewById(R.id.tv_nikename);
         mTvSex = (TextView) findViewById(R.id.tv_sex);
         mTvTel = (TextView) findViewById(R.id.tv_tel);
-        mTvBirthDay = (TextView)findViewById(R.id.tv_birth);
-        mTvEmail = (TextView)findViewById(R.id.tv_email);
+        mTvBirthDay = (TextView) findViewById(R.id.tv_birth);
+        mTvEmail = (TextView) findViewById(R.id.tv_email);
     }
 
 
@@ -245,8 +245,6 @@ public class AccountInfoActivity extends AbstructActivity {
     private TextView mTvSex;
     private TextView mTvTel;
     private TextView mTvEmail;
-
-
 
 
     private Bitmap mHeadBitMap;

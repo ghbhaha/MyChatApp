@@ -1,6 +1,5 @@
 package com.suda.mychatapp.activity;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -14,7 +13,6 @@ import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.utils.ExceptionInfoUtil;
 import com.suda.mychatapp.utils.TextUtil;
-import com.suda.mychatapp.utils.UserPropUtil;
 
 public class DetailEditActivity extends AbstructActivity {
 

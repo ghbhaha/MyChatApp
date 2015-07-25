@@ -2,10 +2,6 @@ package com.suda.mychatapp.utils;
 
 import com.suda.mychatapp.business.pojo.MyAVUser;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Created by Suda on 2015/7/23.
  */
@@ -32,7 +28,7 @@ public class UserPropUtil {
     }
 
     public static String getBirthDayTip(MyAVUser user) {
-        return user.getBirthDay()==null ? "还未填写哦" : DateFmUtil.fmDate1(user.getBirthDay());
+        return user.getBirthDay() == null ? "还未填写哦" : DateFmUtil.fmDate1(user.getBirthDay());
     }
 
 
@@ -45,7 +41,7 @@ public class UserPropUtil {
     }
 
     public static String getBirthDay(MyAVUser user) {
-        return user.getBirthDay()==null ? "就不告诉你" : DateFmUtil.fmDate1(user.getBirthDay());
+        return user.getBirthDay() == null ? "就不告诉你" : DateFmUtil.fmDate1(user.getBirthDay());
     }
 
     public static String getSex(MyAVUser user) {

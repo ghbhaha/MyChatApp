@@ -9,12 +9,12 @@ import java.util.Date;
  */
 public class DateFmUtil {
 
-    public static String fmDate(Date date){
+    public static String fmDate(Date date) {
         DateFormat format = new SimpleDateFormat(SIMPLE_TIME);
         return format.format(date);
     }
 
-    public static String fmDate1(Date date){
+    public static String fmDate1(Date date) {
         DateFormat format = new SimpleDateFormat(SIMPLE_TIME_1);
         return format.format(date);
     }

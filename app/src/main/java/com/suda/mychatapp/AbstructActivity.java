@@ -11,7 +11,7 @@ import com.suda.mychatapp.utils.UIUtil;
 /**
  * Created by Suda on 2015/7/19.
  */
-public abstract class AbstructActivity extends ActionBarActivity{
+public abstract class AbstructActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +55,7 @@ public abstract class AbstructActivity extends ActionBarActivity{
             return true;
         }
     }
+
     protected void toast(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }

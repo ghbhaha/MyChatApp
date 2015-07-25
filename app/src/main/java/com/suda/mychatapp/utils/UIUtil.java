@@ -7,11 +7,11 @@ import android.support.v7.app.ActionBarActivity;
  */
 public class UIUtil {
 
-    public static void  setNullElevation(ActionBarActivity aba){
+    public static void setNullElevation(ActionBarActivity aba) {
         aba.getSupportActionBar().setElevation(0);
     }
 
-    public static void setActionBarBack(ActionBarActivity aba){
+    public static void setActionBarBack(ActionBarActivity aba) {
         aba.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }

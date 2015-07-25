@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -17,14 +15,10 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.ChatActivity;
-import com.suda.mychatapp.activity.MainActivity;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
-
-import java.util.Date;
-import java.util.Random;
 
 public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 

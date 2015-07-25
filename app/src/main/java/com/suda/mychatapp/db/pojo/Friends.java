@@ -1,7 +1,5 @@
 package com.suda.mychatapp.db.pojo;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by Suda on 2015/7/21.
  */
@@ -13,7 +11,7 @@ public class Friends {
     private String username;
 
 
-    public Friends(String nikeName, String sign,String username, String iconurl) {
+    public Friends(String nikeName, String sign, String username, String iconurl) {
         this.nikeName = nikeName;
         this.sign = sign;
         this.iconurl = iconurl;

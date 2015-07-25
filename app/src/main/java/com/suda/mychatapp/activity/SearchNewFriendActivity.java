@@ -14,7 +14,6 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.FollowCallback;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.FriendsBus;
@@ -92,7 +91,7 @@ public class SearchNewFriendActivity extends AbstructActivity {
         });
     }
 
-    public void getFriendInfo(View view){
+    public void getFriendInfo(View view) {
         Intent it = new Intent(SearchNewFriendActivity.this, FriendInfoActivity.class);
         it.putExtra(EXTRA_USERNAME, mFriendUser.getUsername());
         startActivity(it);

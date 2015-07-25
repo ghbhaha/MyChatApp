@@ -12,26 +12,26 @@ import com.suda.mychatapp.R;
 
 public class ConversationFrg extends Fragment {
 
-	public ConversationFrg() {
-		// TODO Auto-generated constructor stub
-	}
+    public ConversationFrg() {
+        // TODO Auto-generated constructor stub
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	}
+    }
 
-	@Override
-	@Nullable
-	public View onCreateView(LayoutInflater inflater,
-			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+    @Override
+    @Nullable
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
 
-		View view = inflater.inflate(R.layout.conversation, container, false);
+        View view = inflater.inflate(R.layout.conversation, container, false);
 
-		return view;
+        return view;
 
-	}
+    }
 
 }
