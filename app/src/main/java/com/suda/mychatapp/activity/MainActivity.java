@@ -40,6 +40,7 @@ import com.suda.mychatapp.utils.NotificationUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 import com.suda.mychatapp.widget.PagerSlidingTabStrip;
+import com.umeng.update.UmengUpdateAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +56,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         initWidget();
+        UmengUpdateAgent.update(this);
+
     }
 
 

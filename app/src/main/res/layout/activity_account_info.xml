@@ -31,6 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:onClick="setSign"
+            android:clickable="true"
             android:text="“今天真开心”。"
             android:textColor="@android:color/white" />
 

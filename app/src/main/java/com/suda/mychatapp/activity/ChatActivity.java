@@ -3,7 +3,6 @@ package com.suda.mychatapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -11,7 +10,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.feedback.ThreadActivity;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
@@ -28,6 +26,8 @@ import com.suda.mychatapp.R;
 import com.suda.mychatapp.adapter.MessageAdapter;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.db.DbHelper;
+import com.suda.mychatapp.db.pojo.LastMessage;
 import com.suda.mychatapp.db.pojo.Message;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
@@ -50,6 +50,8 @@ public class ChatActivity extends AbstructActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        this.mDbhelper = new DbHelper(this);
+
         initWidget();
     }
 
@@ -204,6 +206,23 @@ public class ChatActivity extends AbstructActivity {
                         if (null != e) {
                             e.printStackTrace();
                         } else {
+
+                            if (!mDbhelper.isExistMsg(message.getConversationId())) {
+                                if (Conf.GROUP_CONVERSATION_ID.equals(message.getConversationId())) {
+                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUsername(), UserPropUtil.getNikeName(mMe), mMe.getIcon().getUrl(),
+                                            message.getTimestamp(), message.getText());
+                                    mDbhelper.addLastMess(lastMessage);
+                                } else {
+                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mFriend.getUsername(), UserPropUtil.getNikeName(mFriend), mFriend.getIcon().getUrl(),
+                                            message.getTimestamp(), message.getText());
+                                    mDbhelper.addLastMess(lastMessage);
+                                }
+                            } else {
+                                LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUsername(), UserPropUtil.getNikeName(mMe), mMe.getIcon().getUrl(),
+                                        message.getTimestamp(), message.getText());
+                                mDbhelper.updateLastMsg(lastMessage);
+                            }
+
                             mMessageList.add(MessageUtil.aviMsgtoMsg(message, mMe));
                             mMessageAdapter.notifyDataSetChanged();
                             finishSend();
@@ -217,6 +236,9 @@ public class ChatActivity extends AbstructActivity {
     public void finishSend() {
         mEtMsg.setText(null);
         isSendSuccess = true;
+        if( MessageHandler.getiFace()!=null){
+            MessageHandler.getiFace().update();
+        }
         scrollToLast();
     }
 
@@ -234,7 +256,6 @@ public class ChatActivity extends AbstructActivity {
             isLoadingMessages.set(true);
             AVIMTypedMessage firstMsg = mMessageList.get(0).getAvimTypedMessage();
             long time = firstMsg.getTimestamp();
-            Log.d("time", time + "");
             mConversation.queryMessages(null, time, PAGE_SIZE, new AVIMMessagesQueryCallback() {
                 @Override
                 public void done(List<AVIMMessage> list, AVException e) {
@@ -399,4 +420,7 @@ public class ChatActivity extends AbstructActivity {
     private boolean isSendSuccess = true;
 
     private SwipeRefreshLayout mSwipeLayout;
+
+    private DbHelper mDbhelper;
+
 }

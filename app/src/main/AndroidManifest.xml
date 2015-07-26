@@ -53,6 +53,18 @@
             android:label="@string/title_activity_friend_info"
             android:theme="@style/ThemeWithActionBar" />
 
+        <!--友盟 -->
+        <meta-data android:value="55b47c6fe0f55ad549003b4b" android:name="UMENG_APPKEY"/>
+
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
         <!-- 推送与聊天 -->
         <service
             android:name="com.avos.avoscloud.PushService"

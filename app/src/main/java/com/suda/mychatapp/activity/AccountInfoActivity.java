@@ -23,6 +23,7 @@ import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.db.DbHelper;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.ImageUtil;
 import com.suda.mychatapp.utils.TextUtil;
@@ -42,6 +43,9 @@ public class AccountInfoActivity extends AbstructActivity {
     }
 
     private void initEntity() {
+
+        mDbhelper = new DbHelper(this);
+
         if (UserBus.isExistLocalUser()) {
             new UserBus().getMe(new UserBus.CallBack() {
                 @Override
@@ -166,6 +170,7 @@ public class AccountInfoActivity extends AbstructActivity {
         });
         AVUser.getCurrentUser().logOut();
         UserBus.clearMe();
+        mDbhelper.clearAllData();
         this.finish();
     }
 
@@ -253,5 +258,7 @@ public class AccountInfoActivity extends AbstructActivity {
     private static final int REQUEST_EDIT_ACCOUNT = 3;
 
     private boolean mUpdateImage = false;
+
+    private DbHelper mDbhelper;
 
 }

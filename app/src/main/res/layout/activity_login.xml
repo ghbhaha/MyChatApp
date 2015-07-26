@@ -83,6 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:onClick="registerNew"
+            android:clickable="true"
             android:paddingTop="10dp"
             android:text="注册新用户"
             android:textColor="@android:color/holo_red_light" />
