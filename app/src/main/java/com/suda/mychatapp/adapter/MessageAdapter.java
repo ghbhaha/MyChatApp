@@ -147,22 +147,25 @@ public class MessageAdapter extends BaseAdapter {
         holder.mFromIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(context, FriendInfoActivity.class);
-                it.putExtra(EXTRA_USERNAME, arrayList.get(position).getUsername());
-                context.startActivity(it);
+                showInfo(position);
             }
         });
 
         holder.mToIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(context, FriendInfoActivity.class);
-                it.putExtra(EXTRA_USERNAME, arrayList.get(position).getUsername());
-                context.startActivity(it);
+                showInfo(position);
             }
         });
 
     }
+
+    public void showInfo(int position) {
+        Intent it = new Intent(context, FriendInfoActivity.class);
+        it.putExtra(EXTRA_USERNAME, arrayList.get(position).getUsername());
+        context.startActivity(it);
+    }
+
 
     boolean isMe(String username) {
         return MyAVUser.getCurrentUser().getUsername().equals(username);

@@ -39,9 +39,10 @@
         android:id="@+id/star_friend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="setOrNotFriend"
         android:layout_alignParentRight="true"
         android:layout_marginTop="165dp"
+        android:clickable="true"
+        android:onClick="setOrNotFriend"
         fab:fab_colorNormal="@color/pink"
         fab:fab_colorPressed="@color/pink_pressed"
         fab:fab_icon="@drawable/ic_action_not_important" />
@@ -177,8 +178,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"

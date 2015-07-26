@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
@@ -37,6 +38,7 @@ public class NotificationUtil {
     }
 
     static void showNormalNotification(Context ct, String title, Bitmap icon) {
+
         NotificationManager notificationManager = (NotificationManager) ct.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = new Notification.Builder(ct)
                 .setLargeIcon(icon)
@@ -91,6 +93,8 @@ public class NotificationUtil {
 
     //当新的好友来信息时调用
     public static void showNewOneChatNotification(final Context context, final AVIMTextMessage message) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        final boolean sound = sharedPreferences.getBoolean("sounds",false);
         UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
             @Override
             public void done(final MyAVUser user) {
@@ -111,7 +115,9 @@ public class NotificationUtil {
                                 .setContentText(message.getText())
                                 .build();
                         notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失
-                        notification.defaults = Notification.DEFAULT_SOUND;//声音默认
+                        if(sound){
+                            notification.defaults = Notification.DEFAULT_SOUND;//声音默认
+                        }
                         Intent intent = new Intent(context, ChatActivity.class);
                         intent.putExtra(EXTRA_CONVERSATION_ID, message.getConversationId());
                         intent.putExtra(EXTRA_USERNAME, message.getFrom());
@@ -127,6 +133,11 @@ public class NotificationUtil {
 
     //当当前好友后台，来新消息时调用
     public static void showCurrentGroupChatNotification(final Context context, final AVIMTextMessage message) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        boolean group_msg = sharedPreferences.getBoolean("group_msg",false);
+        if(!group_msg){
+            return;
+        }
         UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
             @Override
             public void done(final MyAVUser user) {
@@ -157,6 +168,12 @@ public class NotificationUtil {
 
     //当新的好友来信息时调用
     public static void showNewGroupChatNotification(final Context context, final AVIMTextMessage message) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        final boolean sound = sharedPreferences.getBoolean("sounds",false);
+        boolean group_msg = sharedPreferences.getBoolean("group_msg",false);
+        if(!group_msg){
+            return;
+        }
         UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
             @Override
             public void done(final MyAVUser user) {
@@ -177,7 +194,9 @@ public class NotificationUtil {
                                 .setContentText(message.getText())
                                 .build();
                         notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失
-                        notification.defaults = Notification.DEFAULT_SOUND;//声音默认
+                        if(sound){
+                            notification.defaults = Notification.DEFAULT_SOUND;//声音默认
+                        }
                         Intent intent = new Intent(context, ChatActivity.class);
                         intent.putExtra(EXTRA_CONVERSATION_ID, message.getConversationId());
                         intent.putExtra(EXTRA_USERNAME, "Suda聊天室");

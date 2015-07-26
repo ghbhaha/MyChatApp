@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -41,6 +42,9 @@ import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 import com.suda.mychatapp.widget.PagerSlidingTabStrip;
 import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +60,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         initWidget();
-        UmengUpdateAgent.update(this);
 
     }
 
@@ -117,6 +120,7 @@ public class MainActivity extends ActionBarActivity {
         lvLeftMenu.addHeaderView(headerContainer);
         mlistItems = new ArrayList<HashMap<String, Object>>();
         addLeftMenu("Suda聊天室（实验）", R.drawable.ic_drawer_settings);
+        addLeftMenu("检测更新", R.drawable.browser_refresh);
         addLeftMenu("设置", R.drawable.ic_drawer_settings);
         addLeftMenu("帮助", R.drawable.ic_drawer_about);
         addLeftMenu("退出", R.drawable.ic_drawer_exit);
@@ -130,14 +134,17 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
+                    case 0:
+                        Intent it = new Intent(MainActivity.this, AccountInfoActivity.class);
+                        startActivityForResult(it, REQUEST_UPDATE_IAMEG);
+                        break;
                     case 1:
-
                         AVIMConversation conversation = MyApplication.getIMClient().getConversation(Conf.GROUP_CONVERSATION_ID);
                         if (conversation.getMembers().contains(MyAVUser.getCurrentUser().getUsername())) {
-                            Intent it = new Intent(MainActivity.this, ChatActivity.class);
-                            it.putExtra(EXTRA_CONVERSATION_ID, Conf.GROUP_CONVERSATION_ID);
-                            it.putExtra(EXTRA_USERNAME, "Suda聊天室");
-                            startActivity(it);
+                            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                            intent.putExtra(EXTRA_CONVERSATION_ID, Conf.GROUP_CONVERSATION_ID);
+                            intent.putExtra(EXTRA_USERNAME, "Suda聊天室");
+                            startActivity(intent);
                         } else {
                             conversation.join(new AVIMConversationCallback() {
                                 @Override
@@ -154,15 +161,15 @@ public class MainActivity extends ActionBarActivity {
                             });
                         }
                         break;
-                    case 0:
-                        Intent it = new Intent(MainActivity.this, AccountInfoActivity.class);
-                        startActivityForResult(it, REQUEST_UPDATE_IAMEG);
-                        break;
                     case 2:
+                        checkForUpdate();
                         break;
                     case 3:
+                        startActivity(new Intent(MainActivity.this,SettingsActivity.class));
                         break;
                     case 4:
+                        break;
+                    case 5:
                         MainActivity.this.finish();
                         break;
                 }
@@ -230,6 +237,30 @@ public class MainActivity extends ActionBarActivity {
                         .getDisplayMetrics()));
         mPagerSlidingTabStrip.setSelectedTextColor(Color.WHITE);
         mPagerSlidingTabStrip.setTextColor(Color.BLACK);
+    }
+
+    public void checkForUpdate() {
+        UmengUpdateAgent.setDeltaUpdate(true);
+        UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+            @Override
+            public void onUpdateReturned(int i, UpdateResponse updateResponse) {
+                switch (i) {
+                    case UpdateStatus.Yes: // has update
+                        UmengUpdateAgent.showUpdateDialog(MainActivity.this, updateResponse);
+                        break;
+                    case UpdateStatus.No: // has no update
+                        Toast.makeText(MainActivity.this, "没有检测到更新", Toast.LENGTH_SHORT).show();
+                        break;
+                    case UpdateStatus.NoneWifi: // none wifi
+                        Toast.makeText(MainActivity.this, "没有wifi连接， 只在wifi下更新", Toast.LENGTH_SHORT).show();
+                        break;
+                    case UpdateStatus.Timeout: // time out
+                        Toast.makeText(MainActivity.this, "连接超时", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+        UmengUpdateAgent.forceUpdate(MainActivity.this);
     }
 
 

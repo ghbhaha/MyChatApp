@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.SaveCallback;
+import com.rey.material.app.DialogFragment;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
@@ -105,6 +106,7 @@ public class EditAccountActivity extends AbstructActivity {
             }
         }, year, month, day);
         dlg.show();
+
 
 /*
         CalendarDatePickerDialog dialog = CalendarDatePickerDialog.newInstance(new CalendarDatePickerDialog.OnDateSetListener() {

@@ -40,13 +40,13 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                 @Override
                 public void done(MyAVUser user) {
                     LastMessage lastMessage = new LastMessage(textMessage.getConversationId(), user.getUsername(), UserPropUtil.getNikeName(user), user.getIcon().getUrl(),
-                             textMessage.getTimestamp(), textMessage.getText());
+                            textMessage.getTimestamp(), textMessage.getText());
                     if (!mDbhelper.isExistMsg(message.getConversationId())) {
                         mDbhelper.addLastMess(lastMessage);
                     } else {
                         mDbhelper.updateLastMsg(lastMessage);
                     }
-                    if(iFace!=null){
+                    if (iFace != null) {
                         iFace.update();
                     }
                 }
@@ -81,11 +81,11 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                         AVIMTextMessage textMessage = (AVIMTextMessage) message;
                         NotificationUtil.showNewGroupChatNotification(context, textMessage);
                     }
-                }
-                // 没有打开聊天界面或者不是当前联系人，通知栏通个人通知
-                if (message instanceof AVIMTextMessage) {
-                    final AVIMTextMessage textMessage = (AVIMTextMessage) message;
-                    NotificationUtil.showNewOneChatNotification(context, textMessage);
+                } else {
+                    if (message instanceof AVIMTextMessage) {
+                        final AVIMTextMessage textMessage = (AVIMTextMessage) message;
+                        NotificationUtil.showNewOneChatNotification(context, textMessage);
+                    }
                 }
             }
         } else {

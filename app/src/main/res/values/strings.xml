@@ -20,5 +20,6 @@
     <string name="title_activity_friend_info">账户信息</string>
     <string name="chatting_with">正在和%1$s聊天</string>
     <string name="title_activity_detail_edit">DetailEditActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 </resources>

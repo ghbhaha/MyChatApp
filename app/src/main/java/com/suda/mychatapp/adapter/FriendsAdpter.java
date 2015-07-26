@@ -1,6 +1,7 @@
 package com.suda.mychatapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.suda.mychatapp.R;
+import com.suda.mychatapp.activity.FriendInfoActivity;
 import com.suda.mychatapp.db.pojo.Friends;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.TextUtil;
@@ -71,9 +73,16 @@ public class FriendsAdpter extends BaseAdapter {
         return convertView;
     }
 
-    public void bindDataToView(final ViewHolder holder, int position) {
+    public void bindDataToView(final ViewHolder holder, final int position) {
         holder.mTvsign.setVisibility(TextUtil.isTextEmpty(arrayList.get(position).getSign()) ? View.INVISIBLE : View.VISIBLE);
         holder.mTvsign.setText(arrayList.get(position).getSign());
+
+        holder.mHeadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInfo(position);
+            }
+        });
 
         ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
             @Override
@@ -91,9 +100,17 @@ public class FriendsAdpter extends BaseAdapter {
                 arrayList.get(position).getUserName() : arrayList.get(position).getNikeName());
     }
 
+    public void showInfo(int position) {
+        Intent it = new Intent(context, FriendInfoActivity.class);
+        it.putExtra(EXTRA_USERNAME, arrayList.get(position).getUserName());
+        context.startActivity(it);
+    }
+
     public class ViewHolder {
         public TextView mTvnikeName;
         public TextView mTvsign;
         public CircleImageView mHeadIcon;
     }
+
+    private static final String EXTRA_USERNAME = "username";
 }

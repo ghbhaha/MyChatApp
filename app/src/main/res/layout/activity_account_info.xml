@@ -30,8 +30,8 @@
             android:layout_below="@+id/profile_image"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:onClick="setSign"
             android:clickable="true"
+            android:onClick="setSign"
             android:text="“今天真开心”。"
             android:textColor="@android:color/white" />
 
@@ -44,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginTop="165dp"
+        android:clickable="true"
         android:onClick="editAccountInfo"
         fab:fab_colorNormal="@color/pink"
         fab:fab_colorPressed="@color/pink_pressed"
