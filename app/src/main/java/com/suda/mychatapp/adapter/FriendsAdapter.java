@@ -11,9 +11,10 @@ import android.widget.TextView;
 
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.FriendInfoActivity;
-import com.suda.mychatapp.db.pojo.Friends;
+import com.suda.mychatapp.db.pojo.User;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.TextUtil;
+import com.suda.mychatapp.utils.UserPropUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +28,10 @@ public class FriendsAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater mInflater;
-    private List<Friends> arrayList;
+    private List<User> arrayList;
 
     public FriendsAdapter(Context context,
-                          ArrayList<Friends> arrayList) {
+                          ArrayList<User> arrayList) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.arrayList = arrayList;
@@ -84,7 +85,7 @@ public class FriendsAdapter extends BaseAdapter {
             }
         });
 
-        ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
+        ImageCacheUtil.showPicture(context, arrayList.get(position).getIconUrl(), new ImageCacheUtil.CallBack() {
             @Override
             public void done(final Bitmap bitmap) {
                 holder.mHeadIcon.post(new Runnable() {
@@ -96,8 +97,7 @@ public class FriendsAdapter extends BaseAdapter {
             }
         });
 
-        holder.mTvnikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikeName()) ?
-                arrayList.get(position).getUserName() : arrayList.get(position).getNikeName());
+        holder.mTvnikeName.setText(UserPropUtil.getNikeNameByUser(arrayList.get(position)));
     }
 
     public void showInfo(int position) {

@@ -212,16 +212,16 @@ public class ChatActivity extends AbstructActivity {
 
                             if (!mDbhelper.isExistMsg(message.getConversationId())) {
                                 if (Conf.GROUP_CONVERSATION_ID.equals(message.getConversationId())) {
-                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUserName(), UserPropUtil.getNikeName2(mMe), mMe.getIconUrl(),
+                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUserName(), UserPropUtil.getNikeNameByUser(mMe), mMe.getIconUrl(),
                                             message.getTimestamp(), message.getText());
                                     mDbhelper.addLastMess(lastMessage);
                                 } else {
-                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mFriend.getUserName(), UserPropUtil.getNikeName2(mFriend), mFriend.getIconUrl(),
+                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mFriend.getUserName(), UserPropUtil.getNikeNameByUser(mFriend), mFriend.getIconUrl(),
                                             message.getTimestamp(), message.getText());
                                     mDbhelper.addLastMess(lastMessage);
                                 }
                             } else {
-                                LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUserName(), UserPropUtil.getNikeName2(mMe), mMe.getIconUrl(),
+                                LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUserName(), UserPropUtil.getNikeNameByUser(mMe), mMe.getIconUrl(),
                                         message.getTimestamp(), message.getText());
                                 mDbhelper.updateLastMsg(lastMessage);
                             }
@@ -353,9 +353,9 @@ public class ChatActivity extends AbstructActivity {
                         mOtherMsg = message;
                         mFmLayoutOtherMsg.setVisibility(View.VISIBLE);
                         if (Conf.GROUP_CONVERSATION_ID.equals(message.getConversationId())) {
-                            mTvOtherMsg.setText("Suda聊天室" + UserPropUtil.getNikeName2(user) + ":" + message.getText());
+                            mTvOtherMsg.setText("Suda聊天室" + UserPropUtil.getNikeNameByUser(user) + ":" + message.getText());
                         } else {
-                            mTvOtherMsg.setText(UserPropUtil.getNikeName2(user) + ":" + message.getText());
+                            mTvOtherMsg.setText(UserPropUtil.getNikeNameByUser(user) + ":" + message.getText());
                         }
                     }
                 });
@@ -440,7 +440,7 @@ public class ChatActivity extends AbstructActivity {
                 @Override
                 public void done(User user) {
                     mFriend = user;
-                    getSupportActionBar().setTitle(String.format(getString(R.string.chatting_with), UserPropUtil.getNikeName2(user)));
+                    getSupportActionBar().setTitle(String.format(getString(R.string.chatting_with), UserPropUtil.getNikeNameByUser(user)));
                     initEntity();
                 }
             });

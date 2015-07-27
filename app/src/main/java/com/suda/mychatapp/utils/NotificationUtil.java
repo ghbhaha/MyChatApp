@@ -30,7 +30,7 @@ public class NotificationUtil {
                     ImageCacheUtil.showPicture(ct, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
                         @Override
                         public void done(Bitmap bitmap) {
-                            showNormalNotification(ct, UserPropUtil.getNikeName(user), bitmap);
+                            showNormalNotification(ct, UserPropUtil.getNikeNameByAVUser(user), bitmap);
                         }
                     });
                 }
@@ -74,7 +74,7 @@ public class NotificationUtil {
                         Notification notification = new Notification.Builder(context)
                                 .setLargeIcon(bitmap)
                                 .setSmallIcon(R.drawable.select_expression_normal)
-                                .setContentTitle(UserPropUtil.getNikeName2(user))
+                                .setContentTitle(UserPropUtil.getNikeNameByUser(user))
                                 .setContentText(message.getText())
                                 .build();
                         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -112,7 +112,7 @@ public class NotificationUtil {
                         Notification notification = new Notification.Builder(context)
                                 .setLargeIcon(bitmap)
                                 .setSmallIcon(R.mipmap.ic_launcher)
-                                .setContentTitle(UserPropUtil.getNikeName2(user))
+                                .setContentTitle(UserPropUtil.getNikeNameByUser(user))
                                 .setContentText(message.getText())
                                 .build();
                         notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失
@@ -149,7 +149,7 @@ public class NotificationUtil {
                         Notification notification = new Notification.Builder(context)
                                 .setLargeIcon(bitmap)
                                 .setSmallIcon(R.drawable.select_expression_normal)
-                                .setContentTitle("Suda聊天室" + UserPropUtil.getNikeName2(user))
+                                .setContentTitle("Suda聊天室" + UserPropUtil.getNikeNameByUser(user))
                                 .setContentText(message.getText())
                                 .build();
                         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -191,7 +191,7 @@ public class NotificationUtil {
                         Notification notification = new Notification.Builder(context)
                                 .setLargeIcon(bitmap)
                                 .setSmallIcon(R.mipmap.ic_launcher)
-                                .setContentTitle("Suda聊天室"+UserPropUtil.getNikeName2(user))
+                                .setContentTitle("Suda聊天室" + UserPropUtil.getNikeNameByUser(user))
                                 .setContentText(message.getText())
                                 .build();
                         notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失

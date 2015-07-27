@@ -35,7 +35,7 @@ import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.fragment.ConversationFrg;
 import com.suda.mychatapp.fragment.DongTaiFrg;
-import com.suda.mychatapp.fragment.FrienrdsFrg;
+import com.suda.mychatapp.fragment.FriendsFrg;
 import com.suda.mychatapp.utils.DoubleClickExitHelper;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.NotificationUtil;
@@ -73,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void done(MyAVUser me) {
                     openClient(me.getUsername());
-                    mTvNikeName.setText(UserPropUtil.getNikeName(me));
+                    mTvNikeName.setText(UserPropUtil.getNikeNameByAVUser(me));
                     mTvsign.setVisibility(TextUtil.isTextEmpty(me.getSign()) ? View.GONE : View.VISIBLE);
                     mTvsign.setText("“" + me.getSign() + "”");
 
@@ -290,7 +290,7 @@ public class MainActivity extends ActionBarActivity {
                 case 0:
                     return new ConversationFrg();
                 case 1:
-                    return new FrienrdsFrg();
+                    return new FriendsFrg();
                 case 2:
                     return new DongTaiFrg();
                 default:

@@ -172,12 +172,12 @@ public class EditAccountActivity extends AbstructActivity {
         UserBus.getMe(new UserBus.CallBack() {
             @Override
             public void done(MyAVUser user) {
-                mTvNikeName.setText(UserPropUtil.getNikeNameTip(user));
-                mTvSex.setText(UserPropUtil.getSexTip(user));
-                mTvSign.setText(UserPropUtil.getSignTip(user));
-                mTvTel.setText(UserPropUtil.getTelTip(user));
-                mTvEmail.setText(UserPropUtil.getEmailTip(user));
-                mTvBirth.setText(UserPropUtil.getBirthDayTip(user));
+                mTvNikeName.setText(UserPropUtil.getNikeNameTipByAVUser(user));
+                mTvSex.setText(UserPropUtil.getSexTipByAVUser(user));
+                mTvSign.setText(UserPropUtil.getSignTipByAVUser(user));
+                mTvTel.setText(UserPropUtil.getTelTipByAVUser(user));
+                mTvEmail.setText(UserPropUtil.getEmailTipByAVUser(user));
+                mTvBirth.setText(UserPropUtil.getBirthDayTipByAVUser(user));
                 if (TextUtil.isTextEmpty(user.getSex())) {
                     mSex = -1;
                 } else {

@@ -52,11 +52,11 @@ public class AccountInfoActivity extends AbstructActivity {
                 public void done(MyAVUser me) {
                     mTvSign.setText(TextUtil.isTextEmpty(me.getSign()) ? "请填写签名哦" : "“" + me.getSign() + "”");
                     mTvUsername.setText(me.getUsername());
-                    mTvSex.setText(UserPropUtil.getSexTip(me));
-                    mTvTel.setText(UserPropUtil.getTelTip(me));
-                    mTvNikeName.setText(UserPropUtil.getNikeNameTip(me));
-                    mTvBirthDay.setText(UserPropUtil.getBirthDayTip(me));
-                    mTvEmail.setText(UserPropUtil.getEmailTip(me));
+                    mTvSex.setText(UserPropUtil.getSexTipByAVUser(me));
+                    mTvTel.setText(UserPropUtil.getTelTipByAVUser(me));
+                    mTvNikeName.setText(UserPropUtil.getNikeNameTipByAVUser(me));
+                    mTvBirthDay.setText(UserPropUtil.getBirthDayTipByAVUser(me));
+                    mTvEmail.setText(UserPropUtil.getEmailTipByAVUser(me));
 
                     if (me.getIcon() != null) {
                         ImageCacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {

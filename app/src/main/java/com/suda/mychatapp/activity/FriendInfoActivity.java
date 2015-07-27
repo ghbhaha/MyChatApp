@@ -3,15 +3,9 @@ package com.suda.mychatapp.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFriendship;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.callback.AVFriendshipCallback;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.MyApplication;
@@ -22,8 +16,6 @@ import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.User;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
-
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -59,7 +51,7 @@ public class FriendInfoActivity extends AbstructActivity {
             UserBus.getMe(new UserBus.CallBack() {
                 @Override
                 public void done(MyAVUser user) {
-                    showInfo(user);
+                    showInfoByAVUser(user);
                 }
             });
 
@@ -68,7 +60,7 @@ public class FriendInfoActivity extends AbstructActivity {
                 @Override
                 public void done(User user) {
                     mFriend = user;
-                    showInfo2(user);
+                    showInfoByUser(user);
                     initStarIcon(user);
                 }
             });
@@ -100,14 +92,14 @@ public class FriendInfoActivity extends AbstructActivity {
         }
     }
 
-    void showInfo2(User user) {
+    void showInfoByUser(User user) {
         mTvUsername.setText(username);
-        mTvSex.setText(UserPropUtil.getSex2(user));
-        mTvTel.setText(UserPropUtil.getTel2(user));
-        mTvSign.setText(UserPropUtil.getSign2(user));
-        mTvNikeName.setText(UserPropUtil.getNikeName2(user));
-        mTvBirthDay.setText(UserPropUtil.getBirthDay2(user));
-        mTvEmail.setText(UserPropUtil.getEmail2(user));
+        mTvSex.setText(UserPropUtil.getSexByUser(user));
+        mTvTel.setText(UserPropUtil.getTelByUser(user));
+        mTvSign.setText(UserPropUtil.getSignByUser(user));
+        mTvNikeName.setText(UserPropUtil.getNikeNameByUser(user));
+        mTvBirthDay.setText(UserPropUtil.getBirthDayByUser(user));
+        mTvEmail.setText(UserPropUtil.getEmailByUser(user));
 
         ImageCacheUtil.showPicture(FriendInfoActivity.this, user.getIconUrl(), new ImageCacheUtil.CallBack() {
             @Override
@@ -122,14 +114,14 @@ public class FriendInfoActivity extends AbstructActivity {
         });
     }
 
-    void showInfo(MyAVUser user) {
+    void showInfoByAVUser(MyAVUser user) {
         mTvUsername.setText(username);
-        mTvSex.setText(UserPropUtil.getSex(user));
-        mTvTel.setText(UserPropUtil.getTel(user));
-        mTvSign.setText(UserPropUtil.getSign(user));
-        mTvNikeName.setText(UserPropUtil.getNikeName(user));
-        mTvBirthDay.setText(UserPropUtil.getBirthDay(user));
-        mTvEmail.setText(UserPropUtil.getEmail(user));
+        mTvSex.setText(UserPropUtil.getSexByAVUser(user));
+        mTvTel.setText(UserPropUtil.getTelByAVUser(user));
+        mTvSign.setText(UserPropUtil.getSignByAVUser(user));
+        mTvNikeName.setText(UserPropUtil.getNikeNameByAVUser(user));
+        mTvBirthDay.setText(UserPropUtil.getBirthDayByAVUser(user));
+        mTvEmail.setText(UserPropUtil.getEmailByAVUser(user));
 
         ImageCacheUtil.showPicture(FriendInfoActivity.this, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
             @Override

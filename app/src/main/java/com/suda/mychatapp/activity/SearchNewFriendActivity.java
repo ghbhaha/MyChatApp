@@ -54,8 +54,8 @@ public class SearchNewFriendActivity extends AbstructActivity {
                                 , list.get(0).getEmail(), list.get(0).getSex(), list.get(0).getBirthDay());
 
                         mRlFriend.setVisibility(View.VISIBLE);
-                        mTvsign.setText(UserPropUtil.getSign2(mFriendUser));
-                        mTvnikeName.setText(UserPropUtil.getNikeName2(mFriendUser));
+                        mTvsign.setText(UserPropUtil.getSignByUser(mFriendUser));
+                        mTvnikeName.setText(UserPropUtil.getNikeNameByUser(mFriendUser));
                         if (!TextUtil.isTextEmpty(mFriendUser.getIconUrl())) {
                             ImageCacheUtil.showPicture(SearchNewFriendActivity.this, mFriendUser.getIconUrl(), new ImageCacheUtil.CallBack() {
                                 @Override

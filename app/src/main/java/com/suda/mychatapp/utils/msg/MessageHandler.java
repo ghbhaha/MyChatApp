@@ -110,7 +110,7 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
             UserBus.findUser(textMessage.getFrom(), new UserBus.CallBack2() {
                 @Override
                 public void done(User user) {
-                    LastMessage lastMessage = new LastMessage(textMessage.getConversationId(), user.getUserName(), UserPropUtil.getNikeName2(user), user.getIconUrl(),
+                    LastMessage lastMessage = new LastMessage(textMessage.getConversationId(), user.getUserName(), UserPropUtil.getNikeNameByUser(user), user.getIconUrl(),
                             textMessage.getTimestamp(), textMessage.getText());
                     if (!mDbhelper.isExistMsg(message.getConversationId())) {
                         mDbhelper.addLastMess(lastMessage);

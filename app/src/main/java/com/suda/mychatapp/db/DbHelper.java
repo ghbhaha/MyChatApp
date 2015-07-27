@@ -8,15 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.suda.mychatapp.Conf;
-import com.suda.mychatapp.db.pojo.Friends;
 import com.suda.mychatapp.db.pojo.LastMessage;
 import com.suda.mychatapp.db.pojo.User;
 import com.suda.mychatapp.utils.DateFmUtil;
-import com.suda.mychatapp.utils.TextUtil;
-import com.suda.mychatapp.utils.UserPropUtil;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Suda on 2015/7/26.
@@ -88,10 +85,10 @@ public class DbHelper {
 
     public void deleteFriend(User user) {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
-        Log.d("del","DELETE FROM friend where userName='" + user.getUserName() + "'");
+        Log.d("del", "DELETE FROM friend where userName='" + user.getUserName() + "'");
         try {
             db.execSQL("DELETE FROM friend where userName='" + user.getUserName() + "'");
-        }catch (Exception e ){
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             db.close();
@@ -106,7 +103,6 @@ public class DbHelper {
         db.close();
         return tmp;
     }
-
 
 
     public User findUserByName(String username) {
@@ -171,10 +167,10 @@ public class DbHelper {
         return tmp;
     }
 
-    public ArrayList<Friends> findAllFriend() {
+    public ArrayList<User> findAllFriend() {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
 
-        Cursor cursor = db.query("friend,user", null,  "friend.userName=user.userName",
+        Cursor cursor = db.query("friend,user", null, "friend.userName=user.userName",
                 null, null, null, null);
 
         if (!cursor.moveToFirst()) {
@@ -182,15 +178,16 @@ public class DbHelper {
             return null;
         }
 
-        ArrayList<Friends> arrayList = new ArrayList<Friends>();
+        ArrayList<User> arrayList = new ArrayList<User>();
 
         for (int i = 0; i < cursor.getCount(); i++, cursor.moveToNext()) {
 
-            arrayList.add(new Friends(TextUtil.isTextEmpty(cursor.getString(cursor.getColumnIndex("nikeName")))?
-                    cursor.getString(cursor.getColumnIndex("userName")):
-                    cursor.getString(cursor.getColumnIndex("nikeName"))
-                    , cursor.getString(cursor.getColumnIndex("sign")),
-                    cursor.getString(cursor.getColumnIndex("userName")), cursor.getString(cursor.getColumnIndex("iconUrl"))));
+            arrayList.add(new User(cursor.getString(cursor.getColumnIndex("objId")), cursor.getString(cursor.getColumnIndex("userName"))
+                    , cursor.getString(cursor.getColumnIndex("nikeName")), cursor.getString(cursor.getColumnIndex("sign"))
+                    , cursor.getString(cursor.getColumnIndex("iconUrl")), cursor.getString(cursor.getColumnIndex("tel"))
+                    , cursor.getString(cursor.getColumnIndex("email")), cursor.getString(cursor.getColumnIndex("sex"))
+                    , cursor.getLong(cursor.getColumnIndex("birthday")) == 0 ? null : new Date(cursor.getLong(cursor.getColumnIndex("birthday")))));
+
         }
         db.close();
         return arrayList;
