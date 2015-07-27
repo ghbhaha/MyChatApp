@@ -6,10 +6,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
@@ -33,6 +36,7 @@ import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 import com.suda.mychatapp.utils.msg.MessageHandler;
 import com.suda.mychatapp.utils.msg.MessageUtil;
+import com.suda.mychatapp.utils.msg.MsgIFace;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +88,6 @@ public class ChatActivity extends AbstructActivity {
                 } else {
                     mMessageList.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, mMe));
                 }
-                ;
             }
         }
         mMessageAdapter.notifyDataSetChanged();
@@ -236,7 +239,7 @@ public class ChatActivity extends AbstructActivity {
     public void finishSend() {
         mEtMsg.setText(null);
         isSendSuccess = true;
-        if( MessageHandler.getiFace()!=null){
+        if (MessageHandler.getiFace() != null) {
             MessageHandler.getiFace().update();
         }
         scrollToLast();
@@ -319,6 +322,46 @@ public class ChatActivity extends AbstructActivity {
 
     public void initEntity() {
 
+        mOtherMsgTimer = new Timer();
+        mMsgIFace = new MsgIFace() {
+            @Override
+            public void update() {
+
+            }
+
+            @Override
+            public void update(final AVIMTextMessage message) {
+                UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+                    @Override
+                    public void done(MyAVUser user) {
+
+                        mOtherMsgTimer.cancel();
+                        mOtherMsgTimer = new Timer();
+                        mOtherMsgTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mFmLayoutOtherMsg.setVisibility(View.GONE);
+                                        mOtherMsgTimer.cancel();
+                                    }
+                                });
+                            }
+                        }, 2000);
+
+                        mOtherMsg = message;
+                        mFmLayoutOtherMsg.setVisibility(View.VISIBLE);
+                        if(Conf.GROUP_CONVERSATION_ID.equals(message.getConversationId())){
+                            mTvOtherMsg.setText("Suda聊天室"+UserPropUtil.getNikeName(user) + ":" + message.getText());
+                        }else{
+                            mTvOtherMsg.setText(UserPropUtil.getNikeName(user) + ":" + message.getText());
+                        }
+                    }
+                });
+            }
+        };
+
         mConversation = MyApplication.getIMClient().getConversation(mConversationId);
         mMessageList = new ArrayList<>();
         mMessageAdapter = new MessageAdapter(this, mMessageList);
@@ -329,6 +372,8 @@ public class ChatActivity extends AbstructActivity {
         MessageHandler.setActivityMessageHandler(mChatHandler);
         if (!mConversationId.equals(Conf.GROUP_CONVERSATION_ID)) {
             MessageHandler.setCurrentFriend(mFriend.getUsername());
+        } else {
+            MessageHandler.setCurrentFriend("group");
         }
         UserBus.getMe(new UserBus.CallBack() {
             @Override
@@ -349,6 +394,21 @@ public class ChatActivity extends AbstructActivity {
 
 
     public void initWidget() {
+
+        mFmLayoutOtherMsg = (FrameLayout) findViewById(R.id.other_msg);
+
+        mFmLayoutOtherMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(ChatActivity.this, ChatActivity.class);
+                it.putExtra(EXTRA_CONVERSATION_ID, mOtherMsg.getConversationId());
+                it.putExtra(EXTRA_USERNAME, mOtherMsg.getFrom());
+                startActivity(it);
+                ChatActivity.this.finish();
+            }
+        });
+
+        mTvOtherMsg = (TextView) findViewById(R.id.tv_other_msg);
 
         mLvChat = (ListView) findViewById(R.id.chat_lv);
         mEtMsg = (EditText) findViewById(R.id.id_input_msg);
@@ -390,12 +450,14 @@ public class ChatActivity extends AbstructActivity {
     @Override
     protected void onPause() {
         MessageHandler.setIsBackTask(true);
+        MessageHandler.setiOtherFace(null);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         MessageHandler.setIsBackTask(false);
+        MessageHandler.setiOtherFace(mMsgIFace);
         super.onResume();
     }
 
@@ -422,5 +484,13 @@ public class ChatActivity extends AbstructActivity {
     private SwipeRefreshLayout mSwipeLayout;
 
     private DbHelper mDbhelper;
+
+    MsgIFace mMsgIFace;
+
+    FrameLayout mFmLayoutOtherMsg;
+    TextView mTvOtherMsg;
+    AVIMTextMessage mOtherMsg;
+    Timer mOtherMsgTimer;
+
 
 }

@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.suda.mychatapp.db.pojo.Message;
 import com.suda.mychatapp.utils.msg.MsgIFace;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.ChatActivity;
@@ -79,6 +81,10 @@ public class ConversationFrg extends Fragment {
             @Override
             public void update() {
                 reFresh();
+            }
+            @Override
+            public void update(AVIMTextMessage message) {
+
             }
         };
 

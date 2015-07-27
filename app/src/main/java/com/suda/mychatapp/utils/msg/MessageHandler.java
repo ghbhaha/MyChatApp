@@ -33,59 +33,41 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
     @Override
     public void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation, final AVIMClient client) {
 
-        if (message instanceof AVIMTextMessage) {
+
+        if (message instanceof AVIMTextMessage && client.getClientId().equals(MyAVUser.getCurrentUser().getUsername())) {
             final AVIMTextMessage textMessage = (AVIMTextMessage) message;
+            //更新数据库
+            updateDb(message);
 
-            UserBus.findUser(textMessage.getFrom(), new UserBus.CallBack() {
-                @Override
-                public void done(MyAVUser user) {
-                    LastMessage lastMessage = new LastMessage(textMessage.getConversationId(), user.getUsername(), UserPropUtil.getNikeName(user), user.getIcon().getUrl(),
-                            textMessage.getTimestamp(), textMessage.getText());
-                    if (!mDbhelper.isExistMsg(message.getConversationId())) {
-                        mDbhelper.addLastMess(lastMessage);
-                    } else {
-                        mDbhelper.updateLastMsg(lastMessage);
-                    }
-                    if (iFace != null) {
-                        iFace.update();
-                    }
-                }
-            });
-        }
-
-        if (client.getClientId().equals(MyAVUser.getCurrentUser().getUsername())) {
-            if (activityMessageHandler != null && message.getFrom().equals(currentFriend)) {
-                // 正在聊天并且前台时，分发消息，刷新界面
-                // 如果当前用户转到后台则通知消息，更新聊天记录
-                if (isBackTask) {
-                    if (message instanceof AVIMTextMessage) {
-                        AVIMTextMessage textMessage = (AVIMTextMessage) message;
+            //ChatActicity存在
+            if (activityMessageHandler != null) {
+                //如果是正在聊天的朋友
+                if (message.getFrom().equals(currentFriend)) {
+                    //如果后台
+                    if (isBackTask) {
                         NotificationUtil.showCurrentOneChatNotification(context, textMessage);
                     }
-                }
-                activityMessageHandler.onMessage(message, conversation, client);
-            } else if (message.getConversationId().equals(Conf.GROUP_CONVERSATION_ID) && activityMessageHandler != null) {
-                // 正在聊天并且前台时，分发消息，刷新界面
-                // 如果当前用户转到后台则通知消息，更新聊天记录
-                if (isBackTask) {
-                    if (message instanceof AVIMTextMessage) {
-                        AVIMTextMessage textMessage = (AVIMTextMessage) message;
+                    activityMessageHandler.onMessage(message, conversation, client);
+
+                    //如果是正在聊天的是群组
+                } else if ("group".equals(currentFriend)) {
+                    //如果后台
+                    if (isBackTask) {
                         NotificationUtil.showCurrentGroupChatNotification(context, textMessage);
                     }
-                }
-                activityMessageHandler.onMessage(message, conversation, client);
-            } else {
-                if (message.getConversationId().equals(Conf.GROUP_CONVERSATION_ID)) {
-                    // 没有打开聊天界面或者不是当前联系人并且是群组，通知栏群组通知
-                    if (message instanceof AVIMTextMessage) {
-                        AVIMTextMessage textMessage = (AVIMTextMessage) message;
-                        NotificationUtil.showNewGroupChatNotification(context, textMessage);
-                    }
+                    activityMessageHandler.onMessage(message, conversation, client);
+                    //其他人发来消息
                 } else {
-                    if (message instanceof AVIMTextMessage) {
-                        final AVIMTextMessage textMessage = (AVIMTextMessage) message;
-                        NotificationUtil.showNewOneChatNotification(context, textMessage);
-                    }
+                    iOtherFace.update(textMessage);
+                }
+                //ChatActicity不存在
+            } else {
+                //如果是群组信息
+                if (Conf.GROUP_CONVERSATION_ID.equals(message.getConversationId())) {
+                    NotificationUtil.showNewGroupChatNotification(context, textMessage);
+                    //如果是好友信息
+                } else {
+                    NotificationUtil.showNewOneChatNotification(context, textMessage);
                 }
             }
         } else {
@@ -105,6 +87,11 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
         MessageHandler.currentFriend = currentFriend;
     }
 
+
+    public static void setiOtherFace(MsgIFace iOtherFace) {
+        MessageHandler.iOtherFace = iOtherFace;
+    }
+
     public static MsgIFace getiFace() {
         return iFace;
     }
@@ -117,6 +104,28 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
         MessageHandler.isBackTask = isBackTask;
     }
 
+    public void updateDb(final AVIMTypedMessage message) {
+        if (message instanceof AVIMTextMessage) {
+            final AVIMTextMessage textMessage = (AVIMTextMessage) message;
+
+            UserBus.findUser(textMessage.getFrom(), new UserBus.CallBack() {
+                @Override
+                public void done(MyAVUser user) {
+                    LastMessage lastMessage = new LastMessage(textMessage.getConversationId(), user.getUsername(), UserPropUtil.getNikeName(user), user.getIcon().getUrl(),
+                            textMessage.getTimestamp(), textMessage.getText());
+                    if (!mDbhelper.isExistMsg(message.getConversationId())) {
+                        mDbhelper.addLastMess(lastMessage);
+                    } else {
+                        mDbhelper.updateLastMsg(lastMessage);
+                    }
+                    if (iFace != null) {
+                        iFace.update();
+                    }
+                }
+            });
+        }
+    }
+
     private static AVIMTypedMessageHandler<AVIMTypedMessage> activityMessageHandler;
     private Context context;
     private String TAG = MessageHandler.this.getClass().getSimpleName();
@@ -125,6 +134,7 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";
     private static final String EXTRA_USERNAME = "username";
     private static MsgIFace iFace;
+    private static MsgIFace iOtherFace;
 
 
 }
