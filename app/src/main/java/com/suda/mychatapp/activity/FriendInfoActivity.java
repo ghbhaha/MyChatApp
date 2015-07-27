@@ -74,6 +74,7 @@ public class FriendInfoActivity extends AbstructActivity {
                 @Override
                 public void result(boolean rs) {
                     MyApplication.getDBHelper().deleteFriend(mFriend);
+                    MyApplication.getmFriendsIface().update();
                     isFriend = !rs;
                     mStar.setIcon(isFriend ?
                             R.drawable.ic_action_important : R.drawable.ic_action_not_important);
@@ -84,6 +85,7 @@ public class FriendInfoActivity extends AbstructActivity {
                 @Override
                 public void result(boolean rs) {
                     MyApplication.getDBHelper().addFriend(mFriend);
+                    MyApplication.getmFriendsIface().update();
                     isFriend = rs;
                     mStar.setIcon(isFriend ?
                             R.drawable.ic_action_important : R.drawable.ic_action_not_important);

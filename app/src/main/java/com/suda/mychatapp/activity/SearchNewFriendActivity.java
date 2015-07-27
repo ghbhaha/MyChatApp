@@ -15,6 +15,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.suda.mychatapp.AbstructActivity;
+import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.FriendsBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
@@ -87,10 +88,24 @@ public class SearchNewFriendActivity extends AbstructActivity {
 
     public void addUserToMine(View view) {
         Log.d("obj", mFriendUser.getObjId());
+
+        if (MyApplication.getDBHelper().isFriend(mFriendUser.getUserName())) {
+            Toast.makeText(this, UserPropUtil.getNikeNameByUser(mFriendUser) + "已经是你的好友了", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (MyAVUser.getCurrentUser().getUsername().equals(mFriendUser.getUserName())) {
+            Toast.makeText(this, "不可添加自己哦", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         FriendsBus.starFriend(this, mFriendUser, new FriendsBus.ResultCallback() {
             @Override
             public void result(boolean rs) {
-
+                if (rs) {
+                    MyApplication.getDBHelper().addFriend(mFriendUser);
+                    MyApplication.getmFriendsIface().update();
+                    Toast.makeText(SearchNewFriendActivity.this, "添加" + UserPropUtil.getNikeNameByUser(mFriendUser) + "成功", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

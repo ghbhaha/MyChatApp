@@ -28,6 +28,7 @@ import com.suda.mychatapp.adapter.FriendsAdapter;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.User;
+import com.suda.mychatapp.iface.FriendsIface;
 import com.suda.mychatapp.utils.FriendSortUtil;
 import com.suda.mychatapp.utils.msg.ConversationType;
 
@@ -48,6 +49,20 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFriendslist = new ArrayList<User>();
+        mFriendsIface = new FriendsIface() {
+            @Override
+            public void update() {
+                if (MyApplication.getDBHelper().findAllFriend() != null) {
+                    mFriendslist.clear();
+                    mFriendslist.addAll(MyApplication.getDBHelper().findAllFriend());
+                    FriendSortUtil.sortFriend(mFriendslist);
+                    friendsAdpter = new FriendsAdapter(getActivity(), mFriendslist);
+                    mLvfriends.setAdapter(friendsAdpter);
+                }
+            }
+        };
+
+        MyApplication.setFriendsIface(mFriendsIface);
 
     }
 
@@ -95,7 +110,6 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
     }
 
     public void initEntity() {
-
         if (MyApplication.getDBHelper().findAllFriend() != null) {
             mFriendslist.addAll(MyApplication.getDBHelper().findAllFriend());
             FriendSortUtil.sortFriend(mFriendslist);
@@ -149,6 +163,9 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
                                 @Override
                                 public void done(User user) {
                                     mFriendslist.add(user);
+                                    if (!MyApplication.getDBHelper().isFriend(user.getUserName())) {
+                                        MyApplication.getDBHelper().addFriend(user);
+                                    }
                                     if (mFriendslist.size() == avFriendship.getFollowees().size()) {
                                         if (friendsAdpter != null) {
                                             FriendSortUtil.sortFriend(mFriendslist);
@@ -168,6 +185,11 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
                     e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void fetchConversationWithClientIds(List<String> clientIds, final ConversationType type, final AVIMConversationCreatedCallback
@@ -204,6 +226,8 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
     private ArrayList<User> mFriendslist;
     private FriendsAdapter friendsAdpter;
     private SwipeRefreshLayout mSwipeRefreshLayput;
+
+    public static FriendsIface mFriendsIface;
 
 
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";
