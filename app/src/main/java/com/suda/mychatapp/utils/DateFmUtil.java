@@ -14,9 +14,25 @@ public class DateFmUtil {
         return format.format(date);
     }
 
-    public static String fmDate1(Date date) {
+    public static String fmDateBirth(Date date) {
         DateFormat format = new SimpleDateFormat(SIMPLE_TIME_1);
         return format.format(date);
+    }
+
+    public static long birthDateToLong(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat(SIMPLE_TIME_1);
+        long datelong = 0;
+
+        if (date == null) {
+            return 0;
+        }
+
+        try {
+            datelong = format.parse(fmDateBirth(date)).getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return datelong;
     }
 
     private final static String SIMPLE_TIME_1 = "yyyy-MM-dd";

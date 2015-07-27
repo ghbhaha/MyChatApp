@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="群消息通知"
+            android:text="群消息通知栏通知"
             android:textColor="#000000" />
 
         <com.rey.material.widget.CheckBox

@@ -13,12 +13,11 @@ import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.DbHelper;
 import com.suda.mychatapp.db.pojo.LastMessage;
+import com.suda.mychatapp.db.pojo.User;
 import com.suda.mychatapp.utils.NotificationUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 
 public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
-
-    DbHelper mDbhelper;
 
     public MessageHandler(Context context) {
         this.context = context;
@@ -108,10 +107,10 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
         if (message instanceof AVIMTextMessage) {
             final AVIMTextMessage textMessage = (AVIMTextMessage) message;
 
-            UserBus.findUser(textMessage.getFrom(), new UserBus.CallBack() {
+            UserBus.findUser(textMessage.getFrom(), new UserBus.CallBack2() {
                 @Override
-                public void done(MyAVUser user) {
-                    LastMessage lastMessage = new LastMessage(textMessage.getConversationId(), user.getUsername(), UserPropUtil.getNikeName(user), user.getIcon().getUrl(),
+                public void done(User user) {
+                    LastMessage lastMessage = new LastMessage(textMessage.getConversationId(), user.getUserName(), UserPropUtil.getNikeName2(user), user.getIconUrl(),
                             textMessage.getTimestamp(), textMessage.getText());
                     if (!mDbhelper.isExistMsg(message.getConversationId())) {
                         mDbhelper.addLastMess(lastMessage);
@@ -135,6 +134,6 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
     private static final String EXTRA_USERNAME = "username";
     private static MsgIFace iFace;
     private static MsgIFace iOtherFace;
-
+    private DbHelper mDbhelper;
 
 }

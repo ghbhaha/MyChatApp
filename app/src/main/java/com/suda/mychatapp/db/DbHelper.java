@@ -5,10 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.suda.mychatapp.Conf;
 import com.suda.mychatapp.db.pojo.LastMessage;
+import com.suda.mychatapp.db.pojo.User;
+import com.suda.mychatapp.utils.DateFmUtil;
 
+import java.util.Date;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +27,7 @@ public class DbHelper {
         this.dbOpenHelper = new DbOpenHelper(context);
     }
 
-    public void clearAllData(){
+    public void clearAllData() {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
         db.execSQL("DELETE FROM last_msg");
     }
@@ -36,7 +40,7 @@ public class DbHelper {
                 db.execSQL(
                         "insert into last_msg(conversation_id, lastTime, userName, nikeName,iconUrl,lastMsg) values(?,?,?,?,?,?)",
                         new Object[]{message.getConversation_id(), message.getLastTime(),
-                                message.getUserName(),"群聊:"+ message.getNikeName(), message.getIconUrl(), message.getLastMsg()});
+                                message.getUserName(), "群聊:" + message.getNikeName(), message.getIconUrl(), message.getLastMsg()});
             } else {
                 db.execSQL(
                         "insert into last_msg(conversation_id, lastTime, userName, nikeName,iconUrl,lastMsg) values(?,?,?,?,?,?)",
@@ -50,9 +54,79 @@ public class DbHelper {
         }
     }
 
-    public void deleteLastMsgById(String conversationId){
+    public void addUser(User user) {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM last_msg where conversation_id='"+conversationId+"'");
+        try {
+            db.execSQL(
+                    "insert into user(objId, userName, nikeName, sign, iconUrl, tel, email, sex, birthday) values(?,?,?,?,?,?,?,?,?)",
+                    new Object[]{user.getObjId(), user.getUserName(), user.getNikeName(),
+                            user.getSign(), user.getIconUrl(), user.getTel(), user.getEmail(), user.getSex(), DateFmUtil.birthDateToLong(user.getBirthday())});
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
+    public void addFriend(User user) {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        try {
+            db.execSQL(
+                    "insert into friend(objId, userName) values(?,?)",
+                    new Object[]{user.getObjId(), user.getUserName()});
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
+    public void deleteFriend(User user) {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        Log.d("del","DELETE FROM friend where userName='" + user.getUserName() + "'");
+        try {
+            db.execSQL("DELETE FROM friend where userName='" + user.getUserName() + "'");
+        }catch (Exception e ){
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
+    public boolean isFriend(String username) {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        Cursor cursor = db.query("friend", null, "userName=?",
+                new String[]{username}, null, null, null);
+        boolean tmp = cursor.moveToFirst();
+        db.close();
+        return tmp;
+    }
+
+
+
+    public User findUserByName(String username) {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        Cursor cursor = db.query("user", null, "username=?",
+                new String[]{username}, null, null, null);
+
+        if (!cursor.moveToFirst()) {
+            db.close();
+            return null;
+        }
+
+        User u = new User(cursor.getString(cursor.getColumnIndex("objId")), cursor.getString(cursor.getColumnIndex("userName"))
+                , cursor.getString(cursor.getColumnIndex("nikeName")), cursor.getString(cursor.getColumnIndex("sign"))
+                , cursor.getString(cursor.getColumnIndex("iconUrl")), cursor.getString(cursor.getColumnIndex("tel"))
+                , cursor.getString(cursor.getColumnIndex("email")), cursor.getString(cursor.getColumnIndex("sex"))
+                , cursor.getLong(cursor.getColumnIndex("birthday")) == 0 ? null : new Date(cursor.getLong(cursor.getColumnIndex("birthday"))));
+        db.close();
+        return u;
+
+    }
+
+    public void deleteLastMsgById(String conversationId) {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        db.execSQL("DELETE FROM last_msg where conversation_id='" + conversationId + "'");
     }
 
     public void updateLastMsg(LastMessage message) {
@@ -61,7 +135,7 @@ public class DbHelper {
             ContentValues values = new ContentValues();
             values.put("lastTime", String.valueOf(message.getLastTime()));
             if (Conf.GROUP_CONVERSATION_ID.equals(message.getConversation_id())) {
-                values.put("nikeName", "群聊:" + message.getUserName());
+                values.put("nikeName", "群聊:" + message.getNikeName());
                 values.put("iconUrl", message.getIconUrl());
             }
             values.put("lastMsg", message.getLastMsg());
@@ -83,7 +157,17 @@ public class DbHelper {
         return tmp;
     }
 
-    public ArrayList<LastMessage> findLastMsg() {
+    public boolean isExistUser(String username) {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        Cursor cursor = db.query("user", null, "username=?",
+                new String[]{username}, null, null, null);
+        boolean tmp = cursor.moveToFirst();
+        db.close();
+        return tmp;
+    }
+
+
+    public ArrayList<LastMessage> findAllLastMsg() {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
         Cursor cursor = db.query("last_msg", null, null,
                 null, null, null, null);

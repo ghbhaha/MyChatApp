@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
@@ -32,6 +31,7 @@ import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.DbHelper;
 import com.suda.mychatapp.db.pojo.LastMessage;
 import com.suda.mychatapp.db.pojo.Message;
+import com.suda.mychatapp.db.pojo.User;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 import com.suda.mychatapp.utils.msg.MessageHandler;
@@ -109,16 +109,16 @@ public class ChatActivity extends AbstructActivity {
     private void filterGMessages(final List<AVIMMessage> messages) {
         for (final AVIMMessage message : messages) {
             if (message instanceof AVIMTypedMessage) {
-                UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+                UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
                     @Override
-                    public void done(MyAVUser user) {
+                    public void done(User user) {
                         mMessageList.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, user));
                         if (messages.size() == mMessageList.size()) {
                             mMessageList.clear();
                             for (final AVIMMessage message : messages) {
-                                UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+                                UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
                                     @Override
-                                    public void done(MyAVUser user) {
+                                    public void done(User user) {
                                         mMessageList.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, user));
                                         if (messages.size() == mMessageList.size()) {
                                             mMessageAdapter.notifyDataSetChanged();
@@ -144,19 +144,19 @@ public class ChatActivity extends AbstructActivity {
         }
 
         for (final AVIMMessage message : messages) {
-            UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+            UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
                 @Override
-                public void done(MyAVUser user) {
-                    UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+                public void done(User user) {
+                    UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
                         @Override
-                        public void done(MyAVUser user) {
+                        public void done(User user) {
                             typedMessages.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, user));
                             if (messages.size() == typedMessages.size()) {
                                 typedMessages.clear();
                                 for (final AVIMMessage message : messages) {
-                                    UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+                                    UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
                                         @Override
-                                        public void done(MyAVUser user) {
+                                        public void done(User user) {
                                             typedMessages.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, user));
                                             if (messages.size() == typedMessages.size()) {
                                                 List<Message> newMessages = new ArrayList<Message>();
@@ -212,16 +212,16 @@ public class ChatActivity extends AbstructActivity {
 
                             if (!mDbhelper.isExistMsg(message.getConversationId())) {
                                 if (Conf.GROUP_CONVERSATION_ID.equals(message.getConversationId())) {
-                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUsername(), UserPropUtil.getNikeName(mMe), mMe.getIcon().getUrl(),
+                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUserName(), UserPropUtil.getNikeName2(mMe), mMe.getIconUrl(),
                                             message.getTimestamp(), message.getText());
                                     mDbhelper.addLastMess(lastMessage);
                                 } else {
-                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mFriend.getUsername(), UserPropUtil.getNikeName(mFriend), mFriend.getIcon().getUrl(),
+                                    LastMessage lastMessage = new LastMessage(message.getConversationId(), mFriend.getUserName(), UserPropUtil.getNikeName2(mFriend), mFriend.getIconUrl(),
                                             message.getTimestamp(), message.getText());
                                     mDbhelper.addLastMess(lastMessage);
                                 }
                             } else {
-                                LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUsername(), UserPropUtil.getNikeName(mMe), mMe.getIcon().getUrl(),
+                                LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUserName(), UserPropUtil.getNikeName2(mMe), mMe.getIconUrl(),
                                         message.getTimestamp(), message.getText());
                                 mDbhelper.updateLastMsg(lastMessage);
                             }
@@ -302,9 +302,9 @@ public class ChatActivity extends AbstructActivity {
             }
             if (conversation.getConversationId().equals(ChatActivity.this.mConversation.getConversationId())) {
                 if (mConversationId.equals(Conf.GROUP_CONVERSATION_ID)) {
-                    UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+                    UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
                         @Override
-                        public void done(MyAVUser user) {
+                        public void done(User user) {
                             mMessageList.add(MessageUtil.aviMsgtoMsg(message, user));
                             mMessageAdapter.notifyDataSetChanged();
                             scrollToLast();
@@ -331,9 +331,9 @@ public class ChatActivity extends AbstructActivity {
 
             @Override
             public void update(final AVIMTextMessage message) {
-                UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+                UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
                     @Override
-                    public void done(MyAVUser user) {
+                    public void done(User user) {
 
                         mOtherMsgTimer.cancel();
                         mOtherMsgTimer = new Timer();
@@ -352,10 +352,10 @@ public class ChatActivity extends AbstructActivity {
 
                         mOtherMsg = message;
                         mFmLayoutOtherMsg.setVisibility(View.VISIBLE);
-                        if(Conf.GROUP_CONVERSATION_ID.equals(message.getConversationId())){
-                            mTvOtherMsg.setText("Suda聊天室"+UserPropUtil.getNikeName(user) + ":" + message.getText());
-                        }else{
-                            mTvOtherMsg.setText(UserPropUtil.getNikeName(user) + ":" + message.getText());
+                        if (Conf.GROUP_CONVERSATION_ID.equals(message.getConversationId())) {
+                            mTvOtherMsg.setText("Suda聊天室" + UserPropUtil.getNikeName2(user) + ":" + message.getText());
+                        } else {
+                            mTvOtherMsg.setText(UserPropUtil.getNikeName2(user) + ":" + message.getText());
                         }
                     }
                 });
@@ -371,14 +371,15 @@ public class ChatActivity extends AbstructActivity {
         mChatHandler = new ChatHandler();
         MessageHandler.setActivityMessageHandler(mChatHandler);
         if (!mConversationId.equals(Conf.GROUP_CONVERSATION_ID)) {
-            MessageHandler.setCurrentFriend(mFriend.getUsername());
+            MessageHandler.setCurrentFriend(mFriend.getUserName());
         } else {
             MessageHandler.setCurrentFriend("group");
         }
         UserBus.getMe(new UserBus.CallBack() {
             @Override
             public void done(MyAVUser user) {
-                mMe = user;
+                mMe = new User(user.getObjectId(), user.getUsername(), user.getNikename(), user.getSign(), user.getIcon().getUrl(), user.getMobilePhoneNumber()
+                        , user.getEmail(), user.getSex(), user.getBirthDay());
                 loadMessagesWhenInit();
             }
         });
@@ -435,11 +436,11 @@ public class ChatActivity extends AbstructActivity {
             getSupportActionBar().setTitle("Suda聊天室");
             initEntity();
         } else {
-            UserBus.findUser(mFriendUserName, new UserBus.CallBack() {
+            UserBus.findUser(mFriendUserName, new UserBus.CallBack2() {
                 @Override
-                public void done(MyAVUser user) {
+                public void done(User user) {
                     mFriend = user;
-                    getSupportActionBar().setTitle(String.format(getString(R.string.chatting_with), UserPropUtil.getNikeName(user)));
+                    getSupportActionBar().setTitle(String.format(getString(R.string.chatting_with), UserPropUtil.getNikeName2(user)));
                     initEntity();
                 }
             });
@@ -475,8 +476,8 @@ public class ChatActivity extends AbstructActivity {
 
     private AVIMConversation mConversation;
     private AtomicBoolean isLoadingMessages = new AtomicBoolean(false);
-    private MyAVUser mFriend;
-    private MyAVUser mMe;
+    private User mFriend;
+    private User mMe;
     private ChatHandler mChatHandler;
 
     private boolean isSendSuccess = true;

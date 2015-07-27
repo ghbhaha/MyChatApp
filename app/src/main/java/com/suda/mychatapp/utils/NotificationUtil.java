@@ -14,6 +14,7 @@ import com.suda.mychatapp.activity.ChatActivity;
 import com.suda.mychatapp.activity.MainActivity;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.db.pojo.User;
 
 /**
  * Created by Suda on 2015/7/25.
@@ -63,17 +64,17 @@ public class NotificationUtil {
 
     //当当前好友后台，来新消息时调用
     public static void showCurrentOneChatNotification(final Context context, final AVIMTextMessage message) {
-        UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+        UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
             @Override
-            public void done(final MyAVUser user) {
-                ImageCacheUtil.showPicture(context, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+            public void done(final User user) {
+                ImageCacheUtil.showPicture(context, user.getIconUrl(), new ImageCacheUtil.CallBack() {
                     @Override
                     public void done(Bitmap bitmap) {
                         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                         Notification notification = new Notification.Builder(context)
                                 .setLargeIcon(bitmap)
                                 .setSmallIcon(R.drawable.select_expression_normal)
-                                .setContentTitle(UserPropUtil.getNikeName(user))
+                                .setContentTitle(UserPropUtil.getNikeName2(user))
                                 .setContentText(message.getText())
                                 .build();
                         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -95,10 +96,10 @@ public class NotificationUtil {
     public static void showNewOneChatNotification(final Context context, final AVIMTextMessage message) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         final boolean sound = sharedPreferences.getBoolean("sounds",false);
-        UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+        UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
             @Override
-            public void done(final MyAVUser user) {
-                ImageCacheUtil.showPicture(context, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+            public void done(final User user) {
+                ImageCacheUtil.showPicture(context, user.getIconUrl(), new ImageCacheUtil.CallBack() {
                     @Override
                     public void done(Bitmap bitmap) {
                         /**
@@ -111,7 +112,7 @@ public class NotificationUtil {
                         Notification notification = new Notification.Builder(context)
                                 .setLargeIcon(bitmap)
                                 .setSmallIcon(R.mipmap.ic_launcher)
-                                .setContentTitle(UserPropUtil.getNikeName(user))
+                                .setContentTitle(UserPropUtil.getNikeName2(user))
                                 .setContentText(message.getText())
                                 .build();
                         notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失
@@ -138,17 +139,17 @@ public class NotificationUtil {
         if(!group_msg){
             return;
         }
-        UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+        UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
             @Override
-            public void done(final MyAVUser user) {
-                ImageCacheUtil.showPicture(context, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+            public void done(final User user) {
+                ImageCacheUtil.showPicture(context, user.getIconUrl(), new ImageCacheUtil.CallBack() {
                     @Override
                     public void done(Bitmap bitmap) {
                         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                         Notification notification = new Notification.Builder(context)
                                 .setLargeIcon(bitmap)
                                 .setSmallIcon(R.drawable.select_expression_normal)
-                                .setContentTitle("Suda聊天室" + UserPropUtil.getNikeName(user))
+                                .setContentTitle("Suda聊天室" + UserPropUtil.getNikeName2(user))
                                 .setContentText(message.getText())
                                 .build();
                         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -174,10 +175,10 @@ public class NotificationUtil {
         if(!group_msg){
             return;
         }
-        UserBus.findUser(message.getFrom(), new UserBus.CallBack() {
+        UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
             @Override
-            public void done(final MyAVUser user) {
-                ImageCacheUtil.showPicture(context, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+            public void done(final User user) {
+                ImageCacheUtil.showPicture(context, user.getIconUrl(), new ImageCacheUtil.CallBack() {
                     @Override
                     public void done(Bitmap bitmap) {
                         /**
@@ -190,7 +191,7 @@ public class NotificationUtil {
                         Notification notification = new Notification.Builder(context)
                                 .setLargeIcon(bitmap)
                                 .setSmallIcon(R.mipmap.ic_launcher)
-                                .setContentTitle("Suda聊天室"+UserPropUtil.getNikeName(user))
+                                .setContentTitle("Suda聊天室"+UserPropUtil.getNikeName2(user))
                                 .setContentText(message.getText())
                                 .build();
                         notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失

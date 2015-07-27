@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.suda.mychatapp.db.pojo.Message;
 import com.suda.mychatapp.utils.msg.MsgIFace;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.ChatActivity;
@@ -59,7 +58,7 @@ public class ConversationFrg extends Fragment {
 
     public void reFresh(){
         mMessageList.clear();
-        mMessageList.addAll(mDbhelper.findLastMsg());
+        mMessageList.addAll(mDBhelper.findAllLastMsg());
         mAdapter.notifyDataSetChanged();
     }
 
@@ -70,10 +69,10 @@ public class ConversationFrg extends Fragment {
     }
 
     void initEntity() {
-        mDbhelper = new DbHelper(getActivity());
+        mDBhelper = new DbHelper(getActivity());
         mMessageList = new ArrayList<LastMessage>();
-        if(mDbhelper.findLastMsg()!=null){
-            mMessageList.addAll(mDbhelper.findLastMsg());
+        if(mDBhelper.findAllLastMsg()!=null){
+            mMessageList.addAll(mDBhelper.findAllLastMsg());
         }
         mAdapter = new ConversationAdpter(getActivity(), mMessageList);
         mLastMsgLv.setAdapter(mAdapter);
@@ -107,7 +106,7 @@ public class ConversationFrg extends Fragment {
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mDbhelper.deleteLastMsgById(mMessageList.get(position).getConversation_id());
+                                mDBhelper.deleteLastMsgById(mMessageList.get(position).getConversation_id());
                                 reFresh();
                             }
                         })
@@ -124,7 +123,7 @@ public class ConversationFrg extends Fragment {
     private ListView mLastMsgLv;
     private SwipeRefreshLayout SwipeRefreshLayout;
     private ConversationAdpter mAdapter;
-    private DbHelper mDbhelper;
+    private DbHelper mDBhelper;
     private MsgIFace msgIFace;
 
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";

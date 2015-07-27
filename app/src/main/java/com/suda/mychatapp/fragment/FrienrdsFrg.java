@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.suda.mychatapp.adapter.FriendsAdpter;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.Friends;
+import com.suda.mychatapp.db.pojo.User;
 import com.suda.mychatapp.utils.FriendSortUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 import com.suda.mychatapp.utils.msg.ConversationType;
@@ -102,10 +104,13 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
                 if (e == null) {
                     for (int i = 0; i < avFriendship.getFollowees().size(); i++) {
                         AVUser user = (AVUser) avFriendship.getFollowees().get(i);
-                        UserBus.findUser(user.getUsername(), new UserBus.CallBack() {
+                        UserBus.findUser(user.getUsername(), new UserBus.CallBack2() {
                             @Override
-                            public void done(MyAVUser user) {
-                                mFriendslist.add(new Friends(UserPropUtil.getNikeName(user), UserPropUtil.getSign(user), user.getUsername(), user.getIcon().getUrl()));
+                            public void done(User user) {
+                                if (!MyApplication.getDBHelper().isFriend(user.getUserName())) {
+                                    MyApplication.getDBHelper().addFriend(user);
+                                }
+                                mFriendslist.add(new Friends(UserPropUtil.getNikeName2(user), UserPropUtil.getSign2(user), user.getUserName(), user.getIconUrl()));
                                 if (mFriendslist.size() == avFriendship.getFollowees().size()) {
                                     FriendSortUtil.sortFriend(mFriendslist);
                                     friendsAdpter = new FriendsAdpter(getActivity(), mFriendslist);
@@ -135,10 +140,11 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
                     } else {
                         for (int i = 0; i < avFriendship.getFollowees().size(); i++) {
                             AVUser user = (AVUser) avFriendship.getFollowees().get(i);
-                            UserBus.findUser(user.getUsername(), new UserBus.CallBack() {
+                            UserBus.findUser(user.getUsername(), new UserBus.CallBack2() {
                                 @Override
-                                public void done(MyAVUser user) {
-                                    mFriendslist.add(new Friends(UserPropUtil.getNikeName(user), UserPropUtil.getSign(user), user.getUsername(), user.getIcon().getUrl()));
+                                public void done(User user) {
+                                    mFriendslist.add(new Friends(UserPropUtil.getNikeName2(user), UserPropUtil.getSign2(user), user.getUserName()
+                                            , user.getIconUrl()));
                                     if (mFriendslist.size() == avFriendship.getFollowees().size()) {
                                         if (friendsAdpter != null) {
                                             FriendSortUtil.sortFriend(mFriendslist);

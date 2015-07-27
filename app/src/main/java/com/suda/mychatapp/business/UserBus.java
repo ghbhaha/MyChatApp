@@ -1,12 +1,15 @@
 package com.suda.mychatapp.business;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.db.pojo.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,21 +43,35 @@ public class UserBus {
         }
     }
 
-    public static void findUser(final String username, final CallBack callBack) {
+    public static void findUser(final String username, final CallBack2 callBack) {
+
         if (userHashMap == null)
             userHashMap = new HashMap<>();
 
+        //查内存
         if (userHashMap.containsKey(username)) {
             callBack.done(userHashMap.get(username));
+        } else if (MyApplication.getDBHelper().isExistUser(username)) {
+            //查本地
+            callBack.done(MyApplication.getDBHelper().findUserByName(username));
+            userHashMap.put(username, MyApplication.getDBHelper().findUserByName(username));
         } else {
+            //查网络，对比更新
             AVQuery<MyAVUser> query = AVObject.getQuery(MyAVUser.class);
             query.whereEqualTo("username", username);
             query.findInBackground(new FindCallback<MyAVUser>() {
                 @Override
                 public void done(List<MyAVUser> list, AVException e) {
                     if (e == null) {
-                        userHashMap.put(username, list.get(0));
-                        callBack.done(list.get(0));
+                        User u = new User(list.get(0).getObjectId(), list.get(0).getUsername(), list.get(0).getNikename(),
+                                list.get(0).getSign(), list.get(0).getIcon().getUrl(), list.get(0).getMobilePhoneNumber(),
+                                list.get(0).getEmail(), list.get(0).getSex(), list.get(0).getBirthDay());
+
+                        if (!MyApplication.getDBHelper().isExistUser(list.get(0).getUsername())) {
+                            MyApplication.getDBHelper().addUser(u);
+                        }
+                        userHashMap.put(username, u);
+                        callBack.done(u);
                     } else {
                         e.printStackTrace();
                     }
@@ -94,9 +111,13 @@ public class UserBus {
 
     public static MyAVUser me;
 
-    public static HashMap<String, MyAVUser> userHashMap;
+    public static HashMap<String, User> userHashMap;
 
     public interface CallBack {
         void done(MyAVUser user);
+    }
+
+    public interface CallBack2 {
+        void done(User user);
     }
 }

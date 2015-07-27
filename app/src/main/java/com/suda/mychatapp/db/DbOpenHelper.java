@@ -9,13 +9,23 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DbOpenHelper extends SQLiteOpenHelper {
 
+    private static final int VERSION = 3;
 
     private static final String DBNAME = "message.db";
 
     private String sqlLastMsg = "CREATE TABLE IF NOT EXISTS " +
-            "last_msg (conversation_id varchar(24) primary key, lastTime long, userName varchar(20),lastMsg varchar(200), nikeName varchar(20), iconUrl varchar(60))";
+            "last_msg (conversation_id varchar(24) primary key, " +
+            "lastTime long, userName varchar(20),lastMsg varchar(200), " +
+            "nikeName varchar(20), iconUrl varchar(60))";
 
-    private static final int VERSION = 1;
+    private String sqlUser = "CREATE TABLE IF NOT EXISTS " +
+            "user (objId varchar(24) primary key, userName varchar(20), nikeName varchar(20), " +
+            "iconUrl varchar(60), sign varchar(40)," +
+            "tel varchar(16), email varchar(20), sex varchar(2), birthday long)";
+
+    private String sqlFriend = "CREATE TABLE IF NOT EXISTS " +
+            "friend (objId varchar(24) primary key, userName varchar(20))";
+
 
     public DbOpenHelper(Context context) {
         super(context, DBNAME, null, VERSION);
@@ -24,11 +34,18 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(sqlLastMsg);
+        db.execSQL(sqlUser);
+        db.execSQL(sqlFriend);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onCreate(db);
+        if (oldVersion == 1) {
+            db.execSQL(sqlFriend);
+            db.execSQL(sqlUser);
+        } else if (oldVersion == 2) {
+            db.execSQL(sqlFriend);
+        }
     }
 
 }

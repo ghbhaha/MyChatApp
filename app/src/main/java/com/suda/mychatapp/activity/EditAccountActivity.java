@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.SaveCallback;
-import com.rey.material.app.DialogFragment;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
@@ -97,7 +96,7 @@ public class EditAccountActivity extends AbstructActivity {
                             public void done(AVException e) {
                                 if (e == null) {
                                     birthday = newdate;
-                                    mTvBirth.setText(DateFmUtil.fmDate1(newdate));
+                                    mTvBirth.setText(DateFmUtil.fmDateBirth(newdate));
                                 }
                             }
                         });
@@ -122,7 +121,7 @@ public class EditAccountActivity extends AbstructActivity {
                             public void done(AVException e) {
                                 if (e == null) {
                                     birthday = newdate;
-                                    mTvBirth.setText(DateFmUtil.fmDate1(newdate));
+                                    mTvBirth.setText(DateFmUtil.fmDateBirth(newdate));
                                 }
                             }
                         });

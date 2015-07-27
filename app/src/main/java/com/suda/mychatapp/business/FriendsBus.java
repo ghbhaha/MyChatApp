@@ -7,14 +7,15 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.FollowCallback;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.db.pojo.User;
 
 /**
  * Created by Suda on 2015/7/24.
  */
 public class FriendsBus {
 
-    public static void starFriend(final Context ct, MyAVUser friend, final ResultCallback callback) {
-        MyAVUser.getCurrentUser().followInBackground(friend.getObjectId(), new FollowCallback() {
+    public static void starFriend(final Context ct, User friend, final ResultCallback callback) {
+        MyAVUser.getCurrentUser().followInBackground(friend.getObjId(), new FollowCallback() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 if (e == null) {
@@ -39,8 +40,8 @@ public class FriendsBus {
         });
     }
 
-    public static void unStarFriend(final Context ct, MyAVUser friend, final ResultCallback callback) {
-        MyAVUser.getCurrentUser().unfollowInBackground(friend.getObjectId(), new FollowCallback() {
+    public static void unStarFriend(final Context ct, User friend, final ResultCallback callback) {
+        MyAVUser.getCurrentUser().unfollowInBackground(friend.getObjId(), new FollowCallback() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 if (e == null) {

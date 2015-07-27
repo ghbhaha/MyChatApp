@@ -18,6 +18,7 @@ import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.FriendsBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
+import com.suda.mychatapp.db.pojo.User;
 import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
@@ -48,12 +49,15 @@ public class SearchNewFriendActivity extends AbstructActivity {
                 @Override
                 public void done(List<MyAVUser> list, AVException e) {
                     if (e == null) {
-                        mFriendUser = list.get(0);
+                        mFriendUser = new User(list.get(0).getObjectId(), list.get(0).getUsername(), list.get(0).getNikename(),
+                                list.get(0).getSign(), list.get(0).getIcon().getUrl(), list.get(0).getMobilePhoneNumber()
+                                , list.get(0).getEmail(), list.get(0).getSex(), list.get(0).getBirthDay());
+
                         mRlFriend.setVisibility(View.VISIBLE);
-                        mTvsign.setText(UserPropUtil.getSign(mFriendUser));
-                        mTvnikeName.setText(UserPropUtil.getNikeName(mFriendUser));
-                        if (mFriendUser.getIcon() != null) {
-                            ImageCacheUtil.showPicture(SearchNewFriendActivity.this, mFriendUser.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+                        mTvsign.setText(UserPropUtil.getSign2(mFriendUser));
+                        mTvnikeName.setText(UserPropUtil.getNikeName2(mFriendUser));
+                        if (!TextUtil.isTextEmpty(mFriendUser.getIconUrl())) {
+                            ImageCacheUtil.showPicture(SearchNewFriendActivity.this, mFriendUser.getIconUrl(), new ImageCacheUtil.CallBack() {
                                 @Override
                                 public void done(Bitmap bitmap) {
                                     final Bitmap bm = bitmap;
@@ -82,7 +86,7 @@ public class SearchNewFriendActivity extends AbstructActivity {
     }
 
     public void addUserToMine(View view) {
-        Log.d("obj", mFriendUser.getObjectId());
+        Log.d("obj", mFriendUser.getObjId());
         FriendsBus.starFriend(this, mFriendUser, new FriendsBus.ResultCallback() {
             @Override
             public void result(boolean rs) {
@@ -93,7 +97,7 @@ public class SearchNewFriendActivity extends AbstructActivity {
 
     public void getFriendInfo(View view) {
         Intent it = new Intent(SearchNewFriendActivity.this, FriendInfoActivity.class);
-        it.putExtra(EXTRA_USERNAME, mFriendUser.getUsername());
+        it.putExtra(EXTRA_USERNAME, mFriendUser.getUserName());
         startActivity(it);
     }
 
@@ -105,7 +109,7 @@ public class SearchNewFriendActivity extends AbstructActivity {
         mHeadIcon = (CircleImageView) findViewById(R.id.icon);
     }
 
-    private static MyAVUser mFriendUser;
+    private static User mFriendUser;
     private RelativeLayout mRlFriend;
     public TextView mTvnikeName;
     public TextView mTvsign;
