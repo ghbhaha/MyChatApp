@@ -8,9 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.suda.mychatapp.Conf;
+import com.suda.mychatapp.db.pojo.Friends;
 import com.suda.mychatapp.db.pojo.LastMessage;
 import com.suda.mychatapp.db.pojo.User;
 import com.suda.mychatapp.utils.DateFmUtil;
+import com.suda.mychatapp.utils.TextUtil;
+import com.suda.mychatapp.utils.UserPropUtil;
 
 import java.util.Date;
 import java.util.ArrayList;
@@ -30,6 +33,8 @@ public class DbHelper {
     public void clearAllData() {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
         db.execSQL("DELETE FROM last_msg");
+        db.execSQL("DELETE FROM user");
+        db.execSQL("DELETE FROM friend");
     }
 
     public void addLastMess(LastMessage message) {
@@ -164,6 +169,31 @@ public class DbHelper {
         boolean tmp = cursor.moveToFirst();
         db.close();
         return tmp;
+    }
+
+    public ArrayList<Friends> findAllFriend() {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+
+        Cursor cursor = db.query("friend,user", null,  "friend.userName=user.userName",
+                null, null, null, null);
+
+        if (!cursor.moveToFirst()) {
+            db.close();
+            return null;
+        }
+
+        ArrayList<Friends> arrayList = new ArrayList<Friends>();
+
+        for (int i = 0; i < cursor.getCount(); i++, cursor.moveToNext()) {
+
+            arrayList.add(new Friends(TextUtil.isTextEmpty(cursor.getString(cursor.getColumnIndex("nikeName")))?
+                    cursor.getString(cursor.getColumnIndex("userName")):
+                    cursor.getString(cursor.getColumnIndex("nikeName"))
+                    , cursor.getString(cursor.getColumnIndex("sign")),
+                    cursor.getString(cursor.getColumnIndex("userName")), cursor.getString(cursor.getColumnIndex("iconUrl"))));
+        }
+        db.close();
+        return arrayList;
     }
 
 

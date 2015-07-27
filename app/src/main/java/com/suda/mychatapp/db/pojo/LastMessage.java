@@ -13,6 +13,7 @@ public class LastMessage {
     private String iconUrl;
     private long lastTime;
     private String lastMsg;
+    private int unreadCount;
 
 
     public LastMessage(String conversation_id, String userName, String nikeName, String iconUrl, long lastTime, String lastMsg) {

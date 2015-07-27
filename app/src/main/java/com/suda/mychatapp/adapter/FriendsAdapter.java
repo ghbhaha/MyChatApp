@@ -23,14 +23,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by Suda on 2015/7/21.
  */
-public class FriendsAdpter extends BaseAdapter {
+public class FriendsAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater mInflater;
     private List<Friends> arrayList;
 
-    public FriendsAdpter(Context context,
-                         ArrayList<Friends> arrayList) {
+    public FriendsAdapter(Context context,
+                          ArrayList<Friends> arrayList) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.arrayList = arrayList;

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.ChatActivity;
-import com.suda.mychatapp.adapter.FriendsAdpter;
+import com.suda.mychatapp.adapter.FriendsAdapter;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.Friends;
@@ -98,31 +97,39 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
     }
 
     public void initEntity() {
-        MyAVUser.getCurrentUser().friendshipQuery().getInBackground(new AVFriendshipCallback() {
-            @Override
-            public void done(final AVFriendship avFriendship, AVException e) {
-                if (e == null) {
-                    for (int i = 0; i < avFriendship.getFollowees().size(); i++) {
-                        AVUser user = (AVUser) avFriendship.getFollowees().get(i);
-                        UserBus.findUser(user.getUsername(), new UserBus.CallBack2() {
-                            @Override
-                            public void done(User user) {
-                                if (!MyApplication.getDBHelper().isFriend(user.getUserName())) {
-                                    MyApplication.getDBHelper().addFriend(user);
+
+        if (MyApplication.getDBHelper().findAllFriend() != null) {
+            mFriendslist.addAll(MyApplication.getDBHelper().findAllFriend());
+            FriendSortUtil.sortFriend(mFriendslist);
+            friendsAdpter = new FriendsAdapter(getActivity(), mFriendslist);
+            mLvfriends.setAdapter(friendsAdpter);
+        } else {
+            MyAVUser.getCurrentUser().friendshipQuery().getInBackground(new AVFriendshipCallback() {
+                @Override
+                public void done(final AVFriendship avFriendship, AVException e) {
+                    if (e == null) {
+                        for (int i = 0; i < avFriendship.getFollowees().size(); i++) {
+                            AVUser user = (AVUser) avFriendship.getFollowees().get(i);
+                            UserBus.findUser(user.getUsername(), new UserBus.CallBack2() {
+                                @Override
+                                public void done(User user) {
+                                    if (!MyApplication.getDBHelper().isFriend(user.getUserName())) {
+                                        MyApplication.getDBHelper().addFriend(user);
+                                    }
+                                    mFriendslist.add(new Friends(UserPropUtil.getNikeName2(user), UserPropUtil.getSign2(user), user.getUserName(), user.getIconUrl()));
+                                    if (mFriendslist.size() == avFriendship.getFollowees().size()) {
+                                        FriendSortUtil.sortFriend(mFriendslist);
+                                        friendsAdpter = new FriendsAdapter(getActivity(), mFriendslist);
+                                        mLvfriends.setAdapter(friendsAdpter);
+                                    }
                                 }
-                                mFriendslist.add(new Friends(UserPropUtil.getNikeName2(user), UserPropUtil.getSign2(user), user.getUserName(), user.getIconUrl()));
-                                if (mFriendslist.size() == avFriendship.getFollowees().size()) {
-                                    FriendSortUtil.sortFriend(mFriendslist);
-                                    friendsAdpter = new FriendsAdpter(getActivity(), mFriendslist);
-                                    mLvfriends.setAdapter(friendsAdpter);
-                                }
-                            }
-                        });
-                    }
-                } else
-                    e.printStackTrace();
-            }
-        });
+                            });
+                        }
+                    } else
+                        e.printStackTrace();
+                }
+            });
+        }
     }
 
     @Override
@@ -151,7 +158,7 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
                                             friendsAdpter.notifyDataSetChanged();
                                         } else {
                                             FriendSortUtil.sortFriend(mFriendslist);
-                                            friendsAdpter = new FriendsAdpter(getActivity(), mFriendslist);
+                                            friendsAdpter = new FriendsAdapter(getActivity(), mFriendslist);
                                             mLvfriends.setAdapter(friendsAdpter);
                                         }
                                         mSwipeRefreshLayput.setRefreshing(false);
@@ -198,7 +205,7 @@ public class FrienrdsFrg extends Fragment implements SwipeRefreshLayout.OnRefres
 
     private ListView mLvfriends;
     private ArrayList<Friends> mFriendslist;
-    private FriendsAdpter friendsAdpter;
+    private FriendsAdapter friendsAdpter;
     private SwipeRefreshLayout mSwipeRefreshLayput;
 
 

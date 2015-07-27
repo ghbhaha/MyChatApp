@@ -22,6 +22,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -334,6 +335,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         NotificationUtil.createNotification(this);
+        AVAnalytics.onPause(this);
         super.onPause();
     }
 
@@ -341,6 +343,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         initEntity();
         NotificationUtil.clearNotification(this);
+        AVAnalytics.onResume(this);
         super.onResume();
     }
 

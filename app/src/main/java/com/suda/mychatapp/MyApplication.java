@@ -2,6 +2,7 @@ package com.suda.mychatapp;
 
 import android.app.Application;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
@@ -26,6 +27,9 @@ public class MyApplication extends Application {
 
         AVOSCloud.initialize(this, "bbi2udim376ydh5lvhq6jzp4o2afosu9nndydes45jvolhj4", "flbtai7ocvvvrsutun5k77jkgagvayew944mnms8e94u3z6j");
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, new MessageHandler(this));
+
+        AVAnalytics.enableCrashReport(this, true);
+
 
     }
 
