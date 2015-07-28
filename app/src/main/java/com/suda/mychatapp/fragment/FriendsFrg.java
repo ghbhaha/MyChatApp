@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
 
 
 public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -48,7 +49,12 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mFriendsList = new ArrayList<User>();
+        friendsAdapter = new FriendsAdapter(getActivity(), mFriendsList);
+
+        handler = new android.os.Handler();
+
         mFriendsIFace = new FriendsIFace() {
             @Override
             public void update() {
@@ -56,8 +62,7 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
                     mFriendsList.clear();
                     mFriendsList.addAll(MyApplication.getDBHelper().findAllFriend());
                     FriendSortUtil.sortFriend(mFriendsList);
-                    friendsAdapter = new FriendsAdapter(getActivity(), mFriendsList);
-                    mLvFriends.setAdapter(friendsAdapter);
+                    friendsAdapter.notifyDataSetChanged();
                 }
             }
         };
@@ -110,11 +115,11 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
     }
 
     public void initEntity() {
+        mLvFriends.setAdapter(friendsAdapter);
         if (MyApplication.getDBHelper().findAllFriend() != null) {
             mFriendsList.addAll(MyApplication.getDBHelper().findAllFriend());
             FriendSortUtil.sortFriend(mFriendsList);
-            friendsAdapter = new FriendsAdapter(getActivity(), mFriendsList);
-            mLvFriends.setAdapter(friendsAdapter);
+            friendsAdapter.notifyDataSetChanged();
         } else {
             MyAVUser.getCurrentUser().friendshipQuery().getInBackground(new AVFriendshipCallback() {
                 @Override
@@ -130,9 +135,13 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
                                     }
                                     mFriendsList.add(user);
                                     if (mFriendsList.size() == avFriendship.getFollowees().size()) {
-                                        FriendSortUtil.sortFriend(mFriendsList);
-                                        friendsAdapter = new FriendsAdapter(getActivity(), mFriendsList);
-                                        mLvFriends.setAdapter(friendsAdapter);
+                                        handler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                FriendSortUtil.sortFriend(mFriendsList);
+                                                friendsAdapter.notifyDataSetChanged();
+                                            }
+                                        });
                                     }
                                 }
                             });
@@ -146,16 +155,13 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
 
     @Override
     public void onRefresh() {
+        mFriendsList.clear();
         MyAVUser.getCurrentUser().friendshipQuery().getInBackground(new AVFriendshipCallback() {
             @Override
             public void done(final AVFriendship avFriendship, AVException e) {
                 if (e == null) {
-                    mFriendsList.clear();
                     if (avFriendship.getFollowees().size() == 0) {
                         mSwipeRefreshLayout.setRefreshing(false);
-                        if (friendsAdapter != null) {
-                            friendsAdapter.notifyDataSetChanged();
-                        }
                     } else {
                         for (int i = 0; i < avFriendship.getFollowees().size(); i++) {
                             AVUser user = (AVUser) avFriendship.getFollowees().get(i);
@@ -167,15 +173,17 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
                                         MyApplication.getDBHelper().addFriend(user);
                                     }
                                     if (mFriendsList.size() == avFriendship.getFollowees().size()) {
-                                        if (friendsAdapter != null) {
-                                            FriendSortUtil.sortFriend(mFriendsList);
-                                            friendsAdapter.notifyDataSetChanged();
-                                        } else {
-                                            FriendSortUtil.sortFriend(mFriendsList);
-                                            friendsAdapter = new FriendsAdapter(getActivity(), mFriendsList);
-                                            mLvFriends.setAdapter(friendsAdapter);
-                                        }
-                                        mSwipeRefreshLayout.setRefreshing(false);
+
+                                        handler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                FriendSortUtil.sortFriend(mFriendsList);
+                                                mSwipeRefreshLayout.setRefreshing(false);
+                                                friendsAdapter.notifyDataSetChanged();
+                                                mLvFriends.setSelection(0);
+                                            }
+                                        });
+
                                     }
                                 }
                             });
@@ -222,6 +230,7 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
     }
 
 
+    private android.os.Handler handler;
     private ListView mLvFriends;
     private ArrayList<User> mFriendsList;
     private FriendsAdapter friendsAdapter;

@@ -73,8 +73,11 @@ public class UserBus {
                         } else {
                             MyApplication.getDBHelper().updateUser(u);
                         }
+                        if (!userHashMap.containsKey(username)) {
+                            callBack.done(u);
+                        }
                         userHashMap.put(username, u);
-                        callBack.done(u);
+
                     } else {
                         e.printStackTrace();
                     }
