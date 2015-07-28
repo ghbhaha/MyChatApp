@@ -58,7 +58,9 @@ public class ConversationFrg extends Fragment {
 
     public void reFresh(){
         mMessageList.clear();
-        mMessageList.addAll(mDBhelper.findAllLastMsg());
+        if (mDBhelper.findAllLastMsg() != null) {
+            mMessageList.addAll(mDBhelper.findAllLastMsg());
+        }
         mAdapter.notifyDataSetChanged();
     }
 

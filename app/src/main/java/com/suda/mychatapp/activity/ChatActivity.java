@@ -459,6 +459,8 @@ public class ChatActivity extends AbstructActivity {
     protected void onResume() {
         MessageHandler.setIsBackTask(false);
         MessageHandler.setiOtherFace(mMsgIFace);
+        mDbhelper.updateUnreadCountById(mConversationId, true);
+        MessageHandler.getiFace().update();
         super.onResume();
     }
 

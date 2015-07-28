@@ -2,7 +2,6 @@ package com.suda.mychatapp.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,9 +59,10 @@ public class ConversationAdpter extends BaseAdapter {
 
             convertView = mInflater.inflate(R.layout.conversation_item, null);
             holder.mHeadIcon = (CircleImageView) convertView.findViewById(R.id.icon);
-            holder.mTvnikeName = (TextView) convertView.findViewById(R.id.tv_nikename);
+            holder.mTvNikeName = (TextView) convertView.findViewById(R.id.tv_nikename);
             holder.mTvLastMsg = (TextView) convertView.findViewById(R.id.tv_last_msg);
             holder.mTvLastTime = (TextView) convertView.findViewById(R.id.tv_last_time);
+            holder.mTvUnreadCount = (TextView) convertView.findViewById(R.id.tv_unreadCount);
 
 
             convertView.setTag(holder);
@@ -89,14 +89,21 @@ public class ConversationAdpter extends BaseAdapter {
             }
         });
 
+        if (arrayList.get(position).getUnreadCount() > 99) {
+            holder.mTvUnreadCount.setText("99+");
+        } else {
+            holder.mTvUnreadCount.setVisibility(arrayList.get(position).getUnreadCount() == 0 ? View.INVISIBLE : View.VISIBLE);
+            holder.mTvUnreadCount.setText((arrayList.get(position).getUnreadCount() == 0 ? 0 : arrayList.get(position).getUnreadCount()) + "");
+        }
         holder.mTvLastTime.setText(DateFmUtil.fmDate(new Date(arrayList.get(position).getLastTime())));
-        holder.mTvnikeName.setText(arrayList.get(position).getNikeName());
+        holder.mTvNikeName.setText(arrayList.get(position).getNikeName());
     }
 
     public class ViewHolder {
-        public TextView mTvnikeName;
+        public TextView mTvNikeName;
         public TextView mTvLastMsg;
         public TextView mTvLastTime;
+        public TextView mTvUnreadCount;
         public CircleImageView mHeadIcon;
     }
 }

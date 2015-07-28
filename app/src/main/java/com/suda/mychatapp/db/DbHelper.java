@@ -210,10 +210,36 @@ public class DbHelper {
 
             arrayList.add(new LastMessage(cursor.getString(cursor.getColumnIndex("conversation_id")), cursor.getString(cursor.getColumnIndex("userName"))
                     , cursor.getString(cursor.getColumnIndex("nikeName")), cursor.getString(cursor.getColumnIndex("iconUrl"))
-                    , cursor.getLong(cursor.getColumnIndex("lastTime")), cursor.getString(cursor.getColumnIndex("lastMsg"))));
+                    , cursor.getLong(cursor.getColumnIndex("lastTime")), cursor.getString(cursor.getColumnIndex("lastMsg")),
+                    cursor.getInt(cursor.getColumnIndex("unreadCount"))));
         }
         db.close();
         return arrayList;
+    }
+
+    public void updateUnreadCountById(String conversationId, boolean clear) {
+
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+
+        if (clear) {
+            try {
+                db.execSQL("UPDATE last_msg set unreadCount = 0 where conversation_id =" +
+                        "'" + conversationId + "'");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.close();
+            }
+        } else {
+            try {
+                db.execSQL("UPDATE last_msg set unreadCount = unreadCount + 1 where conversation_id =" +
+                        "'" + conversationId + "'");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.close();
+            }
+        }
     }
 
 }

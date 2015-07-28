@@ -114,8 +114,10 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                             textMessage.getTimestamp(), textMessage.getText());
                     if (!mDbhelper.isExistMsg(message.getConversationId())) {
                         mDbhelper.addLastMess(lastMessage);
+                        mDbhelper.updateUnreadCountById(message.getConversationId(), false);
                     } else {
                         mDbhelper.updateLastMsg(lastMessage);
+                        mDbhelper.updateUnreadCountById(message.getConversationId(), false);
                     }
                     if (iFace != null) {
                         iFace.update();

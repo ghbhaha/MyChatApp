@@ -16,6 +16,16 @@ public class LastMessage {
     private int unreadCount;
 
 
+    public LastMessage(String conversation_id, String userName, String nikeName, String iconUrl, long lastTime, String lastMsg, int unreadCount) {
+        this.conversation_id = conversation_id;
+        this.userName = userName;
+        this.nikeName = nikeName;
+        this.iconUrl = iconUrl;
+        this.lastTime = lastTime;
+        this.lastMsg = lastMsg;
+        this.unreadCount = unreadCount;
+    }
+
     public LastMessage(String conversation_id, String userName, String nikeName, String iconUrl, long lastTime, String lastMsg) {
         this.conversation_id = conversation_id;
         this.userName = userName;
@@ -23,6 +33,10 @@ public class LastMessage {
         this.iconUrl = iconUrl;
         this.lastTime = lastTime;
         this.lastMsg = lastMsg;
+    }
+
+    public int getUnreadCount() {
+        return unreadCount;
     }
 
     public String getNikeName() {
