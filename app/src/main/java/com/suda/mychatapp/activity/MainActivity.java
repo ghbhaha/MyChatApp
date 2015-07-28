@@ -304,7 +304,6 @@ public class MainActivity extends ActionBarActivity {
     public void searchNewFriend(View view) {
         Intent it = new Intent(this, SearchNewFriendActivity.class);
         startActivity(it);
-
     }
 
     @Override

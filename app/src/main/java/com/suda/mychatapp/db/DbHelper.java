@@ -183,6 +183,22 @@ public class DbHelper {
         return tmp;
     }
 
+    public String getIconUrl(String userName) {
+
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+
+        Cursor cursor = db.query("user", null, "userName=?",
+                new String[]{userName}, null, null, null);
+
+        cursor.moveToFirst();
+
+        String iconUrl = cursor.getString(cursor.getColumnIndex("iconUrl"));
+
+        cursor.close();
+
+        return iconUrl;
+    }
+
     public ArrayList<User> findAllFriend() {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
 

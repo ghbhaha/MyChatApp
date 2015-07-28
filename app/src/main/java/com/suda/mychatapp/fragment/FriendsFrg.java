@@ -8,7 +8,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.avos.avoscloud.AVException;
@@ -21,6 +24,7 @@ import com.avos.avoscloud.im.v2.AVIMConversationQuery;
 import com.avos.avoscloud.im.v2.Conversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.ChatActivity;
@@ -101,6 +105,10 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
     }
 
     public void initWidget(View view) {
+
+        btAddNewFriend = (FloatingActionButton) view.findViewById(R.id.add_new_friends);
+
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.id_swipe_ly);
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
@@ -237,7 +245,8 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public static FriendsIFace mFriendsIFace;
-
+    
+    FloatingActionButton btAddNewFriend;
 
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";
     private static final String EXTRA_USERNAME = "username";
