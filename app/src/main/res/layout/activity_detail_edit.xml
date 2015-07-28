@@ -7,10 +7,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
- <EditText
-     android:layout_width="fill_parent"
-     android:layout_height="wrap_content"
-     android:id="@+id/content"/>
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/content" />
 
     <Button
         android:layout_width="wrap_content"
