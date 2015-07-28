@@ -118,7 +118,8 @@ public class ConversationFrg extends Fragment {
                         mViewPager.requestDisallowInterceptTouchEvent(false);
                         break;
                     default:
-                        mViewPager.requestDisallowInterceptTouchEvent(true);
+                        if (mMessageList.size() != 0)
+                            mViewPager.requestDisallowInterceptTouchEvent(true);
                         break;
                 }
                 return false;
