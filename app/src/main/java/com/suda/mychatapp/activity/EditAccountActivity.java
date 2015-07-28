@@ -202,12 +202,7 @@ public class EditAccountActivity extends AbstructActivity {
 
     //private static final String DATE_PICKER_TAG = "DATE_PICKER_TAG";
 
-    private TextView mTvNikeName;
-    private TextView mTvSign;
-    private TextView mTvSex;
-    private TextView mTvBirth;
-    private TextView mTvTel;
-    private TextView mTvEmail;
+    private TextView mTvNikeName, mTvSign, mTvSex, mTvBirth, mTvTel, mTvEmail;
     private int mSex = -1;
     private Date birthday = null;
 

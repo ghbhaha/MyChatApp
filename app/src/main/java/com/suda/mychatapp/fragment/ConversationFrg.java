@@ -1,23 +1,31 @@
 package com.suda.mychatapp.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
 import com.suda.mychatapp.utils.msg.MsgIFace;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.ChatActivity;
-import com.suda.mychatapp.adapter.ConversationAdpter;
+import com.suda.mychatapp.adapter.ConversationAdapter;
 import com.suda.mychatapp.db.DbHelper;
 import com.suda.mychatapp.db.pojo.LastMessage;
 import com.suda.mychatapp.utils.msg.MessageHandler;
@@ -51,15 +59,15 @@ public class ConversationFrg extends Fragment {
     }
 
     void initWidget(View v) {
-        mLastMsgLv = (ListView) v.findViewById(R.id.lv_conversation);
-        SwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.id_swipe_ly);
+        mLastMsgLv = (SwipeMenuListView) v.findViewById(R.id.lv_conversation);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.id_swipe_ly);
     }
 
 
-    public void reFresh(){
+    public void reFresh() {
         mMessageList.clear();
-        if (mDBhelper.findAllLastMsg() != null) {
-            mMessageList.addAll(mDBhelper.findAllLastMsg());
+        if (mDBHelper.findAllLastMsg() != null) {
+            mMessageList.addAll(mDBHelper.findAllLastMsg());
         }
         mAdapter.notifyDataSetChanged();
     }
@@ -71,18 +79,20 @@ public class ConversationFrg extends Fragment {
     }
 
     void initEntity() {
-        mDBhelper = new DbHelper(getActivity());
+        mDBHelper = new DbHelper(getActivity());
         mMessageList = new ArrayList<LastMessage>();
-        if(mDBhelper.findAllLastMsg()!=null){
-            mMessageList.addAll(mDBhelper.findAllLastMsg());
+        if (mDBHelper.findAllLastMsg() != null) {
+            mMessageList.addAll(mDBHelper.findAllLastMsg());
         }
-        mAdapter = new ConversationAdpter(getActivity(), mMessageList);
+        mAdapter = new ConversationAdapter(getActivity(), mMessageList);
         mLastMsgLv.setAdapter(mAdapter);
+        mLastMsgLv.setMenuCreator(creator);
         msgIFace = new MsgIFace() {
             @Override
             public void update() {
                 reFresh();
             }
+
             @Override
             public void update(AVIMTextMessage message) {
 
@@ -99,20 +109,38 @@ public class ConversationFrg extends Fragment {
             }
         });
 
-        mLastMsgLv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        //拦截ViewPager滑动事件
+        mLastMsgLv.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_CANCEL:
+                        mViewPager.requestDisallowInterceptTouchEvent(false);
+                        break;
+                    default:
+                        mViewPager.requestDisallowInterceptTouchEvent(true);
+                        break;
+                }
+                return false;
+            }
+        });
 
-                new AlertDialog.Builder(getActivity()).setTitle("删除与"+mMessageList.get(position).getNikeName()+"的对话")
-                        .setNegativeButton("取消",null)
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mDBhelper.deleteLastMsgById(mMessageList.get(position).getConversation_id());
-                                reFresh();
-                            }
-                        })
-                        .create().show();
+        mLastMsgLv.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu swipeMenu, int index) {
+                switch (index) {
+                    case 0:
+                        Intent it = new Intent(getActivity(), ChatActivity.class);
+                        it.putExtra(EXTRA_USERNAME, mMessageList.get(position).getUserName());
+                        it.putExtra(EXTRA_CONVERSATION_ID, mMessageList.get(position).getConversation_id());
+                        startActivity(it);
+                        break;
+                    case 1:
+                        mDBHelper.deleteLastMsgById(mMessageList.get(position).getConversation_id());
+                        mMessageList.remove(position);
+                        mAdapter.notifyDataSetChanged();
+                        break;
+                }
                 return true;
             }
         });
@@ -121,12 +149,51 @@ public class ConversationFrg extends Fragment {
 
     }
 
+    private int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                getResources().getDisplayMetrics());
+    }
+
+    SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+        @Override
+        public void create(SwipeMenu menu) {
+            SwipeMenuItem openItem = new SwipeMenuItem(
+                    getActivity());
+            openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+                    0xCE)));
+            openItem.setWidth(dp2px(90));
+            openItem.setTitle("打开");
+            openItem.setTitleSize(18);
+            openItem.setTitleColor(Color.WHITE);
+            menu.addMenuItem(openItem);
+
+            SwipeMenuItem deleteItem = new SwipeMenuItem(
+                    getActivity());
+            deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                    0x3F, 0x25)));
+            deleteItem.setWidth(dp2px(90));
+            deleteItem.setTitle("删除");
+            deleteItem.setTitleSize(18);
+            deleteItem.setTitleColor(Color.WHITE);
+            menu.addMenuItem(deleteItem);
+        }
+    };
+
+
+    public ConversationFrg setViewPager(ViewPager viewPager) {
+        this.mViewPager = viewPager;
+        return this;
+    }
+
     private ArrayList<LastMessage> mMessageList;
-    private ListView mLastMsgLv;
-    private SwipeRefreshLayout SwipeRefreshLayout;
-    private ConversationAdpter mAdapter;
-    private DbHelper mDBhelper;
+    private SwipeMenuListView mLastMsgLv;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ConversationAdapter mAdapter;
+    private DbHelper mDBHelper;
     private MsgIFace msgIFace;
+
+    private ViewPager mViewPager;
 
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";
     private static final String EXTRA_USERNAME = "username";

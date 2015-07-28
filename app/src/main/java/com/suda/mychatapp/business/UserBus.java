@@ -21,7 +21,6 @@ public class UserBus {
 
     public static void getMe(final CallBack callBack) {
         if (me != null) {
-            Log.d("cache", "use");
             callBack.done(me);
         } else {
             if (MyAVUser.getCurrentUser() == null) {
@@ -51,12 +50,14 @@ public class UserBus {
         //查内存
         if (userHashMap.containsKey(username)) {
             callBack.done(userHashMap.get(username));
-        } else if (MyApplication.getDBHelper().isExistUser(username)) {
-            //查本地
-            callBack.done(MyApplication.getDBHelper().findUserByName(username));
-            userHashMap.put(username, MyApplication.getDBHelper().findUserByName(username));
         } else {
-            //查网络，对比更新
+            if (MyApplication.getDBHelper().isExistUser(username)) {
+                //查本地，缓存到内存
+                callBack.done(MyApplication.getDBHelper().findUserByName(username));
+                userHashMap.put(username, MyApplication.getDBHelper().findUserByName(username));
+            }
+
+            //查网络，更新本地，更新内存
             AVQuery<MyAVUser> query = AVObject.getQuery(MyAVUser.class);
             query.whereEqualTo("username", username);
             query.findInBackground(new FindCallback<MyAVUser>() {
@@ -69,6 +70,8 @@ public class UserBus {
 
                         if (!MyApplication.getDBHelper().isExistUser(list.get(0).getUsername())) {
                             MyApplication.getDBHelper().addUser(u);
+                        } else {
+                            MyApplication.getDBHelper().updateUser(u);
                         }
                         userHashMap.put(username, u);
                         callBack.done(u);

@@ -54,7 +54,7 @@ public class ChatActivity extends AbstructActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        this.mDbhelper = new DbHelper(this);
+        this.mDbHelper = new DbHelper(this);
 
         initWidget();
     }
@@ -210,20 +210,20 @@ public class ChatActivity extends AbstructActivity {
                             e.printStackTrace();
                         } else {
 
-                            if (!mDbhelper.isExistMsg(message.getConversationId())) {
+                            if (!mDbHelper.isExistMsg(message.getConversationId())) {
                                 if (Conf.GROUP_CONVERSATION_ID.equals(message.getConversationId())) {
                                     LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUserName(), UserPropUtil.getNikeNameByUser(mMe), mMe.getIconUrl(),
                                             message.getTimestamp(), message.getText());
-                                    mDbhelper.addLastMess(lastMessage);
+                                    mDbHelper.addLastMess(lastMessage);
                                 } else {
                                     LastMessage lastMessage = new LastMessage(message.getConversationId(), mFriend.getUserName(), UserPropUtil.getNikeNameByUser(mFriend), mFriend.getIconUrl(),
                                             message.getTimestamp(), message.getText());
-                                    mDbhelper.addLastMess(lastMessage);
+                                    mDbHelper.addLastMess(lastMessage);
                                 }
                             } else {
                                 LastMessage lastMessage = new LastMessage(message.getConversationId(), mMe.getUserName(), UserPropUtil.getNikeNameByUser(mMe), mMe.getIconUrl(),
                                         message.getTimestamp(), message.getText());
-                                mDbhelper.updateLastMsg(lastMessage);
+                                mDbHelper.updateLastMsg(lastMessage);
                             }
 
                             mMessageList.add(MessageUtil.aviMsgtoMsg(message, mMe));
@@ -447,7 +447,6 @@ public class ChatActivity extends AbstructActivity {
         }
     }
 
-
     @Override
     protected void onPause() {
         MessageHandler.setIsBackTask(true);
@@ -459,8 +458,10 @@ public class ChatActivity extends AbstructActivity {
     protected void onResume() {
         MessageHandler.setIsBackTask(false);
         MessageHandler.setiOtherFace(mMsgIFace);
-        mDbhelper.updateUnreadCountById(mConversationId, true);
-        MessageHandler.getiFace().update();
+        mDbHelper.updateUnreadCountById(mConversationId, true);
+        if (MessageHandler.getiFace() != null) {
+            MessageHandler.getiFace().update();
+        }
         super.onResume();
     }
 
@@ -486,7 +487,7 @@ public class ChatActivity extends AbstructActivity {
 
     private SwipeRefreshLayout mSwipeLayout;
 
-    private DbHelper mDbhelper;
+    private DbHelper mDbHelper;
 
     MsgIFace mMsgIFace;
 

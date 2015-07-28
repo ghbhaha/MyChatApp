@@ -22,10 +22,11 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.suda.mychatapp.Conf;
@@ -74,8 +75,8 @@ public class MainActivity extends ActionBarActivity {
                 public void done(MyAVUser me) {
                     openClient(me.getUsername());
                     mTvNikeName.setText(UserPropUtil.getNikeNameByAVUser(me));
-                    mTvsign.setVisibility(TextUtil.isTextEmpty(me.getSign()) ? View.GONE : View.VISIBLE);
-                    mTvsign.setText("“" + me.getSign() + "”");
+                    mTvSign.setVisibility(TextUtil.isTextEmpty(me.getSign()) ? View.GONE : View.VISIBLE);
+                    mTvSign.setText("“" + me.getSign() + "”");
 
                     if (me.getIcon() != null) {
                         ImageCacheUtil.showPicture(MainActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
@@ -115,21 +116,21 @@ public class MainActivity extends ActionBarActivity {
                 R.layout.siderbar_header, lvLeftMenu, false);
 
         mTvNikeName = (TextView) headerContainer.findViewById(R.id.tv_username);
-        mTvsign = (TextView) headerContainer.findViewById(R.id.tv_sign);
+        mTvSign = (TextView) headerContainer.findViewById(R.id.tv_sign);
         mHeadIcon = (CircleImageView) headerContainer.findViewById(R.id.profile_image);
 
         lvLeftMenu.addHeaderView(headerContainer);
-        mlistItems = new ArrayList<HashMap<String, Object>>();
+        mListItems = new ArrayList<HashMap<String, Object>>();
         addLeftMenu("Suda聊天室（实验）", R.drawable.ic_drawer_settings);
         addLeftMenu("检测更新", R.drawable.browser_refresh);
         addLeftMenu("设置", R.drawable.ic_drawer_settings);
         addLeftMenu("帮助", R.drawable.ic_drawer_about);
         addLeftMenu("退出", R.drawable.ic_drawer_exit);
-        mlistItemAdapter = new SimpleAdapter(this, mlistItems,
+        mListItemAdapter = new SimpleAdapter(this, mListItems,
                 R.layout.siderbar_lisetview_item, new String[]{"ItemTitle",
                 "ItemImage"}, new int[]{R.id.ItemTitle, R.id.ItemImage});
 
-        lvLeftMenu.setAdapter(mlistItemAdapter);
+        lvLeftMenu.setAdapter(mListItemAdapter);
 
         lvLeftMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -137,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
                 switch (position) {
                     case 0:
                         Intent it = new Intent(MainActivity.this, AccountInfoActivity.class);
-                        startActivityForResult(it, REQUEST_UPDATE_IAMEG);
+                        startActivityForResult(it, REQUEST_UPDATE_IMAGE);
                         break;
                     case 1:
                         AVIMConversation conversation = MyApplication.getIMClient().getConversation(Conf.GROUP_CONVERSATION_ID);
@@ -288,7 +289,7 @@ public class MainActivity extends ActionBarActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new ConversationFrg();
+                    return new ConversationFrg().setViewPager(mViewPager);
                 case 1:
                     return new FriendsFrg();
                 case 2:
@@ -309,7 +310,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_UPDATE_IAMEG) {
+            if (requestCode == REQUEST_UPDATE_IMAGE) {
                 Bundle extras = data.getExtras();
                 Bitmap bm = extras.getParcelable("data");
                 mHeadIcon.setImageBitmap(bm);
@@ -328,6 +329,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
         }
+        AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class, MyApplication.mMessageHandler);
         NotificationUtil.clearNotification(this);
         super.onDestroy();
     }
@@ -335,7 +337,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         NotificationUtil.createNotification(this);
-        AVAnalytics.onPause(this);
         super.onPause();
     }
 
@@ -343,7 +344,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         initEntity();
         NotificationUtil.clearNotification(this);
-        AVAnalytics.onResume(this);
         super.onResume();
     }
 
@@ -380,11 +380,11 @@ public class MainActivity extends ActionBarActivity {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("ItemTitle", title);
         map.put("ItemImage", res);
-        mlistItems.add(map);
+        mListItems.add(map);
     }
 
     private TextView mTvNikeName;
-    private TextView mTvsign;
+    private TextView mTvSign;
     private CircleImageView mHeadIcon;
 
     private boolean openOrClose = false;
@@ -396,9 +396,9 @@ public class MainActivity extends ActionBarActivity {
     private ViewPager mViewPager;
     private Toolbar mToolbar;
     private ListView lvLeftMenu;
-    private List<HashMap<String, Object>> mlistItems;
-    private SimpleAdapter mlistItemAdapter;
-    private static final int REQUEST_UPDATE_IAMEG = 1;
+    private List<HashMap<String, Object>> mListItems;
+    private SimpleAdapter mListItemAdapter;
+    private static final int REQUEST_UPDATE_IMAGE = 1;
 
     private static final String EXTRA_USERNAME = "username";
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";

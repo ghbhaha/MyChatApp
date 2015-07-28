@@ -103,7 +103,7 @@ public class SearchNewFriendActivity extends AbstructActivity {
             public void result(boolean rs) {
                 if (rs) {
                     MyApplication.getDBHelper().addFriend(mFriendUser);
-                    MyApplication.getmFriendsIface().update();
+                    MyApplication.getmFriendsIFace().update();
                     Toast.makeText(SearchNewFriendActivity.this, "添加" + UserPropUtil.getNikeNameByUser(mFriendUser) + "成功", Toast.LENGTH_SHORT).show();
                 }
             }

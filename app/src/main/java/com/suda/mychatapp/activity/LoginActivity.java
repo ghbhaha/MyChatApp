@@ -41,17 +41,17 @@ public class LoginActivity extends ActionBarActivity {
     public void login(View v) {
         mCanDo = true;
 
-        final String username = mEtusername.getText().toString();
-        final String password = mEtpassword.getText().toString();
+        final String username = mEtUsername.getText().toString();
+        final String password = mEtPassword.getText().toString();
 
         if (TextUtil.isTextEmpty(username)) {
-            mTvtipusername.setVisibility(View.VISIBLE);
-            mTvtipusername.startAnimation(mShakeAnim);
+            mTvTipUsername.setVisibility(View.VISIBLE);
+            mTvTipUsername.startAnimation(mShakeAnim);
             mCanDo = false;
         }
         if (TextUtil.isTextEmpty(password)) {
-            mTvtippassword.setVisibility(View.VISIBLE);
-            mTvtippassword.startAnimation(mShakeAnim);
+            mTvTipPassword.setVisibility(View.VISIBLE);
+            mTvTipPassword.startAnimation(mShakeAnim);
             mCanDo = false;
         }
 
@@ -78,13 +78,13 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     private void initWidget() {
-        mEtusername = (EditText) findViewById(R.id.et_username);
-        mEtpassword = (EditText) findViewById(R.id.et_password);
-        mTvtipusername = (TextView) findViewById(R.id.tip_username);
-        mTvtippassword = (TextView) findViewById(R.id.tip_password);
-        mTvregist = (TextView) findViewById(R.id.regist);
+        mEtUsername = (EditText) findViewById(R.id.et_username);
+        mEtPassword = (EditText) findViewById(R.id.et_password);
+        mTvTipUsername = (TextView) findViewById(R.id.tip_username);
+        mTvTipPassword = (TextView) findViewById(R.id.tip_password);
+        mTvRegister = (TextView) findViewById(R.id.regist);
 
-        mEtusername.addTextChangedListener(new TextWatcher() {
+        mEtUsername.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -97,12 +97,12 @@ public class LoginActivity extends ActionBarActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mTvtipusername.setVisibility(View.INVISIBLE);
+                mTvTipUsername.setVisibility(View.INVISIBLE);
                 mCanDo = true;
             }
         });
 
-        mEtpassword.addTextChangedListener(new TextWatcher() {
+        mEtPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -115,12 +115,12 @@ public class LoginActivity extends ActionBarActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mTvtippassword.setVisibility(View.INVISIBLE);
+                mTvTipPassword.setVisibility(View.INVISIBLE);
                 mCanDo = true;
             }
         });
 
-        mTvregist.setText(Html.fromHtml("<u>" + getString(R.string.regist_new) + "</u>"));
+        mTvRegister.setText(Html.fromHtml("<u>" + getString(R.string.regist_new) + "</u>"));
 
     }
 
@@ -142,11 +142,9 @@ public class LoginActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private EditText mEtusername;
-    private EditText mEtpassword;
-    private TextView mTvtipusername;
-    private TextView mTvtippassword;
-    private TextView mTvregist;
+
+    private EditText mEtUsername, mEtPassword;
+    private TextView mTvRegister, mTvTipUsername, mTvTipPassword;
 
 
     private boolean mCanDo = true;

@@ -62,7 +62,7 @@ dependencies {
     compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
     compile 'com.android.support:support-v4:22.2.0'
 
-
+    compile 'com.baoyz.swipemenulistview:library:1.2.1'
     compile 'com.github.rey5137:material:1.2.2-SNAPSHOT'
 
 }

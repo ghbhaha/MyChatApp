@@ -41,6 +41,11 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
             //ChatActicity存在
             if (activityMessageHandler != null) {
                 //如果是正在聊天的朋友
+                mDbhelper.updateUnreadCountById(message.getConversationId(), true);
+                if (iFace != null) {
+                    iFace.update();
+                }
+
                 if (message.getFrom().equals(currentFriend)) {
                     //如果后台
                     if (isBackTask) {

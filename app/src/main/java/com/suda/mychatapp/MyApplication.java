@@ -2,7 +2,6 @@ package com.suda.mychatapp;
 
 import android.app.Application;
 
-import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
@@ -10,7 +9,7 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.suda.mychatapp.business.LoadLib;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.DbHelper;
-import com.suda.mychatapp.iface.FriendsIface;
+import com.suda.mychatapp.iface.FriendsIFace;
 import com.suda.mychatapp.utils.msg.MessageHandler;
 
 /**
@@ -26,10 +25,9 @@ public class MyApplication extends Application {
 
         mDbHelper = new DbHelper(this);
 
-        AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, new MessageHandler(this));
+        mMessageHandler = new MessageHandler(this);
 
-        AVAnalytics.enableCrashReport(this, true);
-
+        AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, mMessageHandler);
 
     }
 
@@ -37,12 +35,12 @@ public class MyApplication extends Application {
         return AVIMClient.getInstance(MyAVUser.getCurrentUser().getUsername());
     }
 
-    public static void setFriendsIface(FriendsIface mFriendsIface) {
-        MyApplication.mFriendsIface = mFriendsIface;
+    public static void setFriendsIface(FriendsIFace mFriendsIFace) {
+        MyApplication.mFriendsIFace = mFriendsIFace;
     }
 
-    public static FriendsIface getmFriendsIface() {
-        return mFriendsIface;
+    public static FriendsIFace getmFriendsIFace() {
+        return mFriendsIFace;
     }
 
     public static DbHelper getDBHelper() {
@@ -53,6 +51,7 @@ public class MyApplication extends Application {
 
     private final static String APP_ID = "bbi2udim376ydh5lvhq6jzp4o2afosu9nndydes45jvolhj4";
     private final static String APP_KEY = "flbtai7ocvvvrsutun5k77jkgagvayew944mnms8e94u3z6j";
-    public static FriendsIface mFriendsIface;
+    public static FriendsIFace mFriendsIFace;
+    public static MessageHandler mMessageHandler;
 
 }

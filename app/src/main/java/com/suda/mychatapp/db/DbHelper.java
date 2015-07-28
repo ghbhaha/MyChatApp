@@ -70,6 +70,22 @@ public class DbHelper {
         }
     }
 
+    public void updateUser(User user) {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        try {
+            db.execSQL(
+                    "update user set objId = ?, userName = ?, nikeName = ?, sign = ?, " +
+                            "iconUrl = ?, tel = ?, email = ?, sex = ?, birthday = ? where " +
+                            "objId = '" + user.getObjId() + "'",
+                    new Object[]{user.getObjId(), user.getUserName(), user.getNikeName(),
+                            user.getSign(), user.getIconUrl(), user.getTel(), user.getEmail(), user.getSex(), DateFmUtil.birthDateToLong(user.getBirthday())});
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
     public void addFriend(User user) {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
         try {

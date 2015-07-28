@@ -22,14 +22,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by Suda on 2015/7/26.
  */
-public class ConversationAdpter extends BaseAdapter {
+public class ConversationAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater mInflater;
     private List<LastMessage> arrayList;
 
-    public ConversationAdpter(Context context,
-                              ArrayList<LastMessage> arrayList) {
+    public ConversationAdapter(Context context,
+                               ArrayList<LastMessage> arrayList) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.arrayList = arrayList;

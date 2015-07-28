@@ -44,7 +44,7 @@ public class AccountInfoActivity extends AbstructActivity {
 
     private void initEntity() {
 
-        mDbhelper = new DbHelper(this);
+        mDbHelper = new DbHelper(this);
 
         if (UserBus.isExistLocalUser()) {
             new UserBus().getMe(new UserBus.CallBack() {
@@ -170,7 +170,7 @@ public class AccountInfoActivity extends AbstructActivity {
         });
         AVUser.getCurrentUser().logOut();
         UserBus.clearMe();
-        mDbhelper.clearAllData();
+        mDbHelper.clearAllData();
         this.finish();
     }
 
@@ -243,14 +243,7 @@ public class AccountInfoActivity extends AbstructActivity {
 
 
     private CircleImageView mHeadIcon;
-    private TextView mTvSign;
-    private TextView mTvUsername;
-    private TextView mTvBirthDay;
-    private TextView mTvNikeName;
-    private TextView mTvSex;
-    private TextView mTvTel;
-    private TextView mTvEmail;
-
+    private TextView mTvSign, mTvUsername, mTvBirthDay, mTvNikeName, mTvSex, mTvTel, mTvEmail;
 
     private Bitmap mHeadBitMap;
     private static final int REQUEST_SELECT_IMAGE = 1;
@@ -259,6 +252,6 @@ public class AccountInfoActivity extends AbstructActivity {
 
     private boolean mUpdateImage = false;
 
-    private DbHelper mDbhelper;
+    private DbHelper mDbHelper;
 
 }

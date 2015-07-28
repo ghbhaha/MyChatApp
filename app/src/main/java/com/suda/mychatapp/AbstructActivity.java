@@ -5,7 +5,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVAnalytics;
 import com.suda.mychatapp.utils.NotificationUtil;
 import com.suda.mychatapp.utils.UIUtil;
 
@@ -23,14 +22,12 @@ public abstract class AbstructActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         NotificationUtil.createNotification(this);
-        AVAnalytics.onPause(this);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         NotificationUtil.clearNotification(this);
-        AVAnalytics.onResume(this);
         super.onResume();
     }
 

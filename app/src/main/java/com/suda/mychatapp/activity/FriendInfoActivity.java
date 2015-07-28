@@ -74,7 +74,7 @@ public class FriendInfoActivity extends AbstructActivity {
                 @Override
                 public void result(boolean rs) {
                     MyApplication.getDBHelper().deleteFriend(mFriend);
-                    MyApplication.getmFriendsIface().update();
+                    MyApplication.getmFriendsIFace().update();
                     isFriend = !rs;
                     mStar.setIcon(isFriend ?
                             R.drawable.ic_action_important : R.drawable.ic_action_not_important);
@@ -85,7 +85,7 @@ public class FriendInfoActivity extends AbstructActivity {
                 @Override
                 public void result(boolean rs) {
                     MyApplication.getDBHelper().addFriend(mFriend);
-                    MyApplication.getmFriendsIface().update();
+                    MyApplication.getmFriendsIFace().update();
                     isFriend = rs;
                     mStar.setIcon(isFriend ?
                             R.drawable.ic_action_important : R.drawable.ic_action_not_important);
@@ -178,15 +178,8 @@ public class FriendInfoActivity extends AbstructActivity {
     }
 
     private CircleImageView mHeadIcon;
-    private TextView mTvSign;
-    private TextView mTvUsername;
-    private TextView mTvBirthDay;
-    private TextView mTvNikeName;
-    private TextView mTvSex;
-    private TextView mTvTel;
-    private TextView mTvEmail;
     private FloatingActionButton mStar;
-
+    private TextView mTvSign, mTvUsername, mTvBirthDay, mTvNikeName, mTvSex, mTvTel, mTvEmail;
 
     private boolean isFriend = false;
     private static final String EXTRA_USERNAME = "username";
