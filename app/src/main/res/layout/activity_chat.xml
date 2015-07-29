@@ -69,6 +69,7 @@
                 <ImageButton
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:id="@+id/image_face"
                     android:background="@drawable/chat_select_expression_bg" />
 
                 <TextView
@@ -88,6 +89,12 @@
             android:layout_width="match_parent"
             android:layout_height=".8dp"
             android:background="#BEBEBE" />
+
+        <include
+            android:id="@+id/chat_face_container"
+            layout="@layout/chat_face_container"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 

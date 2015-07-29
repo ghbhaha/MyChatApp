@@ -1,6 +1,7 @@
 package com.suda.mychatapp.adapter;
 
 import android.content.Context;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.suda.mychatapp.R;
 import com.suda.mychatapp.db.pojo.LastMessage;
 import com.suda.mychatapp.utils.DateFmUtil;
 import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
+import com.suda.mychatapp.utils.FaceUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,7 +77,10 @@ public class ConversationAdapter extends BaseAdapter {
     }
 
     public void bindDataToView(final ViewHolder holder, int position) {
-        holder.mTvLastMsg.setText(arrayList.get(position).getLastMsg());
+
+        SpannableStringBuilder sb = FaceUtil.handler2(holder.mTvLastMsg,
+                arrayList.get(position).getLastMsg(), context);
+        holder.mTvLastMsg.setText(sb);
 
         ImageLoader.getInstance().displayImage(arrayList.get(position).getIconUrl(), holder.mHeadIcon, DisplayImageOptionsUtil.OPTION_1);
 /*        ImageCacheUtil.showPicture(context, MyApplication.getDBHelper().

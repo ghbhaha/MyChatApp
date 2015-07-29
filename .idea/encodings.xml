@@ -23,7 +23,6 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/fragment/ConversationFrg.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/fragment/DongTaiFrg.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/fragment/FriendsFrg.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/iface/FriendsIFace.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/utils/DiskLruCache.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/utils/DoubleClickExitHelper.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/suda/mychatapp/utils/ExceptionInfoUtil.java" charset="UTF-8" />

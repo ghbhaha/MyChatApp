@@ -2,6 +2,11 @@ package com.suda.mychatapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +21,17 @@ import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.Message;
 import com.suda.mychatapp.utils.DateFmUtil;
 import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
+import com.suda.mychatapp.utils.FaceUtil;
 import com.suda.mychatapp.utils.TextUtil;
+import com.suda.mychatapp.utils.gif.AnimatedGifDrawable;
+import com.suda.mychatapp.utils.gif.AnimatedImageSpan;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -104,7 +116,10 @@ public class MessageAdapter extends BaseAdapter {
             holder.mFromll.setVisibility(View.INVISIBLE);
             holder.mToll.setVisibility(View.VISIBLE);
 
-            holder.mTvToMsg.setText(arrayList.get(position).getMsg());
+            SpannableStringBuilder sb = FaceUtil.handler(holder.mTvToMsg,
+                    arrayList.get(position).getMsg(), context);
+            holder.mTvToMsg.setText(sb);
+            holder.mTvToMsg.setTextColor(Color.WHITE);
             holder.mTvToUserNikeName.setVisibility(arrayList.get(position).isGChat() ? View.VISIBLE : View.GONE);
             holder.mTvToUserNikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikename()) ?
                     arrayList.get(position).getUsername() : arrayList.get(position).getNikename());
@@ -127,7 +142,12 @@ public class MessageAdapter extends BaseAdapter {
             holder.mToll.setVisibility(View.INVISIBLE);
 
             arrayList.get(position).isGChat();
-            holder.mTvFromMsg.setText(arrayList.get(position).getMsg());
+
+            SpannableStringBuilder sb = FaceUtil.handler(holder.mTvFromMsg,
+                    arrayList.get(position).getMsg(), context);
+
+            holder.mTvFromMsg.setText(sb);
+            holder.mTvFromMsg.setTextColor(Color.BLACK);
             holder.mTvFromUserNikeName.setVisibility(arrayList.get(position).isGChat() ? View.VISIBLE : View.GONE);
             holder.mTvFromUserNikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikename()) ?
                     arrayList.get(position).getUsername() : arrayList.get(position).getNikename());
