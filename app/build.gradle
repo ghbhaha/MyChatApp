@@ -36,7 +36,6 @@ repositories {
 
 
 dependencies {
-
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:support-v4:22.0.3'
@@ -61,8 +60,8 @@ dependencies {
     compile 'com.android.support:cardview-v7:22.2.0'
     compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
     compile 'com.android.support:support-v4:22.2.0'
-
     compile 'com.baoyz.swipemenulistview:library:1.2.1'
     compile 'com.github.rey5137:material:1.2.2-SNAPSHOT'
-
+    compile 'com.melnykov:floatingactionbutton:1.3.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
 }

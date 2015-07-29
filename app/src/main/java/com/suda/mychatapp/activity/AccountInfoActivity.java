@@ -19,12 +19,13 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.DbHelper;
-import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
 import com.suda.mychatapp.utils.ImageUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
@@ -59,7 +60,9 @@ public class AccountInfoActivity extends AbstructActivity {
                     mTvEmail.setText(UserPropUtil.getEmailTipByAVUser(me));
 
                     if (me.getIcon() != null) {
-                        ImageCacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+
+                        ImageLoader.getInstance().displayImage(me.getIcon().getUrl(), mHeadIcon, DisplayImageOptionsUtil.OPTION_1);
+                        /*ImageCacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
                             @Override
                             public void done(Bitmap bitmap) {
                                 final Bitmap bm = bitmap;
@@ -70,7 +73,7 @@ public class AccountInfoActivity extends AbstructActivity {
                                     }
                                 });
                             }
-                        });
+                        });*/
                     }
                 }
             });
@@ -109,15 +112,18 @@ public class AccountInfoActivity extends AbstructActivity {
                                             mUpdateImage = true;
                                         mHeadIcon.setImageBitmap(mHeadBitMap);
                                         mHeadIcon.setVisibility(View.VISIBLE);
+
+
                                         UserBus.refreshMe(new UserBus.CallBack() {
                                             @Override
                                             public void done(MyAVUser me) {
-                                                ImageCacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+                                                ImageLoader.getInstance().displayImage(me.getIcon().getUrl(), mHeadIcon,DisplayImageOptionsUtil.OPTION_1);
+                                                /*ImageCacheUtil.showPicture(AccountInfoActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
                                                     @Override
                                                     public void done(Bitmap bitmap) {
                                                         //do nothing
                                                     }
-                                                });
+                                                });*/
                                             }
                                         });
                                     }

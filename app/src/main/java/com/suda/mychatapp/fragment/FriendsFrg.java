@@ -24,7 +24,7 @@ import com.avos.avoscloud.im.v2.AVIMConversationQuery;
 import com.avos.avoscloud.im.v2.Conversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
-import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.melnykov.fab.FloatingActionButton;
 import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.ChatActivity;
@@ -108,12 +108,14 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
 
         btAddNewFriend = (FloatingActionButton) view.findViewById(R.id.add_new_friends);
 
-
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.id_swipe_ly);
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mLvFriends = (ListView) view.findViewById(R.id.lv_friends);
+
+        btAddNewFriend.attachToListView(mLvFriends);
+
         mLvFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -245,7 +247,7 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public static FriendsIFace mFriendsIFace;
-    
+
     FloatingActionButton btAddNewFriend;
 
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";

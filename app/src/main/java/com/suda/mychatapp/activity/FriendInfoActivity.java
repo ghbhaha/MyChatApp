@@ -1,12 +1,12 @@
 package com.suda.mychatapp.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.R;
@@ -14,7 +14,7 @@ import com.suda.mychatapp.business.FriendsBus;
 import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.User;
-import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -103,7 +103,9 @@ public class FriendInfoActivity extends AbstructActivity {
         mTvBirthDay.setText(UserPropUtil.getBirthDayByUser(user));
         mTvEmail.setText(UserPropUtil.getEmailByUser(user));
 
-        ImageCacheUtil.showPicture(FriendInfoActivity.this, user.getIconUrl(), new ImageCacheUtil.CallBack() {
+        ImageLoader.getInstance().displayImage(user.getIconUrl(), mHeadIcon, DisplayImageOptionsUtil.OPTION_1);
+
+ /*       ImageCacheUtil.showPicture(FriendInfoActivity.this, user.getIconUrl(), new ImageCacheUtil.CallBack() {
             @Override
             public void done(final Bitmap bitmap) {
                 mHeadIcon.post(new Runnable() {
@@ -113,7 +115,7 @@ public class FriendInfoActivity extends AbstructActivity {
                     }
                 });
             }
-        });
+        });*/
     }
 
     void showInfoByAVUser(MyAVUser user) {
@@ -124,8 +126,8 @@ public class FriendInfoActivity extends AbstructActivity {
         mTvNikeName.setText(UserPropUtil.getNikeNameByAVUser(user));
         mTvBirthDay.setText(UserPropUtil.getBirthDayByAVUser(user));
         mTvEmail.setText(UserPropUtil.getEmailByAVUser(user));
-
-        ImageCacheUtil.showPicture(FriendInfoActivity.this, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+        ImageLoader.getInstance().displayImage(user.getIcon().getUrl(), mHeadIcon, DisplayImageOptionsUtil.OPTION_1);
+       /* ImageCacheUtil.showPicture(FriendInfoActivity.this, user.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
             @Override
             public void done(final Bitmap bitmap) {
                 mHeadIcon.post(new Runnable() {
@@ -135,7 +137,7 @@ public class FriendInfoActivity extends AbstructActivity {
                     }
                 });
             }
-        });
+        });*/
     }
 
     void initStarIcon(final User user) {

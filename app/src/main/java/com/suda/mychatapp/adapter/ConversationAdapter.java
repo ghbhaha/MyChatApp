@@ -1,21 +1,20 @@
 package com.suda.mychatapp.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.suda.mychatapp.MyApplication;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.db.pojo.LastMessage;
 import com.suda.mychatapp.utils.DateFmUtil;
-import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -78,7 +77,8 @@ public class ConversationAdapter extends BaseAdapter {
     public void bindDataToView(final ViewHolder holder, int position) {
         holder.mTvLastMsg.setText(arrayList.get(position).getLastMsg());
 
-        ImageCacheUtil.showPicture(context, MyApplication.getDBHelper().
+        ImageLoader.getInstance().displayImage(arrayList.get(position).getIconUrl(), holder.mHeadIcon, DisplayImageOptionsUtil.OPTION_1);
+/*        ImageCacheUtil.showPicture(context, MyApplication.getDBHelper().
                 getIconUrl(arrayList.get(position).getUserName()), new ImageCacheUtil.CallBack() {
             @Override
             public void done(final Bitmap bitmap) {
@@ -89,7 +89,7 @@ public class ConversationAdapter extends BaseAdapter {
                     }
                 });
             }
-        });
+        });*/
 
         if (arrayList.get(position).getUnreadCount() > 99) {
             holder.mTvUnreadCount.setText("99+");

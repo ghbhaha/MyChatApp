@@ -29,6 +29,7 @@ import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.suda.mychatapp.Conf;
 import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.R;
@@ -37,8 +38,8 @@ import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.fragment.ConversationFrg;
 import com.suda.mychatapp.fragment.DongTaiFrg;
 import com.suda.mychatapp.fragment.FriendsFrg;
+import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
 import com.suda.mychatapp.utils.DoubleClickExitHelper;
-import com.suda.mychatapp.utils.ImageCacheUtil;
 import com.suda.mychatapp.utils.NotificationUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
@@ -79,7 +80,8 @@ public class MainActivity extends ActionBarActivity {
                     mTvSign.setText("“" + me.getSign() + "”");
 
                     if (me.getIcon() != null) {
-                        ImageCacheUtil.showPicture(MainActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
+                        ImageLoader.getInstance().displayImage(me.getIcon().getUrl(), mHeadIcon, DisplayImageOptionsUtil.OPTION_1);
+                        /*ImageCacheUtil.showPicture(MainActivity.this, me.getIcon().getUrl(), new ImageCacheUtil.CallBack() {
                             @Override
                             public void done(final Bitmap bitmap) {
                                 final Bitmap bm = bitmap;
@@ -90,7 +92,7 @@ public class MainActivity extends ActionBarActivity {
                                     }
                                 });
                             }
-                        });
+                        });*/
                     }
                 }
             });

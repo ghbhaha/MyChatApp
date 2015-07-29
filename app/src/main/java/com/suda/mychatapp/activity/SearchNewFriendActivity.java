@@ -1,7 +1,6 @@
 package com.suda.mychatapp.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,13 +13,14 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.suda.mychatapp.AbstructActivity;
 import com.suda.mychatapp.MyApplication;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.business.FriendsBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.User;
-import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 
@@ -58,6 +58,8 @@ public class SearchNewFriendActivity extends AbstructActivity {
                         mTvsign.setText(UserPropUtil.getSignByUser(mFriendUser));
                         mTvnikeName.setText(UserPropUtil.getNikeNameByUser(mFriendUser));
                         if (!TextUtil.isTextEmpty(mFriendUser.getIconUrl())) {
+                            ImageLoader.getInstance().displayImage(mFriendUser.getIconUrl(), mHeadIcon, DisplayImageOptionsUtil.OPTION_1);
+/*
                             ImageCacheUtil.showPicture(SearchNewFriendActivity.this, mFriendUser.getIconUrl(), new ImageCacheUtil.CallBack() {
                                 @Override
                                 public void done(Bitmap bitmap) {
@@ -70,7 +72,7 @@ public class SearchNewFriendActivity extends AbstructActivity {
                                     });
 
                                 }
-                            });
+                            });*/
                         }
 
                     } else {

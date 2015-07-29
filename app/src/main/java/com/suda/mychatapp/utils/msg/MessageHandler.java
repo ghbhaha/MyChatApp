@@ -62,7 +62,8 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                     activityMessageHandler.onMessage(message, conversation, client);
                     //其他人发来消息
                 } else {
-                    iOtherFace.update(textMessage);
+                    if (iOtherFace != null)
+                        iOtherFace.update(textMessage);
                 }
                 //ChatActicity不存在
             } else {

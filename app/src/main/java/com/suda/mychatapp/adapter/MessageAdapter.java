@@ -2,7 +2,6 @@ package com.suda.mychatapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.FriendInfoActivity;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.Message;
 import com.suda.mychatapp.utils.DateFmUtil;
-import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
 import com.suda.mychatapp.utils.TextUtil;
 
 import java.util.Date;
@@ -108,7 +108,9 @@ public class MessageAdapter extends BaseAdapter {
             holder.mTvToUserNikeName.setVisibility(arrayList.get(position).isGChat() ? View.VISIBLE : View.GONE);
             holder.mTvToUserNikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikename()) ?
                     arrayList.get(position).getUsername() : arrayList.get(position).getNikename());
-            ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
+            ImageLoader.getInstance().displayImage(arrayList.get(position).getIconurl(), holder.mToIcon, DisplayImageOptionsUtil.OPTION_1);
+
+   /*         ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
                 @Override
                 public void done(final Bitmap bitmap) {
                     holder.mToIcon.post(new Runnable() {
@@ -118,7 +120,7 @@ public class MessageAdapter extends BaseAdapter {
                         }
                     });
                 }
-            });
+            });*/
 
         } else {
             holder.mFromll.setVisibility(View.VISIBLE);
@@ -129,7 +131,9 @@ public class MessageAdapter extends BaseAdapter {
             holder.mTvFromUserNikeName.setVisibility(arrayList.get(position).isGChat() ? View.VISIBLE : View.GONE);
             holder.mTvFromUserNikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikename()) ?
                     arrayList.get(position).getUsername() : arrayList.get(position).getNikename());
-            ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
+
+            ImageLoader.getInstance().displayImage(arrayList.get(position).getIconurl(), holder.mFromIcon, DisplayImageOptionsUtil.OPTION_1);
+/*            ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
                 @Override
                 public void done(final Bitmap bitmap) {
                     holder.mFromIcon.post(new Runnable() {
@@ -139,7 +143,7 @@ public class MessageAdapter extends BaseAdapter {
                         }
                     });
                 }
-            });
+            });*/
 
 
         }

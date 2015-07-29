@@ -2,17 +2,17 @@ package com.suda.mychatapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.FriendInfoActivity;
 import com.suda.mychatapp.db.pojo.User;
-import com.suda.mychatapp.utils.ImageCacheUtil;
+import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
 
@@ -85,6 +85,8 @@ public class FriendsAdapter extends BaseAdapter {
             }
         });
 
+        ImageLoader.getInstance().displayImage(arrayList.get(position).getIconUrl(), holder.mHeadIcon, DisplayImageOptionsUtil.OPTION_1);
+/*
         ImageCacheUtil.showPicture(context, arrayList.get(position).getIconUrl(), new ImageCacheUtil.CallBack() {
             @Override
             public void done(final Bitmap bitmap) {
@@ -96,6 +98,7 @@ public class FriendsAdapter extends BaseAdapter {
                 });
             }
         });
+*/
 
         holder.mTvnikeName.setText(UserPropUtil.getNikeNameByUser(arrayList.get(position)));
     }

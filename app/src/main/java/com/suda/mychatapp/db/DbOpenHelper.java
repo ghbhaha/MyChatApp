@@ -49,9 +49,14 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 3) {
             db.execSQL(sqlFriend);
+        }
 
-        } else if (oldVersion < 2) {
+        if (oldVersion < 2) {
             db.execSQL(sqlUser);
+        }
+
+        if (oldVersion < 1) {
+            db.execSQL(sqlLastMsg);
         }
     }
 
