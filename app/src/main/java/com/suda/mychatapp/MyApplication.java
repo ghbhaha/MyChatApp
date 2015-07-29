@@ -49,7 +49,7 @@ public class MyApplication extends Application {
     public void initImageLoader(Context ct) {
         File cacheDir = StorageUtils.getOwnCacheDirectory(ct, "MyChatApp/Cache");
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(ct)
-                .memoryCacheExtraOptions(480, 800) // default = device screen dimensions 内存缓存文件的最大长宽
+                //.memoryCacheExtraOptions(480, 800) // default = device screen dimensions 内存缓存文件的最大长宽
                 .threadPoolSize(3) // default  线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2) // default 设置当前线程的优先级
                 .tasksProcessingOrder(QueueProcessingType.FIFO) // default
@@ -65,7 +65,7 @@ public class MyApplication extends Application {
                 .imageDownloader(new BaseImageDownloader(ct)) // default
                 .imageDecoder(new BaseImageDecoder(true)) // default
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
-                .writeDebugLogs() // 打印debug log
+              //  .writeDebugLogs() // 打印debug log
                 .build(); //开始构建
         ImageLoader.getInstance().init(config);
 

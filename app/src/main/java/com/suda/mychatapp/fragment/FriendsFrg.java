@@ -8,10 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.avos.avoscloud.AVException;
@@ -41,7 +38,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
 
 
 public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -62,12 +58,12 @@ public class FriendsFrg extends Fragment implements SwipeRefreshLayout.OnRefresh
         mFriendsIFace = new FriendsIFace() {
             @Override
             public void update() {
+                mFriendsList.clear();
                 if (MyApplication.getDBHelper().findAllFriend() != null) {
-                    mFriendsList.clear();
                     mFriendsList.addAll(MyApplication.getDBHelper().findAllFriend());
                     FriendSortUtil.sortFriend(mFriendsList);
-                    friendsAdapter.notifyDataSetChanged();
                 }
+                friendsAdapter.notifyDataSetChanged();
             }
         };
 
