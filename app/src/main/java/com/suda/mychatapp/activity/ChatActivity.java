@@ -204,22 +204,6 @@ public class ChatActivity extends AbstructActivity {
     public void sendText(View view) {
         if (isSendSuccess) {
             isSendSuccess = false;
-            final Timer t = new Timer();
-            t.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    t.cancel();
-                    if (!isSendSuccess) {
-                        isSendSuccess = true;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(ChatActivity.this, "发送超时,请重新发送", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }
-            }, 2 * 1000);
 
             final AVIMTextMessage message = new AVIMTextMessage();
             if (!TextUtil.isTextEmpty(mEtMsg.getText().toString())) {
@@ -228,6 +212,24 @@ public class ChatActivity extends AbstructActivity {
                     @Override
                     public void done(AVException e) {
                         if (null != e) {
+
+                            final Timer t = new Timer();
+                            t.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    t.cancel();
+                                    if (!isSendSuccess) {
+                                        isSendSuccess = true;
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(ChatActivity.this, "发送超时,请重新发送", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }
+                            }, 2 * 1000);
+
                             e.printStackTrace();
                         } else {
 
@@ -253,6 +255,8 @@ public class ChatActivity extends AbstructActivity {
                         }
                     }
                 });
+            } else {
+                isSendSuccess = true;
             }
         }
     }
