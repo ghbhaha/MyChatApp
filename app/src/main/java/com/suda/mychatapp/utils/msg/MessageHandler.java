@@ -75,6 +75,7 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                     NotificationUtil.showNewOneChatNotification(context, textMessage);
                 }
             }
+            iFace2.update();
         } else {
             client.close(null);
         }
@@ -103,6 +104,14 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
     public static void setiFace(MsgIFace iFace) {
         MessageHandler.iFace = iFace;
+    }
+
+    public static void setiFace2(MsgIFace iFace2) {
+        MessageHandler.iFace2 = iFace2;
+    }
+
+    public static MsgIFace getiFace2() {
+        return iFace2;
     }
 
     public static void setIsBackTask(Boolean isBackTask) {
@@ -142,6 +151,7 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
     private static final String EXTRA_USERNAME = "username";
     private static MsgIFace iFace;
     private static MsgIFace iOtherFace;
+    private static MsgIFace iFace2;
     private DbHelper mDbhelper;
 
 }

@@ -249,6 +249,20 @@ public class DbHelper {
         return arrayList;
     }
 
+    public int getAllUnReadCount() {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        int count = 0;
+        Cursor cursor = db.query("last_msg", new String[]{"sum(unreadCount)"}, null,
+                null, null, null, null);
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
+
     public void updateUnreadCountById(String conversationId, boolean clear) {
 
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();

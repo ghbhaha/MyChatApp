@@ -29,6 +29,7 @@ import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.suda.mychatapp.Conf;
 import com.suda.mychatapp.MyApplication;
@@ -43,6 +44,8 @@ import com.suda.mychatapp.utils.DoubleClickExitHelper;
 import com.suda.mychatapp.utils.NotificationUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.UserPropUtil;
+import com.suda.mychatapp.utils.msg.MessageHandler;
+import com.suda.mychatapp.utils.msg.MsgIFace;
 import com.suda.mychatapp.widget.PagerSlidingTabStrip;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
@@ -64,8 +67,26 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.main);
         initWidget();
 
+        msgIFace = new MsgIFace() {
+            @Override
+            public void update() {
+                updateUnreadCount();
+            }
+
+            @Override
+            public void update(AVIMTextMessage message) {
+
+            }
+        };
+
+        MessageHandler.setiFace2(msgIFace);
     }
 
+
+    private void updateUnreadCount(){
+        tvUnreadCount.setVisibility(MyApplication.mDbHelper.getAllUnReadCount() == 0 ? View.INVISIBLE : View.VISIBLE);
+        tvUnreadCount.setText(MyApplication.mDbHelper.getAllUnReadCount() + "");
+    }
 
     private void initEntity() {
 
@@ -107,6 +128,8 @@ public class MainActivity extends ActionBarActivity {
     private void initWidget() {
 
         mClickExitHelper = new DoubleClickExitHelper(MainActivity.this);
+
+        tvUnreadCount = (TextView) findViewById(R.id.tv_unreadCount);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
@@ -169,7 +192,7 @@ public class MainActivity extends ActionBarActivity {
                         checkForUpdate();
                         break;
                     case 3:
-                        startActivity(new Intent(MainActivity.this,SettingsActivity.class));
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                         break;
                     case 4:
                         break;
@@ -338,6 +361,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         NotificationUtil.createNotification(this);
+        MessageHandler.getiFace2().update();
         super.onPause();
     }
 
@@ -345,6 +369,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         initEntity();
         NotificationUtil.clearNotification(this);
+        MessageHandler.getiFace2().update();
         super.onResume();
     }
 
@@ -403,6 +428,9 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String EXTRA_USERNAME = "username";
     private static final String EXTRA_CONVERSATION_ID = "conversation_id";
+
+    private MsgIFace msgIFace;
+    private TextView tvUnreadCount;
 
 }
 
