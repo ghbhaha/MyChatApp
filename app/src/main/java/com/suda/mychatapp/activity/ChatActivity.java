@@ -204,14 +204,13 @@ public class ChatActivity extends AbstructActivity {
     public void sendText(View view) {
         if (isSendSuccess) {
             isSendSuccess = false;
-
             final Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    t.cancel();
                     if (!isSendSuccess) {
                         isSendSuccess = true;
-                        t.cancel();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
