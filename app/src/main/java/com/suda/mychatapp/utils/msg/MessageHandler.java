@@ -75,7 +75,9 @@ public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
                     NotificationUtil.showNewOneChatNotification(context, textMessage);
                 }
             }
-            iFace2.update();
+            if(iFace2!=null){
+                iFace2.update();
+            }
         } else {
             client.close(null);
         }
