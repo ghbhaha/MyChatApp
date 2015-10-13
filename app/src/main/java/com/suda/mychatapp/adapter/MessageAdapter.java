@@ -14,17 +14,22 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.suda.mychatapp.Conf;
 import com.suda.mychatapp.R;
 import com.suda.mychatapp.activity.FriendInfoActivity;
+import com.suda.mychatapp.business.UserBus;
 import com.suda.mychatapp.business.pojo.MyAVUser;
 import com.suda.mychatapp.db.pojo.Message;
+import com.suda.mychatapp.db.pojo.User;
 import com.suda.mychatapp.utils.DateFmUtil;
 import com.suda.mychatapp.utils.DisplayImageOptionsUtil;
 import com.suda.mychatapp.utils.FaceUtil;
 import com.suda.mychatapp.utils.TextUtil;
 import com.suda.mychatapp.utils.gif.AnimatedGifDrawable;
 import com.suda.mychatapp.utils.gif.AnimatedImageSpan;
+import com.suda.mychatapp.utils.msg.MessageUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +47,7 @@ public class MessageAdapter extends BaseAdapter {
 
 
     public MessageAdapter(Context context,
-                          List<Message> arrayList) {
+                          List<AVIMTypedMessage> arrayList) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.arrayList = arrayList;
@@ -88,18 +93,20 @@ public class MessageAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        isGChat = Conf.GROUP_CONVERSATION_ID.equals(arrayList.get(position).getConversationId());
+
         bindDataToView(holder, position);
         return convertView;
     }
 
     public void bindDataToView(final ViewHolder holder, final int position) {
 
-        Date time = new Date(arrayList.get(position).getAvimTypedMessage().getTimestamp());
+        Date time = new Date(arrayList.get(position).getTimestamp());
         boolean show;
 
         if (position > 0) {
-            show = arrayList.get(position).getAvimTypedMessage().getTimestamp()
-                    - arrayList.get(position - 1).getAvimTypedMessage().getTimestamp() > 1000 * 60 * 4;
+            show = arrayList.get(position).getTimestamp()
+                    - arrayList.get(position - 1).getTimestamp() > 1000 * 60 * 4;
         } else {
             //当前消息第一个显示时间
             show = true;
@@ -112,18 +119,29 @@ public class MessageAdapter extends BaseAdapter {
             holder.mTvDate.setVisibility(View.INVISIBLE);
         }
 
-        if (isMe(arrayList.get(position).getUsername())) {
-            holder.mFromll.setVisibility(View.INVISIBLE);
+        if (isMe(arrayList.get(position).getFrom())) {
+            holder.mFromll.setVisibility(View.GONE);
             holder.mToll.setVisibility(View.VISIBLE);
 
+
             SpannableStringBuilder sb = FaceUtil.handler(holder.mTvToMsg,
-                    arrayList.get(position).getMsg(), context);
+                    MessageUtil.getMsg(arrayList.get(position)), context);
+
             holder.mTvToMsg.setText(sb);
             holder.mTvToMsg.setTextColor(Color.WHITE);
-            holder.mTvToUserNikeName.setVisibility(arrayList.get(position).isGChat() ? View.VISIBLE : View.GONE);
-            holder.mTvToUserNikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikename()) ?
-                    arrayList.get(position).getUsername() : arrayList.get(position).getNikename());
-            ImageLoader.getInstance().displayImage(arrayList.get(position).getIconurl(), holder.mToIcon, DisplayImageOptionsUtil.OPTION_1);
+            holder.mTvToUserNikeName.setVisibility(isGChat ? View.VISIBLE : View.GONE);
+
+            UserBus.findUser(arrayList.get(position).getFrom(), new UserBus.CallBack2() {
+                @Override
+                public void done(User user) {
+                    Message message = MessageUtil.aviMsgtoMsg(arrayList.get(position), user);
+                    holder.mTvToUserNikeName.setText(TextUtil.isTextEmpty(message.getNikename()) ?
+                            message.getUsername() : message.getNikename());
+                    ImageLoader.getInstance().displayImage(message.getIconurl(), holder.mToIcon, DisplayImageOptionsUtil.OPTION_1);
+                }
+            });
+
+
 
    /*         ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
                 @Override
@@ -139,20 +157,25 @@ public class MessageAdapter extends BaseAdapter {
 
         } else {
             holder.mFromll.setVisibility(View.VISIBLE);
-            holder.mToll.setVisibility(View.INVISIBLE);
-
-            arrayList.get(position).isGChat();
+            holder.mToll.setVisibility(View.GONE);
 
             SpannableStringBuilder sb = FaceUtil.handler(holder.mTvFromMsg,
-                    arrayList.get(position).getMsg(), context);
+                    MessageUtil.getMsg(arrayList.get(position)), context);
 
             holder.mTvFromMsg.setText(sb);
             holder.mTvFromMsg.setTextColor(Color.BLACK);
-            holder.mTvFromUserNikeName.setVisibility(arrayList.get(position).isGChat() ? View.VISIBLE : View.GONE);
-            holder.mTvFromUserNikeName.setText(TextUtil.isTextEmpty(arrayList.get(position).getNikename()) ?
-                    arrayList.get(position).getUsername() : arrayList.get(position).getNikename());
+            holder.mTvFromUserNikeName.setVisibility(isGChat ? View.VISIBLE : View.GONE);
 
-            ImageLoader.getInstance().displayImage(arrayList.get(position).getIconurl(), holder.mFromIcon, DisplayImageOptionsUtil.OPTION_1);
+            UserBus.findUser(arrayList.get(position).getFrom(), new UserBus.CallBack2() {
+                @Override
+                public void done(User user) {
+                    Message message = MessageUtil.aviMsgtoMsg(arrayList.get(position), user);
+                    holder.mTvFromUserNikeName.setText(TextUtil.isTextEmpty(message.getNikename()) ?
+                            message.getUsername() : message.getNikename());
+                    ImageLoader.getInstance().displayImage(message.getIconurl(), holder.mFromIcon, DisplayImageOptionsUtil.OPTION_1);
+                }
+            });
+
 /*            ImageCacheUtil.showPicture(context, arrayList.get(position).getIconurl(), new ImageCacheUtil.CallBack() {
                 @Override
                 public void done(final Bitmap bitmap) {
@@ -164,7 +187,6 @@ public class MessageAdapter extends BaseAdapter {
                     });
                 }
             });*/
-
 
         }
 
@@ -186,7 +208,7 @@ public class MessageAdapter extends BaseAdapter {
 
     public void showInfo(int position) {
         Intent it = new Intent(context, FriendInfoActivity.class);
-        it.putExtra(EXTRA_USERNAME, arrayList.get(position).getUsername());
+        it.putExtra(EXTRA_USERNAME, arrayList.get(position).getFrom());
         context.startActivity(it);
     }
 
@@ -208,8 +230,9 @@ public class MessageAdapter extends BaseAdapter {
 
     }
 
+    private boolean isGChat = false;
     private Context context;
     private LayoutInflater mInflater;
-    private List<Message> arrayList;
+    private List<AVIMTypedMessage> arrayList;
     private static final String EXTRA_USERNAME = "username";
 }

@@ -90,12 +90,8 @@ public class ChatActivity extends AbstructActivity {
             @Override
             public void done(List<AVIMMessage> messages, AVException e) {
                 if (filterException(e)) {
-                    if (mConversationId.equals(Conf.GROUP_CONVERSATION_ID)) {
-                        filterGMessages(messages);
-                    } else {
-                        filterMessages(messages);
-                        scrollToLast();
-                    }
+                    filterMessages(messages);
+                    scrollToLast();
                 }
                 isLoadingMessages.set(false);
             }
@@ -105,101 +101,23 @@ public class ChatActivity extends AbstructActivity {
     private void filterMessages(List<AVIMMessage> messages) {
         for (final AVIMMessage message : messages) {
             if (message instanceof AVIMTypedMessage) {
-                if (message.getFrom().equals(mFriendUserName)) {
-                    mMessageList.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, mFriend));
-                } else {
-                    mMessageList.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, mMe));
-                }
+                mMessageList.add((AVIMTypedMessage) message);
             }
         }
         mMessageAdapter.notifyDataSetChanged();
     }
 
-    private List<Message> filterMessages2(List<AVIMMessage> messages) {
-        List<Message> typedMessages = new ArrayList<Message>();
-        for (AVIMMessage message : messages) {
-            if (message.getFrom().equals(mFriendUserName)) {
-                typedMessages.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, mFriend));
-            } else {
-                typedMessages.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, mMe));
-            }
-        }
-        return typedMessages;
-    }
+    private ArrayList<AVIMTypedMessage> filterMessages2(List<AVIMMessage> messages) {
+        ArrayList<AVIMTypedMessage> list = new ArrayList<>();
 
-
-    private void filterGMessages(final List<AVIMMessage> messages) {
         for (final AVIMMessage message : messages) {
             if (message instanceof AVIMTypedMessage) {
-                UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
-                    @Override
-                    public void done(User user) {
-                        mMessageList.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, user));
-                        if (messages.size() == mMessageList.size()) {
-                            mMessageList.clear();
-                            for (final AVIMMessage message : messages) {
-                                UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
-                                    @Override
-                                    public void done(User user) {
-                                        mMessageList.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, user));
-                                        if (messages.size() == mMessageList.size()) {
-                                            mMessageAdapter.notifyDataSetChanged();
-                                            scrollToLast();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
+                list.add((AVIMTypedMessage) message);
             }
         }
+        return list;
     }
 
-    private void filterGMessages2(final List<AVIMMessage> messages) {
-        final List<Message> typedMessages = new ArrayList<Message>();
-        if (messages.size() == 0) {
-            toast("无更早的消息了");
-            isLoadingMessages.set(false);
-            mSwipeLayout.setRefreshing(false);
-            return;
-        }
-
-        for (final AVIMMessage message : messages) {
-            UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
-                @Override
-                public void done(User user) {
-                    UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
-                        @Override
-                        public void done(User user) {
-                            typedMessages.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, user));
-                            if (messages.size() == typedMessages.size()) {
-                                typedMessages.clear();
-                                for (final AVIMMessage message : messages) {
-                                    UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
-                                        @Override
-                                        public void done(User user) {
-                                            typedMessages.add(MessageUtil.aviMsgtoMsg((AVIMTypedMessage) message, user));
-                                            if (messages.size() == typedMessages.size()) {
-                                                List<Message> newMessages = new ArrayList<Message>();
-                                                newMessages.addAll(typedMessages);
-                                                newMessages.addAll(mMessageList);
-                                                mMessageList.clear();
-                                                mMessageList.addAll(newMessages);
-                                                mLvChat.setSelection(typedMessages.size() - 1);
-                                                isLoadingMessages.set(false);
-                                                mSwipeLayout.setRefreshing(false);
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        }
-    }
 
     public void sendText(View view) {
         if (isSendSuccess) {
@@ -249,7 +167,7 @@ public class ChatActivity extends AbstructActivity {
                                 mDbHelper.updateLastMsg(lastMessage);
                             }
 
-                            mMessageList.add(MessageUtil.aviMsgtoMsg(message, mMe));
+                            mMessageList.add(message);
                             mMessageAdapter.notifyDataSetChanged();
                             finishSend();
                         }
@@ -282,24 +200,18 @@ public class ChatActivity extends AbstructActivity {
             return;
         } else {
             isLoadingMessages.set(true);
-            AVIMTypedMessage firstMsg = mMessageList.get(0).getAvimTypedMessage();
+            AVIMTypedMessage firstMsg = mMessageList.get(0);
             long time = firstMsg.getTimestamp();
             mConversation.queryMessages(null, time, PAGE_SIZE, new AVIMMessagesQueryCallback() {
                 @Override
                 public void done(List<AVIMMessage> list, AVException e) {
                     if (filterException(e)) {
-                        List<Message> typedMessages = new ArrayList<Message>();
-                        if (mConversationId.equals(Conf.GROUP_CONVERSATION_ID)) {
-                            filterGMessages2(list);
-                            return;
-                        } else {
-                            typedMessages = filterMessages2(list);
-                        }
-
+                        List<AVIMTypedMessage> typedMessages = new ArrayList<>();
+                        typedMessages.addAll(filterMessages2(list));
                         if (typedMessages.size() == 0) {
                             toast("无更早的消息了");
                         } else {
-                            List<Message> newMessages = new ArrayList<Message>();
+                            List<AVIMTypedMessage> newMessages = new ArrayList<>();
                             newMessages.addAll(typedMessages);
                             newMessages.addAll(mMessageList);
                             mMessageList.clear();
@@ -330,13 +242,13 @@ public class ChatActivity extends AbstructActivity {
                     UserBus.findUser(message.getFrom(), new UserBus.CallBack2() {
                         @Override
                         public void done(User user) {
-                            mMessageList.add(MessageUtil.aviMsgtoMsg(message, user));
+                            mMessageList.add(message);
                             mMessageAdapter.notifyDataSetChanged();
                             scrollToLast();
                         }
                     });
                 } else {
-                    mMessageList.add(MessageUtil.aviMsgtoMsg(message, mFriend));
+                    mMessageList.add(message);
                     mMessageAdapter.notifyDataSetChanged();
                 }
                 scrollToLast();
@@ -746,7 +658,7 @@ public class ChatActivity extends AbstructActivity {
 
     private ListView mLvChat;
     private MessageAdapter mMessageAdapter;
-    private List<Message> mMessageList;
+    private List<AVIMTypedMessage> mMessageList;
     private EditText mEtMsg;
 
     private AVIMConversation mConversation;
